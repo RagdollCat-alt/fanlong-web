@@ -1,5 +1,5 @@
 /* js/core.js - 终端接入逻辑终极版 */
-const API_BASE = "http://116.205.101.141:5000/query?qq=";
+const API_BASE = "http://116.205.101.141:8443/query?qq=";
 let currentUser = null;
 
 // 属性配置：特别处理后端键名中存在的空格
@@ -19,8 +19,8 @@ async function handleLogin() {
     const loginBtn = document.querySelector('#login-panel button');
     const qqInput = document.getElementById('login-qq');
     const qq = qqInput.value.trim();
-    
-    if(!qq) return alert("请输入身份芯片标识码");
+
+    if (!qq) return alert("请输入身份芯片标识码");
 
     // 💡 优化：点击后立即禁用按钮，防止多次点击
     loginBtn.disabled = true;
@@ -29,44 +29,44 @@ async function handleLogin() {
 
     try {
         const response = await fetch(`${API_BASE}${qq}&t=${Date.now()}`);
-        
+
         // 如果服务器返回非 200 状态码，直接视为未查获
         if (!response.ok) {
             throw new Error("UserNotFound");
         }
 
         const data = await response.json();
-        
+
         // 🛠️ 关键修复：判断返回的数据是否包含有效用户信息
         // 假设没有该用户时后端返回空对象或 name 字段为空
         if (data && data.name) {
             currentUser = data;
-            
+
             // 1. 更新 UI 状态
             updateLoginUI(true, data.name);
-            
+
             // 2. 彻底移除“未接入系统”预览卡片
             const previewCard = document.getElementById('login-status-preview');
             if (previewCard) previewCard.classList.add('hidden');
 
             // 3. 渲染数据并直接切换到档案页
             renderProfileData(data);
-            switchTab('profile'); 
-            
+            switchTab('profile');
+
             alert(`终端接入成功。欢迎回来，${data.name}。`);
         } else {
             // 如果解析出的 data 里面没有有效信息，手动抛出错误进入 catch
             throw new Error("EmptyUserData");
         }
-        
+
     } catch (err) {
         currentUser = null;
         updateLoginUI(false);
-        
+
         // 自动展开登记表
         const registerSection = document.getElementById('register-section');
         if (registerSection) registerSection.classList.remove('hidden');
-        
+
         // 💡 确保页面平滑滚动到登记处
         setTimeout(() => {
             document.getElementById('register-section').scrollIntoView({ behavior: 'smooth' });
@@ -74,7 +74,7 @@ async function handleLogin() {
 
         // 提示文案
         alert("未查获该 ID 户籍记录。请确保 QQ 号输入正确，或在下方完成新户籍录入。");
-        
+
     } finally {
         // 💡 还原按钮文字
         loginBtn.disabled = false;
@@ -112,7 +112,7 @@ function renderProfileData(data) {
     Object.keys(displayMap).forEach(key => {
         const label = displayMap[key];
         const config = statConfig[key] || statConfig['stat_obed ']; // 获取颜色配置
-        
+
         // 模糊寻找：在 stats 的所有键中找包含当前 key 的那个（处理空格问题）
         let val = 0;
         const realKey = Object.keys(data.stats).find(k => k.trim() === key);
@@ -122,7 +122,7 @@ function renderProfileData(data) {
 
         // 累计总分
         totalScore += val;
-        
+
         // 计算百分比（上限 200）
         const percent = Math.min((val / 200) * 100, 100);
 
@@ -137,10 +137,10 @@ function renderProfileData(data) {
                 </div>
             </div>`;
     });
-    
+
     // 4. 更新综合评分
     document.getElementById('p-total').innerText = totalScore;
-    
+
     // 5. 更新价值评级（文案已按要求修改）
     const obedRankEl = document.getElementById('p-obed');
     let rank = 'E';
@@ -151,7 +151,7 @@ function renderProfileData(data) {
     else if (totalScore >= 600) { rank = 'B'; rankColor = 'text-purple-500'; }
     else if (totalScore >= 400) { rank = 'C'; rankColor = 'text-orange-600'; }
     else if (totalScore >= 200) { rank = 'D'; rankColor = 'text-blue-400'; }
-    
+
     obedRankEl.innerText = rank;
     obedRankEl.className = `text-2xl font-roman tracking-widest ${rankColor}`;
 
@@ -167,7 +167,7 @@ function renderProfileData(data) {
 function updateLoginUI(isOnline, name = "") {
     document.getElementById('status-offline').classList.toggle('hidden', isOnline);
     document.getElementById('status-online').classList.toggle('hidden', !isOnline);
-    if(isOnline) {
+    if (isOnline) {
         document.getElementById('header-user-name').innerText = name;
         document.getElementById('login-panel').classList.add('hidden');
     }
@@ -182,7 +182,7 @@ function logout() {
 function switchTab(tabId) {
     // 1. 定义所有可能的页面区块
     const allTabs = ['home', 'world', 'politics', 'map', 'families', 'apply', 'profile'];
-    
+
     // 2. 核心逻辑：如果点击的是“档案”，根据登录状态决定去哪
     let targetId = tabId;
     if (tabId === 'apply' || tabId === 'profile') {
@@ -210,7 +210,7 @@ function switchTab(tabId) {
     // 5. 同步所有导航高亮 (桌面 + 手机)
     // 匹配逻辑：点击 'profile' 或 'apply' 都要让导航上的“档案”按钮变色
     const highlightId = (tabId === 'profile' || tabId === 'apply') ? 'profile' : tabId;
-    
+
     const allBtns = document.querySelectorAll('#desktop-nav .tab-btn, .bottom-nav-item');
     allBtns.forEach(btn => {
         const clickAttr = btn.getAttribute('onclick');
@@ -229,7 +229,7 @@ function switchTab(tabId) {
         }
     });
 
-    window.scrollTo({top:0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // === 弹窗控制与原有逻辑保留 ===
@@ -334,7 +334,7 @@ function copyRegisterData() {
 }
 
 window.addEventListener('click', (e) => {
-    if(e.target.id === 'family-modal') closeModal();
-    if(e.target.id === 'citizen-modal') closeCitizenModal();
-    if(e.target.id === 'register-modal') document.getElementById('register-modal').classList.add('hidden');
+    if (e.target.id === 'family-modal') closeModal();
+    if (e.target.id === 'citizen-modal') closeCitizenModal();
+    if (e.target.id === 'register-modal') document.getElementById('register-modal').classList.add('hidden');
 });
