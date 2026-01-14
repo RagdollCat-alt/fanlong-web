@@ -1,0 +1,284 @@
+:root {
+            /* 核心色板 */
+            --yu-gold: #C5A059;       /* 皇权/内庭/外庭/统治者 */
+            --yu-silver: #E5E7EB;     /* 通用文本/贵族 */
+            --yu-purple: #7c3aed;     /* 权贵 (世家) */
+            --yu-red: #8B0000;        /* 奚家/下城/警告 */
+            --yu-blue: #3b82f6;       /* 科技/奴籍 */
+            --yu-green: #10b981;      /* 公民籍 */
+            
+            --deep-black: #050505;
+            --panel-bg: #0a0a0a;
+        }
+
+        body {
+            background-color: var(--deep-black);
+            font-family: 'Noto Sans SC', sans-serif;
+            color: #a3a3a3;
+            overflow-x: hidden;
+            padding-bottom: 90px;
+        }
+
+        /* --- 颜色工具类 --- */
+        .text-yu-gold { color: var(--yu-gold); }
+        .bg-yu-gold { background-color: var(--yu-gold); }
+        .border-yu-gold { border-color: var(--yu-gold); }
+        
+        .text-yu-purple { color: var(--yu-purple); }
+        .bg-yu-purple { background-color: #5b21b6; }
+        .border-yu-purple { border-color: #7c3aed; }
+        
+        .text-yu-red { color: #ef4444; }
+        .bg-yu-red { background-color: var(--yu-red); }
+        .border-yu-red { border-color: var(--yu-red); }
+
+        /* 字体工具类 */
+        .font-roman { font-family: 'Cinzel', serif; letter-spacing: 0.05em; }
+        .serif { font-family: 'Noto Serif SC', serif; }
+        .sans { font-family: 'Noto Sans SC', sans-serif; }
+        
+        /* 核心字体修改：方正粗雅宋简体 */
+        .font-cuyasong { 
+            font-family: '方正粗雅宋简体', 'FZCuYaSong-r-GBK', 'Noto Serif SC', serif; 
+            font-weight: 700;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Noto Serif SC', serif; }
+
+        /* 酷炫入场动效 */
+        .reveal-container { perspective: 1000px; }
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            filter: blur(10px);
+            animation: cinematicReveal 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+        @keyframes cinematicReveal {
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        .delay-100 { animation-delay: 0.2s; }
+        .delay-200 { animation-delay: 0.4s; }
+        .delay-300 { animation-delay: 0.6s; }
+        .delay-500 { animation-delay: 1.0s; }
+
+        /* 常规渐入 */
+        .fade-in { animation: fadeIn 0.6s ease-out forwards; opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        /* 金色光晕 */
+        .gold-glow { text-shadow: 0 0 25px rgba(197, 160, 89, 0.3); }
+
+        /* 高级低调的金色渐变文字 - 仍保留class但不再用于首页标题 */
+        .luxury-text {
+            background: linear-gradient(to bottom, #cfc09f 0%, #a69265 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* 地图网格 */
+        .grid-bg {
+            background-image: linear-gradient(to right, #1a1a1a 1px, transparent 1px), linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* 芯片背景纹理 */
+        .chip-bg {
+            background-color: #080808;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .chip-bg:active {
+            background-color: #111;
+            transform: scale(0.98);
+        }
+        
+        /* 芯片颜色变体 */
+        .chip-green-bg {
+            background-image: 
+                linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+        }
+        .chip-blue-bg {
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+        }
+        .chip-red-bg {
+            background-image: 
+                linear-gradient(rgba(239, 68, 68, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(239, 68, 68, 0.05) 1px, transparent 1px);
+        }
+
+        /* 导航状态 */
+        .tab-btn.active { color: var(--yu-gold); border-bottom: 2px solid var(--yu-gold); }
+        .bottom-nav-item.active i { color: var(--yu-gold); text-shadow: 0 0 10px rgba(197, 160, 89, 0.5); }
+        .bottom-nav-item.active span { color: var(--yu-gold); }
+
+        /* 表格样式 */
+        table.custom-table th {
+            background-color: #0f0f0f; color: var(--yu-gold); font-weight: bold;
+            border-bottom: 1px solid #333; padding: 12px; text-align: left;
+            font-size: 0.85rem; font-family: 'Noto Serif SC', serif;
+        }
+        table.custom-table td { padding: 12px; border-bottom: 1px solid #1a1a1a; color: #9ca3af; font-size: 0.85rem; vertical-align: top;}
+        table.custom-table tr:hover td { background-color: rgba(255,255,255,0.03); }
+
+        /* 卡片装饰 */
+        .card-decoration {
+            border: 1px solid rgba(255,255,255,0.05); background: var(--panel-bg);
+            position: relative; overflow: hidden;
+        }
+        .card-decoration::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--yu-gold), transparent); opacity: 0.5;
+        }
+
+        /* 折叠面板 */
+        details > summary { list-style: none; cursor: pointer; transition: background 0.2s; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] > summary { background-color: rgba(255,255,255,0.05); }
+        details[open] > div { animation: sweep .3s ease-in-out; }
+        @keyframes sweep { 0% {opacity: 0; transform: translateY(-5px)} 100% {opacity: 1; transform: translateY(0)} }
+        
+        /* 地图地标Icon */
+        .landmark-icon {
+            position: absolute; 
+            transform: translate(-50%, -50%); 
+            z-index: 10;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid currentColor;
+            box-shadow: 0 0 15px currentColor;
+        }
+        .landmark-icon:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+            z-index: 20;
+        }
+        .landmark-icon::after {
+            content: attr(data-label);
+            position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+            white-space: nowrap; font-size: 10px; font-weight: bold;
+            color: white; background: rgba(0,0,0,0.8); padding: 2px 6px;
+            border-radius: 2px; border: 1px solid #333;
+            opacity: 0; transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .landmark-icon:hover::after { opacity: 1; }
+
+        /* ==========================================================================
+   新增：档案与登录模块样式
+   ========================================================================== */
+
+/* 1. 档案属性进度条特效 */
+.stat-bar-bg {
+    background: rgba(255, 255, 255, 0.05);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.stat-bar-fill {
+    height: 100%;
+    width: 0%; /* 由 JS 控制动画生长 */
+    transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+    box-shadow: 0 0 10px currentColor;
+}
+
+/* 进度条末端光点 */
+.stat-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: white;
+    filter: blur(2px);
+    box-shadow: 0 0 8px white;
+}
+
+/* 2. 科技扫描线效果 */
+.scan-line {
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to bottom, 
+        transparent, 
+        rgba(197, 160, 89, 0.05), 
+        transparent);
+    position: absolute;
+    top: -100px;
+    left: 0;
+    animation: scan 4s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes scan {
+    0% { top: -100px; }
+    100% { top: 100%; }
+}
+
+/* 3. 登录状态小圆点动画 */
+.status-dot-online {
+    box-shadow: 0 0 8px #10b981;
+}
+
+/* 4. 档案面板渐变背景强化 */
+#profile-display .card-decoration {
+    background: linear-gradient(135deg, 
+        rgba(10, 10, 10, 1) 0%, 
+        rgba(20, 20, 20, 1) 100%);
+}
+
+/* 5. 属性颜色分类 */
+.bg-stat-gold { background-color: var(--yu-gold); }
+.bg-stat-pink { background-color: #ec4899; }
+.bg-stat-blue { background-color: #3b82f6; }
+.bg-stat-emerald { background-color: #10b981; }
+.bg-stat-indigo { background-color: #6366f1; }
+.bg-stat-red { background-color: #ef4444; }
+.bg-stat-purple { background-color: #a855f7; }
+.bg-stat-orange { background-color: #f97316; }
+
+/* 6. 输入框优化 */
+input#login-qq {
+    transition: all 0.3s;
+    letter-spacing: 0.1em;
+}
+input#login-qq:focus {
+    box-shadow: 0 0 15px rgba(197, 160, 89, 0.1);
+    background: rgba(197, 160, 89, 0.02);
+}
+
+/* 优化预览卡片的文字对齐 */
+#login-status-preview .text-left {
+    text-align: left;
+}
+
+/* 确保桌面端激活态颜色强制生效 */
+.tab-btn.active {
+    color: var(--yu-gold) !important;
+    border-bottom: 2px solid var(--yu-gold);
+}
+
+/* 解决电脑端卡片过度拉伸 */
+@media (min-width: 768px) {
+    #tab-apply {
+        max-width: 800px; /* 限制最大宽度，保持精致感 */
+    }
+}
+
