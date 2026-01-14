@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>虞宫官网 | YU PALACE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- 引入字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@200;300;500;700;900&family=Noto+Sans+SC:wght@100;300;400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* 核心色板 */
+            --yu-gold: #C5A059;       /* 皇权/内庭/外庭/统治者 */
+            --yu-silver: #E5E7EB;     /* 通用文本/贵族 */
+            --yu-purple: #7c3aed;     /* 权贵 (世家) */
+            --yu-red: #8B0000;        /* 奚家/下城/警告 */
+            --yu-blue: #3b82f6;       /* 科技/奴籍 */
+            --yu-green: #10b981;      /* 公民籍 */
+            
+            --deep-black: #050505;
+            --panel-bg: #0a0a0a;
+        }
+
+        body {
+            background-color: var(--deep-black);
+            font-family: 'Noto Sans SC', sans-serif;
+            color: #a3a3a3;
+            overflow-x: hidden;
+            padding-bottom: 90px;
+        }
+
+        /* --- 颜色工具类 --- */
+        .text-yu-gold { color: var(--yu-gold); }
+        .bg-yu-gold { background-color: var(--yu-gold); }
+        .border-yu-gold { border-color: var(--yu-gold); }
+        
+        .text-yu-purple { color: var(--yu-purple); }
+        .bg-yu-purple { background-color: #5b21b6; }
+        .border-yu-purple { border-color: #7c3aed; }
+        
+        .text-yu-red { color: #ef4444; }
+        .bg-yu-red { background-color: var(--yu-red); }
+        .border-yu-red { border-color: var(--yu-red); }
+
+        /* 字体工具类 */
+        .font-roman { font-family: 'Cinzel', serif; letter-spacing: 0.05em; }
+        .serif { font-family: 'Noto Serif SC', serif; }
+        .sans { font-family: 'Noto Sans SC', sans-serif; }
+        
+        /* 核心字体修改：方正粗雅宋简体 */
+        .font-cuyasong { 
+            font-family: '方正粗雅宋简体', 'FZCuYaSong-r-GBK', 'Noto Serif SC', serif; 
+            font-weight: 700;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Noto Serif SC', serif; }
+
+        /* 酷炫入场动效 */
+        .reveal-container { perspective: 1000px; }
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            filter: blur(10px);
+            animation: cinematicReveal 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+        @keyframes cinematicReveal {
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        .delay-100 { animation-delay: 0.2s; }
+        .delay-200 { animation-delay: 0.4s; }
+        .delay-300 { animation-delay: 0.6s; }
+        .delay-500 { animation-delay: 1.0s; }
+
+        /* 常规渐入 */
+        .fade-in { animation: fadeIn 0.6s ease-out forwards; opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        /* 金色光晕 */
+        .gold-glow { text-shadow: 0 0 25px rgba(197, 160, 89, 0.3); }
+
+        /* 高级低调的金色渐变文字 - 仍保留class但不再用于首页标题 */
+        .luxury-text {
+            background: linear-gradient(to bottom, #cfc09f 0%, #a69265 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* 地图网格 */
+        .grid-bg {
+            background-image: linear-gradient(to right, #1a1a1a 1px, transparent 1px), linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* 芯片背景纹理 */
+        .chip-bg {
+            background-color: #080808;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .chip-bg:active {
+            background-color: #111;
+            transform: scale(0.98);
+        }
+        
+        /* 芯片颜色变体 */
+        .chip-green-bg {
+            background-image: 
+                linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+        }
+        .chip-blue-bg {
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+        }
+        .chip-red-bg {
+            background-image: 
+                linear-gradient(rgba(239, 68, 68, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(239, 68, 68, 0.05) 1px, transparent 1px);
+        }
+
+        /* 导航状态 */
+        .tab-btn.active { color: var(--yu-gold); border-bottom: 2px solid var(--yu-gold); }
+        .bottom-nav-item.active i { color: var(--yu-gold); text-shadow: 0 0 10px rgba(197, 160, 89, 0.5); }
+        .bottom-nav-item.active span { color: var(--yu-gold); }
+
+        /* 表格样式 */
+        table.custom-table th {
+            background-color: #0f0f0f; color: var(--yu-gold); font-weight: bold;
+            border-bottom: 1px solid #333; padding: 12px; text-align: left;
+            font-size: 0.85rem; font-family: 'Noto Serif SC', serif;
+        }
+        table.custom-table td { padding: 12px; border-bottom: 1px solid #1a1a1a; color: #9ca3af; font-size: 0.85rem; vertical-align: top;}
+        table.custom-table tr:hover td { background-color: rgba(255,255,255,0.03); }
+
+        /* 卡片装饰 */
+        .card-decoration {
+            border: 1px solid rgba(255,255,255,0.05); background: var(--panel-bg);
+            position: relative; overflow: hidden;
+        }
+        .card-decoration::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--yu-gold), transparent); opacity: 0.5;
+        }
+
+        /* 折叠面板 */
+        details > summary { list-style: none; cursor: pointer; transition: background 0.2s; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] > summary { background-color: rgba(255,255,255,0.05); }
+        details[open] > div { animation: sweep .3s ease-in-out; }
+        @keyframes sweep { 0% {opacity: 0; transform: translateY(-5px)} 100% {opacity: 1; transform: translateY(0)} }
+        
+        /* 地图地标Icon */
+        .landmark-icon {
+            position: absolute; 
+            transform: translate(-50%, -50%); 
+            z-index: 10;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid currentColor;
+            box-shadow: 0 0 15px currentColor;
+        }
+        .landmark-icon:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+            z-index: 20;
+        }
+        .landmark-icon::after {
+            content: attr(data-label);
+            position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+            white-space: nowrap; font-size: 10px; font-weight: bold;
+            color: white; background: rgba(0,0,0,0.8); padding: 2px 6px;
+            border-radius: 2px; border: 1px solid #333;
+            opacity: 0; transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .landmark-icon:hover::after { opacity: 1; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 bg-black/95 backdrop-blur-md border-b border-white/5 shadow-2xl h-16 flex items-center justify-center md:justify-between px-6">
+        <div class="flex flex-col items-center md:items-start">
+            <h1 class="text-xl md:text-2xl font-bold tracking-[0.2em] text-white gold-glow serif">虞宫</h1>
+            <span class="text-[0.6rem] text-gray-500 font-roman tracking-widest text-gradient-gold">IMPERIAL ADMINISTRATION PORTAL</span>
+        </div>
+        
+        <!-- Desktop Nav -->
+        <nav id="desktop-nav" class="hidden md:flex gap-8 text-xs font-bold tracking-widest text-gray-500">
+            <button onclick="switchTab('home')" class="tab-btn hover:text-white transition-colors py-2 active">首页</button>
+            <button onclick="switchTab('world')" class="tab-btn hover:text-white transition-colors py-2">世界观</button>
+            <button onclick="switchTab('politics')" class="tab-btn hover:text-white transition-colors py-2">政体与官职</button>
+            <button onclick="switchTab('map')" class="tab-btn hover:text-white transition-colors py-2">繁笼地图</button>
+            <button onclick="switchTab('families')" class="tab-btn hover:text-white transition-colors py-2">世家名录</button>
+            <button onclick="switchTab('apply')" class="tab-btn text-white bg-red-900/80 px-4 py-2 rounded-sm hover:bg-red-800 transition-colors border border-red-900">户籍登记</button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-20 px-4 md:px-6 max-w-7xl mx-auto w-full relative z-10">
+
+        <!-- Tab: HOME -->
+        <div id="tab-home" class="block mt-8 md:mt-12 reveal-container">
+            <div class="text-center py-16 md:py-24 relative overflow-hidden">
+                <div class="reveal-item">
+                    <div class="w-48 md:w-64 h-auto mx-auto mb-10 relative flex items-center justify-center">
+                         <img src="https://img10.360buyimg.com/imgzone/jfs/t1/376160/38/15660/3117516/6945747dFf514b96b/899cdcc05c46848c.png" alt="虞宫Logo" class="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(197,160,89,0.3)] filter brightness-110 contrast-125">
+                    </div>
+                </div>
+                
+                <!-- Font Changed: 方正粗雅宋简体, Color Changed: text-yu-gold -->
+                <h2 class="text-4xl md:text-6xl text-yu-gold tracking-[0.5em] pl-[0.5em] font-cuyasong reveal-item delay-100 uppercase gold-glow">
+                    虞宫
+                </h2>
+                
+                <div class="h-px w-12 bg-white/10 mx-auto my-10 reveal-item delay-200"></div>
+                
+                <p class="text-lg md:text-xl text-gray-400 font-light italic serif tracking-widest reveal-item delay-200">
+                    “你是我灵魂里，最后一克自由的砝码。”
+                </p>
+                <p class="max-w-2xl mx-auto text-xs md:text-sm text-gray-600 leading-relaxed pt-8 reveal-item delay-300 font-light">
+                    欢迎访问虞宫官方终端。在这里，血统决定高度，科技锁死阶级。<br>
+                    请谨记：高主位对低主位拥有天然权威。
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4 md:gap-6 text-center reveal-item delay-500">
+                <div class="p-6 md:p-8 card-decoration hover:bg-white/5 transition-all duration-500 group cursor-pointer" onclick="switchTab('world')">
+                    <i class="fas fa-microchip text-2xl text-gray-600 group-hover:text-yellow-600 mb-3 transition-colors"></i>
+                    <h3 class="text-white text-lg font-cuyasong mb-1">严格等级</h3>
+                    <div class="text-[10px] text-gray-600 font-roman mb-2 tracking-widest">STRICT HIERARCHY</div>
+                    <p class="text-xs text-gray-500">六层主位，六层奴位。不可逾越的鸿沟。</p>
+                </div>
+                <div class="p-6 md:p-8 card-decoration hover:bg-white/5 transition-all duration-500 group cursor-pointer" onclick="switchTab('families')">
+                    <i class="fas fa-chess-king text-2xl text-gray-600 group-hover:text-red-900 mb-3 transition-colors"></i>
+                    <h3 class="text-white text-lg font-cuyasong mb-1">世家垄断</h3>
+                    <div class="text-[10px] text-gray-600 font-roman mb-2 tracking-widest">FAMILY MONOPOLY</div>
+                    <p class="text-xs text-gray-500">虞家统治，世家分治。经济与权力的绝对掌控。</p>
+                </div>
+                <div class="p-6 md:p-8 card-decoration hover:bg-white/5 transition-all duration-500 group cursor-pointer" onclick="switchTab('politics')">
+                    <i class="fas fa-balance-scale text-2xl text-gray-600 group-hover:text-blue-500 mb-3 transition-colors"></i>
+                    <h3 class="text-white text-lg font-cuyasong mb-1">中央集权</h3>
+                    <div class="text-[10px] text-gray-600 font-roman mb-2 tracking-widest">CENTRALIZATION</div>
+                    <p class="text-xs text-gray-500">内庭外庭，各司其职。庞大精密的统治机器。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: WORLD -->
+        <div id="tab-world" class="hidden space-y-12 mt-4 md:mt-8 pb-12">
+            <!-- Hierarchy -->
+            <section class="fade-in">
+                <div class="flex items-end gap-4 mb-6 border-b border-white/10 pb-2">
+                    <h2 class="text-2xl md:text-3xl text-white font-cuyasong border-l-4 border-yu-gold pl-4">社会阶级</h2>
+                    <span class="text-xs md:text-sm text-gray-600 pb-1 font-roman">Social Hierarchy</span>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4 md:gap-8">
+                    <div class="space-y-2">
+                        <h4 class="text-yu-gold text-xs tracking-widest mb-4 uppercase border-b border-yellow-600/20 pb-1 font-bold">主位阶级 (六层)</h4>
+                        <div class="bg-white/5 p-3 border border-yellow-600/20 text-yu-gold font-bold text-center text-sm">1. 统治者 (虞)</div>
+                        <div class="bg-white/5 p-3 border-l border-white/10 text-yellow-200/80 text-center ml-4 text-sm">2. 亲贵 (虞家旁系)</div>
+                        <div class="bg-white/5 p-2 border-l border-white/10 text-yu-purple text-center ml-8 text-sm">3. 权贵 (世家家主)</div>
+                        <div class="bg-white/5 p-2 border-l border-white/10 text-white text-center ml-12 text-xs">4. 贵族</div>
+                        <div class="bg-white/5 p-2 border-l border-white/10 text-white text-center ml-16 text-xs">5. 新贵</div>
+                        <div class="bg-white/5 p-2 border-l border-white/10 text-white text-center ml-20 text-xs">6. 士绅</div>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-gray-500 text-xs tracking-widest mb-4 uppercase border-b border-gray-700 pb-1 font-bold">奴位阶级 (六层)</h4>
+                        <div class="bg-black border border-gray-800 p-3 text-gray-300 flex justify-between items-center text-sm">
+                            <span>1. 私奴</span> <span class="text-[10px] bg-yellow-900/30 text-yellow-500 px-2 py-0.5 rounded">私产</span>
+                        </div>
+                        <div class="bg-black border border-gray-800 p-2 ml-4 text-gray-400 flex justify-between items-center text-sm">
+                            <span>2. 侍奴</span> <span class="text-[10px] bg-gray-800 px-2 py-0.5 rounded">内庭</span>
+                        </div>
+                        <div class="bg-black border border-gray-800 p-2 ml-8 text-gray-500 flex justify-between items-center text-sm">
+                            <span>3. 契奴</span> <span class="text-[10px] bg-blue-900/30 text-blue-500 px-2 py-0.5 rounded">公共</span>
+                        </div>
+                        <div class="bg-black border border-gray-800 p-2 ml-12 text-gray-600 text-xs">4. 公奴</div>
+                        <div class="bg-red-900/10 border border-red-900/30 p-2 ml-16 text-red-500 flex justify-between text-xs">
+                            <span>5. 罪奴</span> <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="bg-red-900/20 border border-red-900/50 p-2 ml-20 text-red-700 text-xs">6. 畜奴</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Economy -->
+            <section class="fade-in">
+                <div class="flex items-end gap-4 mb-6 border-b border-white/10 pb-2">
+                    <h2 class="text-2xl md:text-3xl text-white font-cuyasong border-l-4 border-yu-gold pl-4">经济体制</h2>
+                    <span class="text-xs md:text-sm text-gray-600 pb-1 font-roman">Economic System</span>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="p-5 card-decoration">
+                        <h3 class="text-yu-gold font-bold mb-1 flex items-center gap-2 font-serif text-sm"><i class="fas fa-coins"></i> 信用点</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed mt-2">纯粹的数字货币，与生物芯片ID绑定。虞家掌控中央服务器，拥有冻结、划转、乃至蒸发任何账户资产的最终权力。</p>
+                    </div>
+                    <div class="p-5 card-decoration">
+                        <h3 class="text-yu-gold font-bold mb-1 flex items-center gap-2 font-serif text-sm"><i class="fas fa-city"></i> 世家垄断</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed mt-2">金字塔形产业结构。虞家控制金融能源，权贵控制重工物流，贵族控制文娱生物。层层剥削，严密分工。</p>
+                    </div>
+                    <div class="p-5 card-decoration">
+                        <h3 class="text-yu-gold font-bold mb-1 flex items-center gap-2 font-serif text-sm"><i class="fas fa-hand-holding-usd"></i> 中央贡赋</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed mt-2">所有企业需将利润上缴虞宫国库。核心企业中，虞家天然占有“干股”，不参与经营但享受分红。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Citizenship -->
+            <section class="fade-in">
+                <div class="flex items-end gap-4 mb-6 border-b border-white/10 pb-2">
+                    <h2 class="text-2xl md:text-3xl text-white font-cuyasong border-l-4 border-yu-gold pl-4">户籍制度</h2>
+                    <span class="text-xs md:text-sm text-gray-600 pb-1 font-roman">Citizenship</span>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <!-- Citizen -->
+                    <div onclick="showCitizenshipDetails('citizen')" class="chip-bg chip-green-bg p-5 rounded relative overflow-hidden group cursor-pointer border border-green-900/50 hover:border-green-600/80">
+                        <h3 class="text-green-500 font-bold text-sm mb-2 font-serif">公民籍</h3>
+                        <p class="text-xs text-gray-400 mb-4">身份芯片：<span class="text-green-400">绿色识别码</span></p>
+                        <ul class="text-xs text-gray-400 space-y-1 list-disc list-inside">
+                            <li>享有完整财产权、择业权</li>
+                            <li>可自由迁徙与婚配</li>
+                            <li>受《繁笼律》生命保护</li>
+                        </ul>
+                        <div class="absolute bottom-4 right-4 text-[10px] text-green-200 font-serif tracking-widest border border-green-500/50 bg-black/80 px-3 py-1 rounded-full z-20 shadow-lg">查看详情</div>
+                    </div>
+                    <!-- Slave -->
+                    <div onclick="showCitizenshipDetails('slave')" class="chip-bg chip-blue-bg p-5 rounded relative overflow-hidden group cursor-pointer border border-blue-900/50 hover:border-blue-600/80">
+                        <h3 class="text-blue-500 font-bold text-sm mb-2 font-serif">奴籍</h3>
+                        <p class="text-xs text-gray-400 mb-4">身份芯片：<span class="text-blue-400">蓝色识别码</span></p>
+                        <ul class="text-xs text-gray-400 space-y-1 list-disc list-inside">
+                            <li>无财产，一切归主人所有</li>
+                            <li>行动受限，不可自由婚配</li>
+                            <li>生命权归主人，处死需报备</li>
+                        </ul>
+                        <div class="absolute bottom-4 right-4 text-[10px] text-blue-200 font-serif tracking-widest border border-blue-500/50 bg-black/80 px-3 py-1 rounded-full z-20 shadow-lg">查看详情</div>
+                    </div>
+                    <!-- Sinner -->
+                    <div onclick="showCitizenshipDetails('sinner')" class="chip-bg chip-red-bg p-5 rounded relative overflow-hidden group cursor-pointer border border-red-900/50 hover:border-red-600/80">
+                        <h3 class="text-red-500 font-bold text-sm mb-2 font-serif">罪奴籍</h3>
+                        <p class="text-xs text-gray-400 mb-4">身份芯片：<span class="text-red-600 animate-pulse">红色警报</span></p>
+                        <ul class="text-xs text-gray-400 space-y-1 list-disc list-inside">
+                            <li>烙印家族罪印，无任何权利</li>
+                            <li>仅供劳作与赎罪</li>
+                            <li>不受任何法律保护，可随意处死</li>
+                        </ul>
+                        <div class="absolute bottom-4 right-4 text-[10px] text-red-200 font-serif tracking-widest border border-red-500/50 bg-black/80 px-3 py-1 rounded-full z-20 shadow-lg">查看详情</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Attributes -->
+            <section class="fade-in pb-12">
+                 <div class="flex items-end gap-4 mb-6 border-b border-white/10 pb-2">
+                    <h2 class="text-2xl md:text-3xl text-white font-cuyasong border-l-4 border-yu-gold pl-4">属性制度</h2>
+                    <span class="text-xs md:text-sm text-gray-600 pb-1 font-roman">Attributes</span>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="bg-white/5 p-3 rounded"><h4 class="text-yu-gold text-xs font-bold mb-1"><i class="fas fa-star mr-1"></i> 颜值</h4><p class="text-[10px] text-gray-500">第一印象，观赏价值。影响受宠程度与联姻。</p></div>
+                    <div class="bg-white/5 p-3 rounded"><h4 class="text-pink-500 text-xs font-bold mb-1"><i class="fas fa-heart mr-1 text-pink-400"></i> 魅力</h4><p class="text-[10px] text-gray-500">取悦主人能力/社交手腕。影响容忍度与人才招揽。</p></div>
+                    <div class="bg-white/5 p-3 rounded"><h4 class="text-yu-gold text-xs font-bold mb-1"><i class="fas fa-brain mr-1"></i> 智力</h4><p class="text-[10px] text-gray-500">处理事务能力、战略眼光与政治嗅觉。</p></div>
+                    <div class="bg-white/5 p-3 rounded"><h4 class="text-yu-gold text-xs font-bold mb-1"><i class="fas fa-coins mr-1"></i> 商业</h4><p class="text-[10px] text-gray-500">创造财富能力。影响家族产业盈利。</p></div>
+                    <div class="bg-white/5 p-3 rounded"><h4 class="text-yu-gold text-xs font-bold mb-1"><i class="fas fa-comment-alt mr-1"></i> 口才</h4><p class="text-[10px] text-gray-500">语言艺术/公开辩论。影响求饶成功率与谈判。</p></div>
+                    <div class="bg-white/5 p-3 rounded"><h4 class="text-yu-gold text-xs font-bold mb-1"><i class="fas fa-fist-raised mr-1"></i> 体能</h4><p class="text-[10px] text-gray-500">生存率、武力值与危机应对能力。</p></div>
+                    <div class="bg-white/5 p-3 rounded"><h4 class="text-yu-gold text-xs font-bold mb-1"><i class="fas fa-palette mr-1"></i> 才艺</h4><p class="text-[10px] text-gray-500">艺术修养/文化声望。影响宴会表现与地位。</p></div>
+                    <div class="bg-white/5 p-3 rounded"><h4 class="text-gray-400 text-xs font-bold mb-1"><i class="fas fa-award mr-1 text-cyan-400"></i> 名誉</h4><p class="text-[10px] text-gray-500">外界评价/家族声望。影响社交范围与话语权。</p></div>
+                    <div class="bg-white/5 p-3 rounded col-span-2 md:col-span-4"><h4 class="text-red-600 text-xs font-bold mb-1"><i class="fas fa-balance-scale-right mr-1 text-orange-500"></i> 威慑/服从</h4><p class="text-[10px] text-gray-500">奴：对规则遵从度。 主：令人敬畏的气场与统御。</p></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Tab: POLITICS -->
+        <div id="tab-politics" class="hidden fade-in mt-4 md:mt-8 pb-12">
+            <h2 class="text-3xl md:text-4xl text-white font-cuyasong text-center mb-2">政体架构</h2>
+            <div class="text-center text-gray-600 mb-8 tracking-widest text-sm font-bold">权奴专制主义中央集权制</div>
+            
+            <!-- Structure Diagram -->
+            <div class="grid md:grid-cols-2 gap-6 mb-12">
+                <!-- Inner Court -->
+                <div class="card-decoration p-6">
+                    <h3 class="text-xl text-yu-gold font-bold mb-1 text-center serif">内庭 (私人)</h3>
+                    <div class="text-center text-[10px] text-gray-600 mb-6 font-roman">INNER COURT</div>
+                    
+                    <div class="space-y-4">
+                        <details class="group bg-black border border-yu-gold/20 rounded-sm">
+                            <summary class="flex justify-between items-center p-3 cursor-pointer hover:bg-white/5">
+                                <span class="text-yu-gold font-bold text-sm serif">侍官府</span>
+                                <i class="fas fa-chevron-down text-xs text-gray-600 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <div class="p-3 border-t border-white/5 text-xs text-gray-400 bg-white/[0.02]">
+                                <div class="mb-2 text-white"><strong>领导者：</strong>侍官长</div>
+                                <p>统管除训诫司外的一切内廷事务。包括家主日程、安全、财务、内侍调配。</p>
+                            </div>
+                        </details>
+
+                        <details class="group bg-black border border-yu-gold/20 rounded-sm">
+                            <summary class="flex justify-between items-center p-3 cursor-pointer hover:bg-white/5">
+                                <span class="text-yu-gold font-bold text-sm serif">训诫司</span>
+                                <i class="fas fa-chevron-down text-xs text-gray-600 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <div class="p-3 border-t border-white/5 text-xs text-gray-400 bg-white/[0.02]">
+                                <div class="mb-2 text-white"><strong>领导者：</strong>掌刑</div>
+                                <div class="space-y-2">
+                                    <div class="bg-white/5 p-2 rounded">
+                                        <span class="text-yu-gold font-bold serif">御礼庭</span>：负责礼仪/才艺培训。<br>下设：【戒堂】(再教育)
+                                    </div>
+                                    <div class="bg-white/5 p-2 rounded">
+                                        <span class="text-yu-gold font-bold serif">宗监庭</span>：负责奴隶内务。<br>下设：【净肆】(杂役)、【漱坊】(清洁)、【畜笼】(畜奴)、【内务监】(登记)
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <!-- Outer Court (Unified Format and Color) -->
+                <div class="card-decoration p-6">
+                    <h3 class="text-xl text-yu-gold font-bold mb-1 text-center serif">外庭 (公共)</h3>
+                    <div class="text-center text-[10px] text-gray-600 mb-6 font-roman">OUTER COURT</div>
+                    
+                    <div class="space-y-4">
+                        <!-- Direct Control -->
+                        <details class="group bg-black border border-yu-gold/20 rounded-sm">
+                            <summary class="flex justify-between items-center p-3 cursor-pointer hover:bg-white/5">
+                                <span class="text-yu-gold font-bold text-sm serif">家主直辖</span>
+                                <i class="fas fa-chevron-down text-xs text-gray-600 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <div class="p-3 border-t border-white/5 text-xs text-gray-400 bg-white/[0.02]">
+                                <div class="mb-2 text-white"><strong>直接领导：</strong>家主</div>
+                                <div class="space-y-2">
+                                    <div class="bg-white/5 p-2 rounded">
+                                        <span class="text-yu-gold font-bold serif">稽查司</span>：监察百官。<br>下设：【督署庭】、【监察庭】
+                                    </div>
+                                    <div class="bg-white/5 p-2 rounded">
+                                        <span class="text-yu-gold font-bold serif">虞家私军</span>：精锐武装。<br>下设：【禁军】、【特勤队】
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+                        
+                        <!-- Cabinet -->
+                         <details class="group bg-black border border-yu-gold/20 rounded-sm">
+                             <summary class="flex justify-between items-center p-3 cursor-pointer hover:bg-white/5">
+                                <span class="text-yu-gold font-bold text-sm serif">议阁 (立法)</span>
+                                <i class="fas fa-chevron-down text-xs text-gray-600 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <div class="p-3 border-t border-white/5 text-xs text-gray-400 bg-white/[0.02]">
+                                <div class="mb-2 text-white"><strong>领导者：</strong>丞辅</div>
+                                <div class="bg-white/5 p-2 rounded">
+                                    <span class="text-yu-gold font-bold serif">公卿会议</span>：八大公卿 | 贵族利益代言，复议决策。
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- Council -->
+                        <details class="group bg-black border border-yu-gold/20 rounded-sm">
+                            <summary class="flex justify-between items-center p-3 cursor-pointer hover:bg-white/5">
+                                <span class="text-yu-gold font-bold text-sm serif">理事厅 (行政)</span>
+                                <i class="fas fa-chevron-down text-xs text-gray-600 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <div class="p-3 border-t border-white/5 text-xs text-gray-400 bg-white/[0.02]">
+                                <div class="mb-2 text-white"><strong>领导者：</strong>执理事</div>
+                                <div class="space-y-2">
+                                    <div class="bg-white/5 p-2 rounded"><span class="text-yu-gold font-bold serif">财政司</span>：税收/国库。<br>下设：【税利庭】、【务财庭】</div>
+                                    <div class="bg-white/5 p-2 rounded"><span class="text-yu-gold font-bold serif">营造司</span>：基建/土地。<br>下设：【置业庭】、【利工庭】</div>
+                                    <div class="bg-white/5 p-2 rounded"><span class="text-yu-gold font-bold serif">法裁司</span>：司法/监狱。<br>下设：【法庭】、【刑狱庭】</div>
+                                    <div class="bg-white/5 p-2 rounded"><span class="text-yu-gold font-bold serif">民政司</span>：户籍/教育。<br>下设：【户查庭】、【教理庭】</div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- Military -->
+                        <details class="group bg-black border border-yu-gold/20 rounded-sm">
+                            <summary class="flex justify-between items-center p-3 cursor-pointer hover:bg-white/5">
+                                <span class="text-yu-gold font-bold text-sm serif">军务院 (军事)</span>
+                                <i class="fas fa-chevron-down text-xs text-gray-600 group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <div class="p-3 border-t border-white/5 text-xs text-gray-400 bg-white/[0.02]">
+                                <div class="mb-2 text-white"><strong>领导者：</strong>督军</div>
+                                <div class="space-y-2">
+                                    <div class="bg-white/5 p-2 rounded"><span class="text-yu-gold font-bold serif">军令司</span>：国防指挥</div>
+                                    <div class="bg-white/5 p-2 rounded"><span class="text-yu-gold font-bold serif">军备司</span>：后勤研发</div>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Functions Table (Merged Cells) -->
+            <div class="mb-12">
+                <h3 class="text-lg text-white mb-4 border-l-2 border-yu-gold pl-4">外庭部门职能详解</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left custom-table">
+                        <thead>
+                            <tr>
+                                <th class="w-1/4">所属机构</th>
+                                <th class="w-1/4">二级司部</th>
+                                <th class="w-1/4">下设庭署</th>
+                                <th>核心职能</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="2" class="text-yu-gold font-bold align-middle border-r border-gray-800">家主直辖</td>
+                                <td class="text-gray-300 font-bold">稽查司</td>
+                                <td>督署庭、监察庭</td>
+                                <td>家主之眼。负责官员任免考核(督署)与百官违纪检举(监察)。</td>
+                            </tr>
+                            <tr>
+                                <td class="text-gray-300 font-bold">虞家私军</td>
+                                <td>禁军、特勤队</td>
+                                <td>只听命于家主的精锐武装，负责皇城安全与特殊任务。</td>
+                            </tr>
+                            <tr>
+                                <td class="text-yu-gold font-bold align-middle border-r border-gray-800">议阁</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>立法机构。由公卿组成，代表贵族利益复议重大决策。</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="4" class="text-yu-gold font-bold align-middle border-r border-gray-800">理事厅</td>
+                                <td class="text-yu-gold font-bold">财政司</td>
+                                <td>税利庭、务财庭</td>
+                                <td>国家钱袋子。负责税收、预算分配与国库管理。</td>
+                            </tr>
+                            <tr>
+                                <td class="text-yu-gold font-bold">营造司</td>
+                                <td>置业庭、利工庭</td>
+                                <td>基建狂魔。负责城市规划、大型工程建设与土地管理。</td>
+                            </tr>
+                            <tr>
+                                <td class="text-yu-gold font-bold">法裁司</td>
+                                <td>法庭、刑狱庭</td>
+                                <td>法律执行。负责审判公民纠纷与管理普通监狱。</td>
+                            </tr>
+                            <tr>
+                                <td class="text-yu-gold font-bold">民政司</td>
+                                <td>户查庭、教理庭</td>
+                                <td>社会基石。负责户籍管理、教育体系与社会福利。</td>
+                            </tr>
+                            <tr>
+                                <td class="text-yu-gold font-bold align-middle border-r border-gray-800">军务院</td>
+                                <td class="text-yu-gold font-bold">军令/军备</td>
+                                <td>-</td>
+                                <td>国防力量。负责边境防御、常规作战与武器研发。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Chain of Command (Vertical) -->
+            <div class="mb-8 bg-[#0a0a0a] border border-gray-800 p-6 rounded">
+                <h3 class="text-lg text-white mb-4 border-l-2 border-gray-500 pl-4 serif">地方行政链条</h3>
+                <div class="flex flex-col gap-4 relative pl-4 border-l border-gray-800 ml-2">
+                    <div class="relative">
+                        <div class="absolute -left-[21px] top-2 w-3 h-3 bg-yu-gold rounded-full border-2 border-black"></div>
+                        <div class="text-yu-gold font-bold text-sm serif">理事厅 (中央)</div>
+                        <div class="text-[10px] text-gray-600 font-roman">COUNCIL</div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute -left-[21px] top-2 w-3 h-3 bg-yu-gold rounded-full border-2 border-black"></div>
+                        <div class="text-yu-gold font-bold text-sm serif">各司 (司长/庭执官)</div>
+                        <div class="text-[10px] text-gray-600 font-roman">MINISTRIES</div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute -left-[21px] top-2 w-3 h-3 bg-gray-600 rounded-full border-2 border-black"></div>
+                        <div class="text-gray-300 font-bold text-sm serif">外属 (省级统筹)</div>
+                        <div class="text-[10px] text-gray-600 font-roman">PROVINCIAL</div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute -left-[21px] top-2 w-3 h-3 bg-gray-600 rounded-full border-2 border-black"></div>
+                        <div class="text-gray-400 font-bold text-sm serif">地方官员 (市级)</div>
+                        <div class="text-[10px] text-gray-600 font-roman">MUNICIPAL</div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute -left-[21px] top-2 w-3 h-3 bg-gray-800 rounded-full border-2 border-black"></div>
+                        <div class="text-gray-500 font-bold text-sm serif">执事/卫官</div>
+                        <div class="text-[10px] text-gray-600 font-roman">LOCAL</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appointment -->
+            <div class="mb-8">
+                <h3 class="text-lg text-white mb-4 border-l-2 border-gray-500 pl-4 serif">官职任免制度</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white/5 p-3 border-t-2 border-yellow-600">
+                        <h4 class="text-yellow-600 font-bold text-xs mb-1">家主任免</h4>
+                        <p class="text-[10px] text-gray-400">家主直接指派，交由稽查司执行。拥有最高优先级。</p>
+                    </div>
+                    <div class="bg-white/5 p-3 border-t-2 border-gray-500">
+                        <h4 class="text-gray-300 font-bold text-xs mb-1">嫡长子继承</h4>
+                        <p class="text-[10px] text-gray-400">父死子继。继承人需经“德不配位”考核。</p>
+                    </div>
+                    <div class="bg-white/5 p-3 border-t-2 border-gray-500">
+                        <h4 class="text-gray-300 font-bold text-xs mb-1">举荐制</h4>
+                        <p class="text-[10px] text-gray-400">三位以上官员联合举荐公民籍人才，通过能力考核后任职。</p>
+                    </div>
+                    <div class="bg-white/5 p-3 border-t-2 border-gray-500">
+                        <h4 class="text-gray-300 font-bold text-xs mb-1">五年大选</h4>
+                        <p class="text-[10px] text-gray-400">选拔侍奴。五年期满表现优异者可“荣归”为官。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Outer Court Roles Table -->
+            <div class="card-decoration p-4 overflow-x-auto mb-6">
+                <h3 class="text-white text-sm mb-3 serif"><i class="fas fa-search mr-2 text-gray-600"></i>外庭官职速查</h3>
+                <table class="w-full text-xs text-left text-gray-400 custom-table">
+                    <thead>
+                        <tr><th>品级</th><th>文职</th><th>武职</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="text-yellow-500">正一品</td><td>丞辅</td><td>督军</td></tr>
+                        <tr><td class="text-yellow-600">次一品</td><td>公卿</td><td>律官</td></tr>
+                        <tr><td class="text-red-400">正二品</td><td>执理事</td><td>室长</td></tr>
+                        <tr><td class="text-blue-400">正三品</td><td>司长</td><td>骑士</td></tr>
+                        <tr><td>正四品</td><td>庭执官</td><td>巡行官</td></tr>
+                        <tr><td>正五品</td><td>属员</td><td>侍卫</td></tr>
+                        <tr><td class="text-gray-600">六品下</td><td>地方官</td><td>地方武</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Inner Court Roles Table -->
+            <div class="card-decoration p-4 overflow-x-auto">
+                <h3 class="text-white text-sm mb-3 serif"><i class="fas fa-crown mr-2 text-yellow-600"></i>内庭官职速查</h3>
+                <table class="w-full text-xs text-left text-gray-400 custom-table">
+                    <thead>
+                        <tr><th>品级</th><th>职位</th><th>核心职责</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="text-yellow-500">正一品</td><td>家主夫人</td><td>荣誉职位，尊贵象征</td></tr>
+                        <tr><td class="text-yellow-500">正一品</td><td>侍官长</td><td>内庭实权，统管一切</td></tr>
+                        <tr><td class="text-yellow-600">次四品</td><td>侍官</td><td>各事务部门主管</td></tr>
+                        <tr><td>次五品</td><td>从者</td><td>侍官副手，执行记录</td></tr>
+                        <tr><td>六品</td><td>内侍</td><td>贴身服务亲贵/高级私奴</td></tr>
+                        <tr><td>次六品</td><td>常侍</td><td>管理公奴及基础纪律</td></tr>
+                        <tr><td class="text-gray-600">七品</td><td>杂使</td><td>清洁搬运等杂活</td></tr>
+                        <tr><td class="text-gray-700">无品</td><td>使奴</td><td>清理污秽底层</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab: MAP -->
+        <div id="tab-map" class="hidden fade-in mt-4 md:mt-8 pb-12">
+            <!-- Font Changed -->
+            <h2 class="text-3xl text-white font-cuyasong mb-2">繁城地图</h2>
+            <p class="text-gray-500 font-roman mb-8 tracking-widest text-sm">CITY MAP OF FANLONG</p>
+
+            <div class="relative w-full max-w-lg mx-auto aspect-square grid-bg border border-gray-800 p-4 md:p-8 flex items-center justify-center mb-8 shadow-2xl">
+                <!-- River -->
+                <div class="absolute bottom-10 left-0 w-full h-8 bg-blue-900/30 blur-sm flex items-center justify-center text-blue-500 text-xs font-bold z-0 transform -rotate-1 font-serif-sc serif">蟠龙江</div>
+                
+                <!-- Visual Map Layers with Click Events -->
+                <div class="w-full h-full border-2 border-white/30 bg-[#111] relative flex flex-col justify-between p-2 map-area" onclick="showMapDetail('outer')">
+                    <span class="text-white text-[10px] font-bold uppercase p-1">外城区</span>
+                    <!-- Landmark Icons -->
+                    <div class="landmark-icon text-white" style="top: 20%; left: 20%" data-label="中央枢纽"><i class="fas fa-plane"></i></div>
+                    <div class="landmark-icon text-white" style="top: 80%; right: 20%" data-label="繁城之心"><i class="fas fa-city"></i></div>
+
+                    <div class="w-3/4 h-3/4 border-2 border-white/30 bg-[#0d0d0d] mx-auto my-auto relative flex flex-col justify-between p-2 shadow-[0_0_20px_rgba(255,255,255,0.1)] map-area" onclick="event.stopPropagation(); showMapDetail('middle')">
+                        <span class="text-white text-[10px] font-bold uppercase p-1">中城区</span>
+                        <div class="landmark-icon text-white" style="top: 15%; right: 15%" data-label="精英大学"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="landmark-icon text-white" style="bottom: 15%; left: 15%" data-label="外庭司部"><i class="fas fa-briefcase"></i></div>
+
+                        <div class="w-2/3 h-2/3 border-2 border-purple-900 bg-[#080808] mx-auto my-auto relative flex flex-col justify-between p-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] map-area" onclick="event.stopPropagation(); showMapDetail('upper')">
+                            <span class="text-white text-[10px] font-bold uppercase p-1">上城区</span>
+                            <div class="landmark-icon text-white" style="top: 10%; left: 50%" data-label="未名会所"><i class="fas fa-wine-glass"></i></div>
+                            <div class="landmark-icon text-white" style="bottom: 10%; right: 50%" data-label="议阁"><i class="fas fa-landmark"></i></div>
+
+                            <div class="w-1/2 h-1/2 border-2 border-yellow-600 bg-black mx-auto my-auto flex items-center justify-center shadow-[0_0_30px_rgba(202,138,4,0.3)] relative map-area" onclick="event.stopPropagation(); showMapDetail('imperial')">
+                                <i class="fas fa-crown text-yellow-600 text-2xl animate-pulse"></i>
+                                <span class="absolute -bottom-6 text-yellow-600 text-[10px] font-bold">皇城区</span>
+                                <div class="landmark-icon text-yellow-500" style="top: 30%; left: 50%" data-label="虞宫·内庭"><i class="fas fa-dragon"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -bottom-4 right-4 bg-red-900/20 border border-red-900 border-dashed px-2 py-1 text-red-500 text-[10px] font-bold text-center map-area" onclick="showMapDetail('lower')">
+                    下城<br>诫律区
+                    <div class="landmark-icon text-red-500" style="top: -10px; left: 10px" data-label="训诫司"><i class="fas fa-gavel"></i></div>
+                </div>
+            </div>
+
+            <!-- Map Details List -->
+            <div class="max-w-4xl mx-auto space-y-4">
+                <div id="detail-imperial" class="bg-black border border-yellow-600/30 p-4 rounded-sm flex gap-3 items-start transition-all">
+                    <div class="text-yellow-600 text-xl pt-1"><i class="fas fa-crown"></i></div>
+                    <div>
+                        <h4 class="text-yellow-500 font-bold mb-1 serif text-sm">皇城区</h4>
+                        <p class="text-xs text-gray-400 mb-2">绝对中心，高耸宫墙与外界隔绝。天命大道贯穿。</p>
+                        <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
+                            <li><strong>虞宫·内庭</strong>：权力策源地。融合古典园林与未来科技，家主居所。</li>
+                            <li><strong>外庭中枢</strong>：丞辅府、理事厅等最高行政机构群。</li>
+                            <li><strong>禁军驻地</strong>：负责保卫皇城区的精锐武装。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="detail-upper" class="bg-black border border-gray-400 p-4 rounded-sm flex gap-3 items-start transition-all">
+                    <div class="text-gray-300 text-xl pt-1"><i class="fas fa-landmark"></i></div>
+                    <div>
+                        <h4 class="text-gray-300 font-bold mb-1 serif text-sm">上城区</h4>
+                        <p class="text-xs text-gray-400 mb-2">紧邻皇城，顶级权贵居住地。</p>
+                        <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
+                            <li><strong>世家府邸</strong>：庄园式豪宅，私人园林与停机坪。</li>
+                            <li><strong>议阁</strong>：公卿议事场所，政治斗争舞台。</li>
+                            <li><strong>未名会所</strong>：顶级私人会所，权色交易与密谋之地。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="detail-middle" class="bg-black border border-gray-500 p-4 rounded-sm flex gap-3 items-start transition-all">
+                    <div class="text-gray-400 text-xl pt-1"><i class="fas fa-university"></i></div>
+                    <div>
+                        <h4 class="text-gray-400 font-bold mb-1 serif text-sm">中城区</h4>
+                        <p class="text-xs text-gray-400 mb-2">社会中坚力量聚集区。</p>
+                        <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
+                            <li><strong>外庭司部</strong>：各司、庭、属办公大楼，政策执行层。</li>
+                            <li><strong>中央精英大学</strong>：为贵族子弟和天才平民提供高等教育。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="detail-outer" class="bg-black border border-gray-700 p-4 rounded-sm flex gap-3 items-start transition-all">
+                    <div class="text-gray-500 text-xl pt-1"><i class="fas fa-building"></i></div>
+                    <div>
+                        <h4 class="text-gray-500 font-bold mb-1 serif text-sm">外城区</h4>
+                        <p class="text-xs text-gray-400 mb-2">最广阔区域，市民与商人混居。</p>
+                        <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
+                            <li><strong>繁城之心</strong>：商业区，金融大厦与娱乐场所。</li>
+                            <li><strong>中央交通枢纽</strong>：列车站与空港，人流混杂。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="detail-lower" class="bg-black border border-red-900/30 p-4 rounded-sm flex gap-3 items-start transition-all">
+                    <div class="text-red-800 text-xl pt-1"><i class="fas fa-skull"></i></div>
+                    <div>
+                        <h4 class="text-red-800 font-bold mb-1 serif text-sm">下城-诫律区</h4>
+                        <p class="text-xs text-red-900/70 mb-2">蟠龙江对岸，奴隶与罪犯的流放地。</p>
+                        <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
+                            <li><strong>训诫司总部</strong>：堡垒般综合体。奴隶登记、拍卖、惩戒。</li>
+                            <li><strong>奴隶营</strong>：从蜂巢宿舍到重刑监区。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: FAMILIES -->
+        <div id="tab-families" class="hidden fade-in mt-4 md:mt-8 pb-12">
+            <!-- Font Changed -->
+            <h2 class="text-3xl text-white font-cuyasong mb-2">世家名录</h2>
+            <div class="text-sm text-gray-600 font-roman mb-8 tracking-widest">THE GREAT HOUSES</div>
+
+            <!-- Ruler & Relatives -->
+            <div class="mb-10">
+                <h3 class="text-yellow-600 text-sm font-bold border-b border-yellow-600/20 pb-2 mb-4">统治者与亲贵</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- YU -->
+                    <div onclick="showFamilyDetails('yu')" class="bg-black border border-yellow-600 p-5 relative cursor-pointer hover:bg-yellow-900/10 transition-colors shadow-[0_0_15px_rgba(202,138,4,0.1)] group">
+                        <div class="absolute top-0 right-0 bg-yellow-600 text-black text-[10px] font-bold px-2 py-0.5 font-serif">统治者</div>
+                        <h3 class="text-2xl text-yellow-500 font-serif mb-2">虞家</h3>
+                        <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">统治者。垄断金融、能源、数据。</p>
+                        <div class="text-xs text-yellow-700 group-hover:text-yellow-500 transition-colors mt-auto tracking-wider">
+                            查看详情 <i class="fas fa-arrow-right ml-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Power Families -->
+            <div class="mb-10">
+                <h3 class="text-yu-purple text-sm font-bold border-b border-yu-purple/20 pb-2 mb-4">权贵 (四大世家)</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- DUWEI -->
+                    <div onclick="showFamilyDetails('duwei')" class="bg-black border border-yu-purple p-5 relative cursor-pointer hover:bg-yu-purple/10 transition-colors group">
+                        <div class="absolute top-0 right-0 bg-yu-purple text-white text-[10px] font-bold px-2 py-0.5 font-serif">军门</div>
+                        <h3 class="text-2xl text-yu-purple font-serif mb-2">都尉家</h3>
+                        <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">虞家的“刀柄”。垄断军工、安保。</p>
+                        <div class="text-xs text-yu-purple group-hover:text-white transition-colors mt-auto tracking-wider">
+                            查看详情 <i class="fas fa-arrow-right ml-1"></i>
+                        </div>
+                    </div>
+                     <!-- QUE -->
+                    <div onclick="showFamilyDetails('que')" class="bg-black border border-yu-purple p-5 relative cursor-pointer hover:bg-yu-purple/10 transition-colors group">
+                        <div class="absolute top-0 right-0 bg-yu-purple text-white text-[10px] font-bold px-2 py-0.5 font-serif">工造</div>
+                        <h3 class="text-2xl text-yu-purple font-serif mb-2">阙家</h3>
+                        <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">基建狂魔。交通、物流、工程。</p>
+                        <div class="text-xs text-yu-purple group-hover:text-white transition-colors mt-auto tracking-wider">
+                            查看详情 <i class="fas fa-arrow-right ml-1"></i>
+                        </div>
+                    </div>
+                    <!-- BO -->
+                    <div onclick="showFamilyDetails('bo')" class="bg-black border border-yu-purple p-5 relative cursor-pointer hover:bg-yu-purple/10 transition-colors group">
+                        <div class="absolute top-0 right-0 bg-yu-purple text-white text-[10px] font-bold px-2 py-0.5 font-serif">行政</div>
+                        <h3 class="text-2xl text-yu-purple font-serif mb-2">伯家</h3>
+                        <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">掌尺人。户籍、教育。秩序基石。</p>
+                        <div class="text-xs text-yu-purple group-hover:text-white transition-colors mt-auto tracking-wider">
+                            查看详情 <i class="fas fa-arrow-right ml-1"></i>
+                        </div>
+                    </div>
+                    <!-- XI -->
+                    <div onclick="showFamilyDetails('xi')" class="bg-black border border-red-900 p-5 relative cursor-pointer hover:bg-red-900/10 transition-colors group">
+                        <div class="absolute top-0 right-0 bg-red-900 text-white text-[10px] font-bold px-2 py-0.5 font-serif">罪族</div>
+                        <h3 class="text-2xl text-red-700 font-serif mb-2">奚家</h3>
+                        <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">昔日法学巨擘，今朝谋逆罪奴。</p>
+                        <div class="text-xs text-red-800 group-hover:text-red-500 transition-colors mt-auto tracking-wider">
+                            查看罪状 <i class="fas fa-exclamation-circle ml-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nobles -->
+            <div class="mb-10">
+                <h3 class="text-white text-sm font-bold border-b border-white/20 pb-2 mb-4">显赫贵族</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div onclick="showFamilyDetails('thin')" class="bg-white/5 p-5 relative cursor-pointer hover:bg-white/10 transition-colors group border border-white">
+                        <div class="absolute top-0 right-0 bg-white text-black text-[10px] font-bold px-2 py-0.5 font-serif">生物</div>
+                        <h3 class="text-xl text-white font-serif mb-2">薄家</h3>
+                        <p class="text-xs text-gray-400 mb-2">生物科技、医疗。</p>
+                        <div class="text-xs text-gray-500 group-hover:text-white transition-colors mt-auto tracking-wider">查看详情</div>
+                    </div>
+                    <div onclick="showFamilyDetails('duan')" class="bg-white/5 p-5 relative cursor-pointer hover:bg-white/10 transition-colors group border border-white">
+                        <div class="absolute top-0 right-0 bg-white text-black text-[10px] font-bold px-2 py-0.5 font-serif">律法</div>
+                        <h3 class="text-xl text-white font-serif mb-2">段家</h3>
+                        <p class="text-xs text-gray-400 mb-2">法律服务、拍卖。</p>
+                        <div class="text-xs text-gray-500 group-hover:text-white transition-colors mt-auto tracking-wider">查看详情</div>
+                    </div>
+                    <div onclick="showFamilyDetails('si')" class="bg-white/5 p-5 relative cursor-pointer hover:bg-white/10 transition-colors group border border-white">
+                        <div class="absolute top-0 right-0 bg-white text-black text-[10px] font-bold px-2 py-0.5 font-serif">文书</div>
+                        <h3 class="text-xl text-white font-serif mb-2">司家</h3>
+                        <p class="text-xs text-gray-400 mb-2">文书、档案、管家。</p>
+                        <div class="text-xs text-gray-500 group-hover:text-white transition-colors mt-auto tracking-wider">查看详情</div>
+                    </div>
+                    <div onclick="showFamilyDetails('ming')" class="bg-white/5 p-5 relative cursor-pointer hover:bg-white/10 transition-colors group border border-white">
+                        <div class="absolute top-0 right-0 bg-white text-black text-[10px] font-bold px-2 py-0.5 font-serif">传媒</div>
+                        <h3 class="text-xl text-white font-serif mb-2">明家</h3>
+                        <p class="text-xs text-gray-400 mb-2">文娱、舆论引导。</p>
+                        <div class="text-xs text-gray-500 group-hover:text-white transition-colors mt-auto tracking-wider">查看详情</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: APPLY (Register) -->
+        <div id="tab-apply" class="hidden fade-in mt-4 md:mt-8 pb-12 max-w-3xl mx-auto">
+            <!-- Font Changed -->
+            <h2 class="text-2xl md:text-3xl text-white font-cuyasong mb-8 flex items-center justify-center">
+                <i class="fas fa-fingerprint mr-4 text-red-900"></i> 户籍登记
+            </h2>
+            
+            <form id="register-form" class="bg-[#0a0a0a] border border-gray-800 p-6 md:p-8 space-y-6 shadow-2xl relative">
+                <!-- Top Decoration -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-900 to-transparent opacity-50"></div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">姓名</label>
+                        <input type="text" name="name" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">年龄</label>
+                        <input type="number" name="age" min="16" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">身高</label>
+                        <input type="text" name="height" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">属性</label>
+                        <select name="attribute" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                            <option value="">请选择</option>
+                            <option value="主位 (Dom/1)">主位 (Dom/1)</option>
+                            <option value="双向 (Switch)">双向 (Switch)</option>
+                            <option value="奴位 (Sub/0)">奴位 (Sub/0)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">户籍</label>
+                        <select name="class" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                            <option value="">请选择</option>
+                            <option value="公民籍">公民籍</option>
+                            <option value="奴籍">奴籍</option>
+                            <option value="罪奴籍">罪奴籍</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">职位</label>
+                        <input type="text" name="position" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                    </div>
+                </div>
+                
+                <!-- New Fields Logic: 家世 & 背景 Split -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">家世 (家族身份)</label>
+                        <input type="text" name="family" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">隶属 (仅奴籍填)</label>
+                        <input type="text" name="affiliation" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">背景</label>
+                    <textarea name="background" class="w-full bg-black border border-gray-700 text-white p-3 h-24 focus:border-red-900 outline-none transition-colors text-sm"></textarea>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">性格 (20字+)</label>
+                        <textarea name="personality" class="w-full bg-black border border-gray-700 text-white p-3 h-32 focus:border-red-900 outline-none transition-colors text-sm"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">外貌 (30字+)</label>
+                        <textarea name="appearance" class="w-full bg-black border border-gray-700 text-white p-3 h-32 focus:border-red-900 outline-none transition-colors text-sm"></textarea>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">喜恶</label>
+                        <input type="text" name="likes" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">禁忌</label>
+                        <input type="text" name="taboos" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">薪资</label>
+                    <input type="text" name="salary" placeholder="参考薪资表填写" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">备注</label>
+                    <input type="text" name="notes" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                </div>
+
+                <div class="pt-6 border-t border-gray-800">
+                    <button type="button" onclick="generateRegisterData()" class="w-full bg-red-900 hover:bg-red-800 text-white font-bold py-4 border border-red-700 transition-all uppercase tracking-widest flex items-center justify-center gap-2 text-sm">
+                        <i class="fas fa-paper-plane"></i> 提交档案至稽查司
+                    </button>
+                    <p class="text-center text-[10px] text-gray-600 mt-4 tracking-wider">
+                        *提交即代表接受《繁笼律》所有条款，包括连坐制度与隐私让渡。<br>
+                        数据上传至：内部监控系统
+                    </p>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <!-- Mobile Bottom Navigation (Fixed) -->
+    <nav class="md:hidden fixed bottom-0 left-0 w-full bg-black/95 backdrop-blur-md border-t border-white/10 flex justify-around items-center h-16 z-50 pb-safe">
+        <button onclick="switchTab('home')" class="bottom-nav-item active flex flex-col items-center justify-center w-full h-full text-gray-600">
+            <i class="fas fa-home text-lg mb-1 transition-colors"></i>
+            <span class="text-[0.5rem] tracking-widest font-roman">首页</span>
+        </button>
+        <button onclick="switchTab('world')" class="bottom-nav-item flex flex-col items-center justify-center w-full h-full text-gray-600">
+            <i class="fas fa-globe text-lg mb-1 transition-colors"></i>
+            <span class="text-[0.5rem] tracking-widest font-roman">世界观</span>
+        </button>
+        <button onclick="switchTab('politics')" class="bottom-nav-item flex flex-col items-center justify-center w-full h-full text-gray-600">
+            <i class="fas fa-landmark text-lg mb-1 transition-colors"></i>
+            <span class="text-[0.5rem] tracking-widest font-roman">政体</span>
+        </button>
+        <button onclick="switchTab('map')" class="bottom-nav-item flex flex-col items-center justify-center w-full h-full text-gray-600">
+            <i class="fas fa-map text-lg mb-1 transition-colors"></i>
+            <span class="text-[0.5rem] tracking-widest font-roman">地图</span>
+        </button>
+        <button onclick="switchTab('families')" class="bottom-nav-item flex flex-col items-center justify-center w-full h-full text-gray-600">
+            <i class="fas fa-users text-lg mb-1 transition-colors"></i>
+            <span class="text-[0.5rem] tracking-widest font-roman">世家</span>
+        </button>
+        <button onclick="switchTab('apply')" class="bottom-nav-item flex flex-col items-center justify-center w-full h-full text-gray-600">
+            <i class="fas fa-fingerprint text-lg mb-1 transition-colors"></i>
+            <span class="text-[0.5rem] tracking-widest font-roman">登记</span>
+        </button>
+    </nav>
+
+    <!-- Family Detail Modal -->
+    <div id="family-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center px-4 modal-backdrop">
+        <div class="bg-black border border-gray-700 w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-sm relative shadow-2xl animate-fadeIn">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white z-10"><i class="fas fa-times text-xl"></i></button>
+            <div id="modal-content" class="p-8">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Citizenship Detail Modal (Same structure, reused) -->
+    <div id="citizen-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center px-4 modal-backdrop">
+        <div class="bg-black border border-gray-700 w-full max-w-lg overflow-y-auto rounded-sm relative shadow-2xl animate-fadeIn">
+            <button onclick="closeCitizenModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white z-10"><i class="fas fa-times text-xl"></i></button>
+            <div id="citizen-content" class="p-8">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Result Modal (New) -->
+    <div id="register-modal" class="fixed inset-0 z-[70] hidden flex items-center justify-center px-4 modal-backdrop">
+        <div class="bg-[#111] border border-gray-600 w-full max-w-lg rounded-sm relative shadow-2xl animate-fadeIn p-6">
+            <h3 class="text-xl text-white font-serif mb-4 border-b border-gray-700 pb-2">档案生成确认</h3>
+            <textarea id="register-result" class="w-full h-64 bg-black border border-gray-800 text-gray-300 p-3 text-xs font-mono mb-4 resize-none focus:outline-none"></textarea>
+            <div class="flex gap-4">
+                <button onclick="copyRegisterData()" class="flex-1 bg-yu-gold text-black font-bold py-2 rounded hover:bg-yellow-600 transition-colors">复制内容</button>
+                <button onclick="document.getElementById('register-modal').classList.add('hidden')" class="flex-1 bg-gray-800 text-white font-bold py-2 rounded hover:bg-gray-700 transition-colors">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data ---
+        const familyData = {
+            'yu': {
+                name: "虞家",
+                title: "统治者",
+                color: "text-yu-gold",
+                desc: "国家的绝对统治者。地位类比古代皇室。控制着【信用点】发行与结算、全球能源网络、以及所有人的身份数据。",
+                monopoly: "金融、能源、数据",
+                roles: ["家主 (1/1)", "私奴 (1/1)", "侍官长 (NPC)"]
+            },
+            'xi': {
+                name: "奚家",
+                title: "罪族",
+                color: "text-red-700",
+                desc: "昔日功勋世家，曾垄断法律与教育。因犯“谋逆”大罪，全族连坐降为罪奴。除少主外，家主为畜奴，旁系为罪奴。",
+                monopoly: "已剥夺 (原为法律、教育)",
+                roles: ["少主 (1/1)", "家主 (畜奴)", "旁系 (罪奴)", "旁系侍奴 (公奴)"]
+            },
+            'duwei': {
+                name: "都尉家",
+                title: "权贵 - 军门",
+                color: "text-yu-purple",
+                desc: "虞家最信赖的“刀柄”。世代掌军，极少参与文官斗争，只专注武力。家主通常担任【督军】。",
+                monopoly: "军工、安保、尖端武器、军用科技",
+                roles: ["家主 (x/1)", "旁系子弟 (4)", "私奴 (4)", "旁系侍奴 (12)"]
+            },
+            'que': {
+                name: "阙家",
+                title: "权贵 - 工造",
+                color: "text-yu-purple",
+                desc: "实务派技术官僚。精于计算，讲求效率。维系着帝国庞大的疆域运转与基础设施。",
+                monopoly: "交通、物流、大型工程、公共设施",
+                roles: ["家主 (1)", "少主 (1)", "直系子弟 (2)", "旁系子弟 (4)"]
+            },
+            'bo': {
+                name: "伯家",
+                title: "权贵 - 行政",
+                color: "text-yu-purple",
+                desc: "历史最悠久的世家之一，行事低调保守。社会秩序的基石，主导户籍管理与思想教育。",
+                monopoly: "户籍管理、教育体系、教科书编纂",
+                roles: ["家主 (1)", "少主 (1)", "直系子弟 (2)", "旁系子弟 (4)"]
+            },
+            'thin': {
+                name: "薄家",
+                title: "贵族 - 生物",
+                color: "text-white",
+                desc: "专攻生命科学。负责基因优化、高端医疗与奢侈品。多在民政司（教理庭）任职。",
+                monopoly: "生物科技、医疗、奢侈品",
+                roles: ["家主 (1)", "直系子弟 (2)", "旁系子弟 (1)"]
+            },
+            'duan': {
+                name: "段家",
+                title: "贵族 - 律法",
+                color: "text-white",
+                desc: "法律界的权威，接手了部分奚家的遗产。同时也运营着拍卖行与私人安保法务。",
+                monopoly: "法律服务、拍卖行、私人安保",
+                roles: ["家主 (1)", "直系子弟 (2)", "旁系子弟 (1)"]
+            },
+            'si': {
+                name: "司家",
+                title: "贵族 - 文书",
+                color: "text-white",
+                desc: "官僚体系的“血肉”。精通行政事务，为各大家族提供专业的“执事”与“管家”培训。",
+                monopoly: "文书处理、档案管理、管家培训",
+                roles: ["家主 (1)", "直系子弟 (2)", "旁系子弟 (1)"]
+            },
+            'ming': {
+                name: "明家",
+                title: "贵族 - 传媒",
+                color: "text-white",
+                desc: "喉舌与粉饰者。负责为虞宫的统治营造积极舆论，掌控新闻媒体与文化娱乐。",
+                monopoly: "影视、音乐、新闻媒体、舆论引导",
+                roles: ["家主 (1)", "直系子弟 (2)", "旁系子弟 (1)"]
+            }
+        };
+
+        const citizenData = {
+            'citizen': {
+                title: "公民籍",
+                chip: "绿色识别码",
+                color: "text-green-500",
+                desc: "帝国的基石，拥有完整的法律人格与财产权利。",
+                rights: [
+                    "拥有私人财产所有权，受法律保护。",
+                    "自由迁徙权（除禁区外）。",
+                    "自由婚配权。",
+                    "拥有接受高等教育与担任公职的资格（需考核）。"
+                ],
+                duties: [
+                    "依法纳税。",
+                    "服从高主位阶级的领导。",
+                    "不可冒犯贵族尊严。"
+                ]
+            },
+            'slave': {
+                title: "奴籍",
+                chip: "蓝色识别码",
+                color: "text-blue-500",
+                desc: "从属资产，无独立法律人格，依附于主人或机构。",
+                rights: [
+                    "无私人财产，一切归主人所有。",
+                    "行动受限，需主人授权方可离开指定区域。",
+                    "无婚配权，繁衍需经批准。",
+                    "生命权归主人，但处死需向训诫司报备（防止资产浪费）。"
+                ],
+                duties: [
+                    "绝对服从主人的命令。",
+                    "每日需完成指定劳动配额。"
+                ]
+            },
+            'sinner': {
+                title: "罪奴籍",
+                chip: "红色警报",
+                color: "text-red-500",
+                desc: "戴罪之身，被剥夺一切权利，仅作为消耗品存在。",
+                rights: [
+                    "无任何权利。",
+                    "生命不受法律保护，主人可随意处死且无需报备。",
+                    "禁止繁衍（或繁衍后代自动为畜奴）。",
+                    "全天候位置监控，一旦越界即刻处决。"
+                ],
+                duties: [
+                    "从事高危、重体力劳动。",
+                    "作为活体实验样本或角斗消耗品。"
+                ]
+            }
+        };
+
+        function switchTab(tabId) {
+            const tabs = ['home', 'world', 'politics', 'map', 'families', 'apply'];
+            // Hide all tabs
+            tabs.forEach(id => {
+                const el = document.getElementById('tab-' + id);
+                if(el) el.classList.add('hidden');
+            });
+            // Show selected tab
+            const selected = document.getElementById('tab-' + tabId);
+            if(selected) selected.classList.remove('hidden');
+
+            // Update Desktop Nav
+            const desktopBtns = document.querySelectorAll('#desktop-nav .tab-btn');
+            desktopBtns.forEach(btn => {
+                if(btn.getAttribute('onclick') === `switchTab('${tabId}')`) {
+                    btn.classList.add('active', 'text-white');
+                } else {
+                    btn.classList.remove('active', 'text-white');
+                }
+            });
+            
+            // Update Mobile Nav
+            const mobileBtns = document.querySelectorAll('.bottom-nav-item');
+            mobileBtns.forEach(btn => {
+                if(btn.getAttribute('onclick') === `switchTab('${tabId}')`) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            window.scrollTo({top:0, behavior: 'smooth'});
+        }
+
+        function showFamilyDetails(id) {
+            const data = familyData[id];
+            const modal = document.getElementById('family-modal');
+            const content = document.getElementById('modal-content');
+            
+            let rolesHtml = data.roles.map(r => `<span class="inline-block bg-white/10 text-gray-300 px-3 py-1 text-xs rounded border border-white/5 mr-2 mb-2 tracking-wide">${r}</span>`).join('');
+
+            content.innerHTML = `
+                <div class="text-center mb-6">
+                    <span class="text-xs font-bold border border-gray-600 px-2 py-1 rounded text-gray-400 mb-4 inline-block tracking-widest font-roman">${data.title}</span>
+                    <h3 class="text-3xl font-serif ${data.color} mb-4">${data.name}</h3>
+                    <div class="h-px w-16 bg-gray-700 mx-auto"></div>
+                </div>
+                <div class="space-y-6 text-sm text-gray-400">
+                    <div>
+                        <h4 class="text-white font-bold mb-2 font-serif">家族简介</h4>
+                        <p class="leading-relaxed font-sans">${data.desc}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold mb-2 font-serif">垄断领域</h4>
+                        <p class="text-gray-300 font-sans">${data.monopoly}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold mb-2 font-serif">开放职位</h4>
+                        <div class="flex flex-wrap">${rolesHtml}</div>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+        }
+
+        function showCitizenshipDetails(type) {
+            const data = citizenData[type];
+            const modal = document.getElementById('citizen-modal');
+            const content = document.getElementById('citizen-content');
+
+            if (!data) return;
+
+            let rightsHtml = data.rights.map(r => `<li class="mb-1">${r}</li>`).join('');
+            let dutiesHtml = data.duties.map(d => `<li class="mb-1">${d}</li>`).join('');
+
+            content.innerHTML = `
+                <div class="text-center mb-6">
+                    <div class="inline-block px-3 py-1 border border-gray-600 rounded text-xs font-roman mb-3 tracking-widest text-gray-400">${data.chip}</div>
+                    <h3 class="text-3xl font-serif ${data.color} mb-2">${data.title}</h3>
+                    <p class="text-xs text-gray-500">${data.desc}</p>
+                </div>
+                <div class="space-y-6 text-sm text-gray-300">
+                    <div class="bg-white/5 p-4 rounded border-l-2 border-gray-600">
+                        <h4 class="text-white font-bold mb-2 font-serif">权利与权限</h4>
+                        <ul class="list-disc list-inside text-xs text-gray-400 space-y-1">
+                            ${rightsHtml}
+                        </ul>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded border-l-2 border-red-900/50">
+                        <h4 class="text-white font-bold mb-2 font-serif">义务与限制</h4>
+                        <ul class="list-disc list-inside text-xs text-gray-400 space-y-1">
+                            ${dutiesHtml}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('family-modal').classList.add('hidden');
+        }
+
+        function closeCitizenModal() {
+            document.getElementById('citizen-modal').classList.add('hidden');
+        }
+
+        function showMapDetail(regionId) {
+            const element = document.getElementById('detail-' + regionId);
+            if(element) {
+                element.classList.add('border-white', 'bg-white/10');
+                setTimeout(() => {
+                    element.classList.remove('border-white', 'bg-white/10');
+                }, 800);
+                
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function generateRegisterData() {
+            const form = document.querySelector('#register-form');
+            const data = new FormData(form);
+            const modal = document.getElementById('register-modal');
+            const resultArea = document.getElementById('register-result');
+
+            // Default Placeholders
+            const placeholders = {
+                'name': '',
+                'age': '（最低16岁）',
+                'attribute': '（dom/swi/sub、1/0；奴皮不允dom/S，奴1会被玩后面，但不进入，主皮不允许sub/M）',
+                'family': '（家族内身份，如X家少爷/旁系）',
+                'position': '（奴皮选公奴，主皮有官职的写官职名称，无官职可自拟任意职业）',
+                'height': '',
+                'personality': '（不写为人处世，不写明面如何其实如何。字数不低于20）',
+                'appearance': '（写清楚长什么样，不强制写四肢。字数不低于30）',
+                'background': '',
+                'likes': '',
+                'taboos': '',
+                'class': '（公民籍/奴籍/罪奴籍）',
+                'salary': '（根据薪资表自行填写）',
+                'affiliation': '（奴皮填训诫司，主皮不填）',
+                'notes': ''
+            };
+
+            const outputOrder = [
+                { key: 'name', label: '姓名' },
+                { key: 'age', label: '年龄' },
+                { key: 'attribute', label: '属性' },
+                { key: 'family', label: '家世' },
+                { key: 'position', label: '职位' },
+                { key: 'height', label: '身高' },
+                { key: 'personality', label: '性格' },
+                { key: 'appearance', label: '外貌' },
+                { key: 'background', label: '背景' },
+                { key: 'likes', label: '喜恶' },
+                { key: 'taboos', label: '禁忌' },
+                { key: 'class', label: '户籍' },
+                { key: 'salary', label: '薪资' },
+                { key: 'affiliation', label: '隶属' },
+                { key: 'notes', label: '备注' }
+            ];
+
+            let content = "【户籍登记表】\n";
+            outputOrder.forEach(item => {
+                const userValue = data.get(item.key);
+                // If userValue exists and is not empty, use it. Otherwise use placeholder.
+                const valueToShow = (userValue && userValue.trim() !== "") ? userValue : placeholders[item.key];
+                content += `${item.label}=${valueToShow}\n`;
+            });
+
+            resultArea.value = content;
+            modal.classList.remove('hidden');
+        }
+
+        function copyRegisterData() {
+            const textarea = document.getElementById('register-result');
+            textarea.select();
+            document.execCommand('copy');
+            alert("已复制到剪贴板");
+        }
+
+        // Close modal on click outside
+        window.addEventListener('click', (e) => {
+            if(e.target === document.getElementById('family-modal')) {
+                closeModal();
+            }
+            if(e.target === document.getElementById('citizen-modal')) {
+                closeCitizenModal();
+            }
+            if(e.target === document.getElementById('register-modal')) {
+                document.getElementById('register-modal').classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
