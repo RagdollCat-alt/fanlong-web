@@ -53,7 +53,13 @@ async function handleLogin() {
             renderProfileData(data);
             switchTab('profile');
 
-            alert(`终端接入成功。欢迎回来，${data.name}。`);
+            showCyberPopup(
+    "ACCESS GRANTED", 
+    `终端身份校验通过。<br>欢迎回来，${data.name}。`,
+    () => {
+        switchTab('profile'); // 点击弹窗确认后再切换到档案页
+    }
+);
         } else {
             // 如果解析出的 data 里面没有有效信息，手动抛出错误进入 catch
             throw new Error("EmptyUserData");
@@ -63,17 +69,22 @@ async function handleLogin() {
         currentUser = null;
         updateLoginUI(false);
 
-        // 自动展开登记表
-        const registerSection = document.getElementById('register-section');
-        if (registerSection) registerSection.classList.remove('hidden');
+        // 提示文案弹窗化
+        showCyberPopup(
+            "IDENTIFICATION FAILED", 
+            "未查获该 ID 户籍记录。<br>请确保芯片标识码输入正确，或在下方完成新户籍录入登记。",
+            () => {
+                // 弹窗关闭后的回调：自动展开登记表并滚动
+                const registerSection = document.getElementById('register-section');
+                if (registerSection) registerSection.classList.remove('hidden');
 
-        // 💡 确保页面平滑滚动到登记处
-        setTimeout(() => {
-            document.getElementById('register-section').scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-
-        // 提示文案
-        alert("未查获该 ID 户籍记录。请确保 QQ 号输入正确，或在下方完成新户籍录入。");
+                setTimeout(() => {
+                    document.getElementById('register-section').scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            },
+            'error', // 指定为错误类型
+            '前往登记' // 按钮文字
+        );
 
     } finally {
         // 💡 还原按钮文字
@@ -338,3 +349,30 @@ window.addEventListener('click', (e) => {
     if (e.target.id === 'citizen-modal') closeCitizenModal();
     if (e.target.id === 'register-modal') document.getElementById('register-modal').classList.add('hidden');
 });
+
+function showCyberPopup(title, message, callback, type = 'success', btnText = '确认接入') {
+    const overlay = document.createElement('div');
+    overlay.className = 'cyber-modal-overlay';
+    
+    // 如果是 error 类型，给 content 加上 error class
+    const contentClass = type === 'error' ? 'cyber-modal-content error' : 'cyber-modal-content';
+    
+    overlay.innerHTML = `
+        <div class="${contentClass}">
+            <div class="cyber-modal-title">${title}</div>
+            <div class="cyber-modal-body">${message}</div>
+            <button class="cyber-modal-btn">${btnText}</button>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    setTimeout(() => overlay.classList.add('active'), 10);
+
+    overlay.querySelector('.cyber-modal-btn').onclick = () => {
+        overlay.classList.remove('active');
+        setTimeout(() => {
+            overlay.remove();
+            if (callback) callback();
+        }, 300);
+    };
+}
