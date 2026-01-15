@@ -1,5 +1,5 @@
 /* js/core.js - 终端接入逻辑终极版 */
-const API_BASE = "http://116.205.101.141:8443/query?qq=";
+const API_BASE = "http://rpg0707.com/query?qq=";
 let currentUser = null;
 
 // 属性配置：特别处理后端键名中存在的空格
