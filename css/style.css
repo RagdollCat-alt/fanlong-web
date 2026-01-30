@@ -381,3 +381,69 @@ input#login-qq:focus {
 .cyber-modal-overlay.active { opacity: 1; }
 .cyber-modal-overlay.active .cyber-modal-content { transform: scale(1); }
 
+/* 弹窗核心容器：建立 Flex 纵向布局 */
+#citizen-content {
+    max-height: 85vh; 
+    display: flex !important; /* 强制启用 Flex */
+    flex-direction: column; 
+    overflow: hidden !important; /* 容器本身绝对不滚动 */
+    padding: 1.5rem; /* 保持内边距一致 */
+}
+
+/* 固定区域：包含标题和描述文案 */
+.modal-fixed-header {
+    flex-shrink: 0; /* 禁止收缩，确保文字不被挤压 */
+    text-align: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
+}
+
+/* 滚动区域：包含获取方式等板块 */
+.modal-scroll-area {
+    flex-grow: 1; /* 占据剩余所有空间 */
+    overflow-y: auto; /* 仅此处允许滚动 */
+    padding-right: 10px; /* 为滚动条留出位置 */
+    -webkit-overflow-scrolling: touch; /* 优化移动端滚动 */
+}
+
+/* 滚动条美化 */
+.modal-scroll-area::-webkit-scrollbar {
+    width: 2px;
+}
+.modal-scroll-area::-webkit-scrollbar-thumb {
+    background: var(--yu-gold);
+    border-radius: 4px;
+}
+
+/* 字体定义 */
+.font-cuyasong { font-family: 'Noto Serif SC', serif; font-weight: 900; }
+.font-roman { font-family: 'Cinzel', serif; }
+
+/* 金色发光效果 */
+.gold-glow {
+    text-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
+}
+
+/* 卡片装饰 */
+.card-decoration {
+    background: rgba(10, 10, 10, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+}
+
+/* 移动端安全区域适配 */
+.pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 统一可点击官职的下划线样式 */
+.underline {
+    text-underline-offset: 4px; /* 下划线距离文字的距离 */
+    text-decoration-thickness: 1px; /* 下划线粗细 */
+}
+
+/* 鼠标悬停时加深下划线颜色 */
+.cursor-pointer:hover {
+    text-decoration-color: var(--yu-gold) !important;
+}
