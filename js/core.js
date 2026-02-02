@@ -309,36 +309,60 @@ function showCyberPopup(title, message, callback, type = 'success', btnText = '�
             if (callback) callback(); 
         }, 300);
     };
-} // ✅ 补齐 showCyberPopup 闭合括号
+} 
 
-// 9. 登记表生成
+// 9. 登记表生成 (已更新)
 function generateRegisterData() {
     const form = document.querySelector('#register-form');
     const data = new FormData(form);
     const modal = document.getElementById('register-modal');
     const resultArea = document.getElementById('register-result');
     
+    // 更新：根据新模板修改了默认提示语
     const placeholders = {
-        'name': '', 'age': '（最低16岁）', 'attribute': '（dom/swi/sub、1/0）',
-        'family': '（家族内身份，如X家少爷/旁系）', 'position': '（职位名称）',
-        'height': '', 'personality': '（字数不低于20）', 'appearance': '（字数不低于30）',
-        'background': '', 'likes': '', 'taboos': '', 'class': '（公民籍/奴籍/罪奴籍）',
-        'salary': '（自行填写）', 'affiliation': '（仅奴皮填）', 'notes': ''
+        'name': '', 
+        'age': '（最低16岁）', 
+        'attribute': '（DOM/SWI/SUB、1/0；奴皮不允DOM/S，奴1会被玩后面，但不进入，主皮不允许SUB/M）',
+        'personality': '（不写为人处世，不写明面如何其实如何。字数不低于20）', 
+        'appearance': '（写清楚长什么样，不强制写四肢。字数不低于30）',
+        'height': '', 
+        'family': '（家族内身份/士绅/平民，如X家少爷/旁系）', 
+        'position': '（奴皮选公奴，主皮有官职的写:正x品+官职名称，无官职可自拟任意职业）',
+        'background': '', 
+        'likes': '', 
+        'taboos': '', 
+        'class': '（公民籍/奴籍/罪奴籍）',
+        'salary': '（根据薪资表自行填写）', 
+        'affiliation': '（奴皮填训诫司，主皮填家族名称）', 
+        'notes': ''
     };
     
+    // 更新：调整了输出顺序以匹配新模板
     const outputOrder = [
-        { key: 'name', label: '姓名' }, { key: 'age', label: '年龄' }, { key: 'attribute', label: '属性' },
-        { key: 'family', label: '家世' }, { key: 'position', label: '职位' }, { key: 'height', label: '身高' },
-        { key: 'personality', label: '性格' }, { key: 'appearance', label: '外貌' }, { key: 'background', label: '背景' },
-        { key: 'likes', label: '喜恶' }, { key: 'taboos', label: '禁忌' }, { key: 'class', label: '户籍' },
-        { key: 'salary', label: '薪资' }, { key: 'affiliation', label: '隶属' }, { key: 'notes', label: '备注' }
+        { key: 'name', label: '姓名' }, 
+        { key: 'age', label: '年龄' }, 
+        { key: 'attribute', label: '属性' },
+        { key: 'personality', label: '性格' }, 
+        { key: 'appearance', label: '外貌' }, 
+        { key: 'height', label: '身高' },
+        { key: 'family', label: '家世' }, 
+        { key: 'position', label: '职位' }, 
+        { key: 'background', label: '背景' },
+        { key: 'likes', label: '喜恶' }, 
+        { key: 'taboos', label: '禁忌' }, 
+        { key: 'class', label: '户籍' },
+        { key: 'salary', label: '薪资' }, 
+        { key: 'affiliation', label: '隶属' }, 
+        { key: 'notes', label: '备注' }
     ];
     
     let content = "【户籍登记表】\n";
     outputOrder.forEach(item => {
         const userValue = data.get(item.key);
+        // 逻辑：如果有用户输入则使用输入值，否则使用占位符
         const valueToShow = (userValue && userValue.trim() !== "") ? userValue : (placeholders[item.key] || "");
-        content += `${item.label}=${valueToShow}\n`;
+        // 格式：使用中文冒号
+        content += `${item.label}：${valueToShow}\n`;
     });
     
     resultArea.value = content;
@@ -394,4 +418,144 @@ function updateLoginUI(isOnline, name = "") {
 function logout() {
     currentUser = null;
     location.reload();
+}
+// ====================
+// 12. 薪资计算器逻辑
+// ====================
+
+// 切换弹窗显示/隐藏
+function toggleSalaryModal() {
+    const modal = document.getElementById('salary-modal');
+    modal.classList.toggle('hidden');
+    // 重置并初次计算
+    if (!modal.classList.contains('hidden')) {
+        updateCalcUI();
+        calculateSalary();
+    }
+}
+
+// 更新界面显示（主位/奴位切换时）
+function updateCalcUI() {
+    const type = document.querySelector('input[name="calc-type"]:checked').value;
+    const masterOpts = document.getElementById('master-options');
+    const slaveOpts = document.getElementById('slave-options');
+    const slaveType = document.getElementById('calc-slave-type').value;
+    const masterInput = document.getElementById('master-salary-input');
+    const yuOption = document.getElementById('yu-private-option');
+
+    if (type === 'master') {
+        masterOpts.classList.remove('hidden');
+        slaveOpts.classList.add('hidden');
+    } else {
+        masterOpts.classList.add('hidden');
+        slaveOpts.classList.remove('hidden');
+        
+        // 只有私奴和侍奴需要输入主人薪资
+        if (slaveType === 'private' || slaveType === 'attendant') {
+            masterInput.classList.remove('hidden');
+            // 只有私奴显示"是虞家私奴"选项
+            if(slaveType === 'private') {
+                yuOption.classList.remove('hidden');
+            } else {
+                yuOption.classList.add('hidden');
+            }
+        } else {
+            masterInput.classList.add('hidden');
+            yuOption.classList.add('hidden');
+        }
+    }
+}
+
+// 核心计算函数
+function calculateSalary() {
+    let baseSalary = 0;
+    const type = document.querySelector('input[name="calc-type"]:checked').value;
+    const rankBonus = parseInt(document.getElementById('calc-rank').value) || 0;
+
+    if (type === 'master') {
+        // --- 主位/平民计算逻辑 ---
+        const level = document.getElementById('calc-master-level').value;
+        const lineage = document.getElementById('calc-lineage').value;
+        
+        // 数据表
+        const salaryMap = {
+            'qingui': { direct: 25, collateral: 20 },
+            'quangui': { direct: 20, collateral: 15 },
+            'noble': { direct: 15, collateral: 12 },
+            'newnoble': { direct: 12, collateral: 10 },
+            'gentry': { direct: 8, collateral: 6 },
+            'commoner': { direct: 5, collateral: 5 } // 平民无区别
+        };
+
+        baseSalary = salaryMap[level][lineage];
+
+    } else {
+        // --- 奴位计算逻辑 ---
+        const slaveType = document.getElementById('calc-slave-type').value;
+        const masterSalary = parseFloat(document.getElementById('calc-master-base').value) || 0;
+        const isYuSlave = document.getElementById('is-yu-slave').checked;
+
+        if (slaveType === 'private') {
+            if (isYuSlave) {
+                baseSalary = 18; // 虞家私奴固定
+            } else {
+                baseSalary = masterSalary - 5; // 主人-5
+            }
+        } else if (slaveType === 'attendant') {
+            // 主人-8，但最低不低于10
+            let calc = masterSalary - 8;
+            baseSalary = calc < 10 ? 10 : calc;
+        } else if (slaveType === 'contract') {
+            baseSalary = 8;
+        } else if (slaveType === 'public') {
+            baseSalary = 5;
+        } else if (slaveType === 'sinner') {
+            baseSalary = 2;
+        } else if (slaveType === 'animal') {
+            baseSalary = 0;
+        }
+        
+        // 防止负数（虽然逻辑上侍奴已有保底，但私奴可能出现负数）
+        if (baseSalary < 0) baseSalary = 0;
+    }
+
+    // 总计 = 基础 + 职位
+    const total = baseSalary + rankBonus;
+    
+    // 渲染动画效果
+    const resultEl = document.getElementById('calc-result');
+    resultEl.innerText = total;
+}
+
+// 将计算结果填入登记表
+function applySalaryToForm() {
+    // 1. 获取计算结果
+    const resultText = document.getElementById('calc-result').innerText;
+    
+    // 2. 找到登记表中的薪资输入框
+    const salaryInput = document.querySelector('input[name="salary"]');
+    
+    // 3. 赋值
+    if (salaryInput) {
+        salaryInput.value = resultText;
+    }
+    
+    // 4. 关闭弹窗
+    toggleSalaryModal();
+    
+    // 5. (可选) 给个小提示或自动聚焦，提升体验
+    salaryInput.focus();
+    // 这里的边框闪烁效果是利用 Tailwind 的 ring 样式，
+    // 如果想要视觉反馈，可以临时加一个 class，这里简单聚焦即可。
+}
+
+// 实时更新字数统计
+function updateCharCount(input, outputId) {
+    const len = input.value.length;
+    const output = document.getElementById(outputId);
+    if (output) {
+        output.innerText = len + " 字";
+        // 可选：如果字数达标（比如30字），可以让颜色变绿，这里先保持简单的金色
+        // if (len >= 30) output.classList.add('text-green-500');
+    }
 }

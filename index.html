@@ -73,7 +73,7 @@
                     <i class="fas fa-microchip text-2xl text-gray-600 group-hover:text-yellow-600 mb-3 transition-colors"></i>
                     <h3 class="text-white text-lg font-cuyasong mb-1">严格等级</h3>
                     <div class="text-[10px] text-gray-600 font-roman mb-2 tracking-widest">STRICT HIERARCHY</div>
-                    <p class="text-xs text-gray-500">六层主位，六层奴位。不可逾越的鸿沟。</p>
+                    <p class="text-xs text-gray-500">七层主位，六层奴位。不可逾越的鸿沟。</p>
                 </div>
                 <div class="p-6 md:p-8 card-decoration hover:bg-white/5 transition-all duration-500 group cursor-pointer" onclick="switchTab('families')">
                     <i class="fas fa-chess-king text-2xl text-gray-600 group-hover:text-red-900 mb-3 transition-colors"></i>
@@ -100,13 +100,14 @@
                 </div>
                 <div class="grid md:grid-cols-2 gap-4 md:gap-8">
                     <div class="space-y-2">
-                        <h4 class="text-yu-gold text-xs tracking-widest mb-4 uppercase border-b border-yellow-600/20 pb-1 font-bold">主位阶级 (六层)</h4>
+                        <h4 class="text-yu-gold text-xs tracking-widest mb-4 uppercase border-b border-yellow-600/20 pb-1 font-bold">主位阶级 (七层)</h4>
                         <div class="bg-white/5 p-3 border border-yellow-600/20 text-yu-gold font-bold text-center text-sm">1. 统治者 (虞)</div>
                         <div class="bg-white/5 p-3 border-l border-white/10 text-yellow-200/80 text-center ml-4 text-sm">2. 亲贵 (虞家旁系)</div>
                         <div class="bg-white/5 p-2 border-l border-white/10 text-yu-purple text-center ml-8 text-sm">3. 权贵 (世家家主)</div>
                         <div class="bg-white/5 p-2 border-l border-white/10 text-white text-center ml-12 text-xs">4. 贵族</div>
                         <div class="bg-white/5 p-2 border-l border-white/10 text-white text-center ml-16 text-xs">5. 新贵</div>
                         <div class="bg-white/5 p-2 border-l border-white/10 text-white text-center ml-20 text-xs">6. 士绅</div>
+                        <div class="bg-white/5 p-2 border-l border-white/10 text-white text-center ml-24 text-xs">7. 平民</div>
                     </div>
                     <div class="space-y-2">
                         <h4 class="text-gray-500 text-xs tracking-widest mb-4 uppercase border-b border-gray-700 pb-1 font-bold">奴位阶级 (六层)</h4>
@@ -157,38 +158,43 @@
                     <span class="text-xs md:text-sm text-gray-600 pb-1 font-roman">Citizenship</span>
                 </div>
                 <div class="grid md:grid-cols-3 gap-4">
-                    <!-- Citizen -->
-                    <div onclick="showCitizenshipDetails('citizen')" class="chip-bg chip-green-bg p-5 rounded relative overflow-hidden group cursor-pointer border border-green-900/50 hover:border-green-600/80">
-                        <h3 class="text-green-500 font-bold text-sm mb-2 font-serif">公民籍</h3>
-                        <p class="text-xs text-gray-400 mb-4">身份芯片：<span class="text-green-400">绿色身份芯片</span></p>
-                        <ul class="text-xs text-gray-400 space-y-1 list-disc list-inside">
-                            <li>拥有个人姓名、肖像、18位公民身份号码</li>
-                            <li>享有理事厅下发的社会基础保障</li>
-                            <li>受《虞宫律》生命保护</li>
-                        </ul>
-                        <div class="absolute bottom-4 right-4 text-[10px] text-green-200 font-serif tracking-widest border border-green-500/50 bg-black/80 px-3 py-1 rounded-full z-20 shadow-lg">查看详情</div>
+                    <div onclick="showCitizenshipDetails('citizen')" class="chip-bg chip-green-bg p-5 rounded relative overflow-hidden group cursor-pointer border border-green-900/50 hover:border-green-600/80 flex flex-col h-full justify-between">
+                        <div>
+                            <h3 class="text-green-500 font-bold text-sm mb-2 font-serif">公民籍</h3>
+                            <p class="text-xs text-gray-400 mb-4">身份芯片：<span class="text-green-400">绿色身份芯片</span></p>
+                            <ul class="text-xs text-gray-400 space-y-1 list-disc list-inside">
+                                <li>拥有个人姓名、肖像、18位公民身份号码</li>
+                                <li>享有理事厅下发的社会基础保障</li>
+                                <li>受《虞宫律》生命保护</li>
+                            </ul>
+                        </div>
+                        <div class="self-end mt-4 text-[10px] text-green-200 font-serif tracking-widest border border-green-500/50 bg-black/80 px-3 py-1 rounded-full z-20 shadow-lg">查看详情</div>
                     </div>
-                    <!-- Slave -->
-                    <div onclick="showCitizenshipDetails('slave')" class="chip-bg chip-blue-bg p-5 rounded relative overflow-hidden group cursor-pointer border border-blue-900/50 hover:border-blue-600/80">
-                        <h3 class="text-blue-500 font-bold text-sm mb-2 font-serif">奴籍</h3>
-                        <p class="text-xs text-gray-400 mb-4">身份芯片：<span class="text-blue-400">蓝色身份芯片</span></p>
-                        <ul class="text-xs text-gray-400 space-y-1 list-disc list-inside">
-                            <li>受其主人管辖，档案关联其主人信息</li>
-                            <li>行动受限，享有由主人或训诫司提供的基础工资</li>
-                            <li>生命权归主人，处死需报备</li>
-                        </ul>
-                        <div class="absolute bottom-4 right-4 text-[10px] text-blue-200 font-serif tracking-widest border border-blue-500/50 bg-black/80 px-3 py-1 rounded-full z-20 shadow-lg">查看详情</div>
+
+                    <div onclick="showCitizenshipDetails('slave')" class="chip-bg chip-blue-bg p-5 rounded relative overflow-hidden group cursor-pointer border border-blue-900/50 hover:border-blue-600/80 flex flex-col h-full justify-between">
+                        <div>
+                            <h3 class="text-blue-500 font-bold text-sm mb-2 font-serif">奴籍</h3>
+                            <p class="text-xs text-gray-400 mb-4">身份芯片：<span class="text-blue-400">蓝色身份芯片</span></p>
+                            <ul class="text-xs text-gray-400 space-y-1 list-disc list-inside">
+                                <li>受其主人管辖，档案关联其主人信息</li>
+                                <li>行动受限，享有由主人或训诫司提供的基础工资</li>
+                                <li>生命权归主人，处死需报备</li>
+                            </ul>
+                        </div>
+                        <div class="self-end mt-4 text-[10px] text-blue-200 font-serif tracking-widest border border-blue-500/50 bg-black/80 px-3 py-1 rounded-full z-20 shadow-lg">查看详情</div>
                     </div>
-                    <!-- Sinner -->
-                    <div onclick="showCitizenshipDetails('sinner')" class="chip-bg chip-red-bg p-5 rounded relative overflow-hidden group cursor-pointer border border-red-900/50 hover:border-red-600/80">
-                        <h3 class="text-red-500 font-bold text-sm mb-2 font-serif">罪奴籍</h3>
-                        <p class="text-xs text-gray-400 mb-4">身份芯片：<span class="text-red-600 animate-pulse">红色身份芯片（伴有警报）</span></p>
-                        <ul class="text-xs text-gray-400 space-y-1 list-disc list-inside">
-                            <li>身上烙印家族罪印或惩罚性纹身</li>
-                            <li>无任何权利，任何公民/奴籍均享有使用权</li>
-                            <li>不受任何法律保护，主位处死罪奴，均无需承担责任。</li>
-                        </ul>
-                        <div class="absolute bottom-4 right-4 text-[10px] text-red-200 font-serif tracking-widest border border-red-500/50 bg-black/80 px-3 py-1 rounded-full z-20 shadow-lg">查看详情</div>
+
+                    <div onclick="showCitizenshipDetails('sinner')" class="chip-bg chip-red-bg p-5 rounded relative overflow-hidden group cursor-pointer border border-red-900/50 hover:border-red-600/80 flex flex-col h-full justify-between">
+                        <div>
+                            <h3 class="text-red-500 font-bold text-sm mb-2 font-serif">罪奴籍</h3>
+                            <p class="text-xs text-gray-400 mb-4">身份芯片：<span class="text-red-600 animate-pulse">红色身份芯片（伴有警报）</span></p>
+                            <ul class="text-xs text-gray-400 space-y-1 list-disc list-inside">
+                                <li>身上烙印家族罪印或惩罚性纹身</li>
+                                <li>无任何权利，任何公民/奴籍均享有使用权</li>
+                                <li>不受任何法律保护，主位处死罪奴，均无需承担责任。</li>
+                            </ul>
+                        </div>
+                        <div class="self-end mt-4 text-[10px] text-red-200 font-serif tracking-widest border border-red-500/50 bg-black/80 px-3 py-1 rounded-full z-20 shadow-lg">查看详情</div>
                     </div>
                 </div>
             </section>
@@ -832,119 +838,138 @@
     </div>
 
         <div id="register-section">
-            <h2 class="text-2xl md:text-3xl text-white font-cuyasong mb-8 flex items-center justify-center">
-                <i class="fas fa-fingerprint mr-4 text-red-900"></i> 户籍登记
-            </h2>
-            <form id="register-form" class="bg-[#0a0a0a] border border-gray-800 p-6 md:p-8 space-y-6 shadow-2xl relative">
-                <!-- Top Decoration -->
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-900 to-transparent opacity-50"></div>
+    <h2 class="text-2xl md:text-3xl text-white font-cuyasong mb-8 flex items-center justify-center">
+        <i class="fas fa-fingerprint mr-4 text-red-900"></i> 户籍登记
+    </h2>
+    <form id="register-form" class="bg-[#0a0a0a] border border-gray-800 p-6 md:p-8 space-y-6 shadow-2xl relative">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-900 to-transparent opacity-50"></div>
 
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">姓名</label>
-                        <input type="text" name="name" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">年龄</label>
-                        <input type="number" name="age" min="16" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">身高</label>
-                        <input type="text" name="height" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                    </div>
-                </div>
-
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">属性</label>
-                        <select name="attribute" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                            <option value="">请选择</option>
-                            <option value="主位 Dom/1"> Dom1</option>
-                            <option value="主位 Dom/0.5">Dom0.5</option>
-                            <option value="主位 Dom/0">Dom0</option>
-                            <option value="奴位 Sub/1"> Sub1</option>
-                            <option value="奴位 Sub/0.5">Sub0.5</option>
-                            <option value="奴位 Sub/0">Sub0</option>
-                            <option value="双向 Swi/1"> Swi1</option>
-                            <option value="双向 Swi/0.5">Swi0.5</option>
-                            <option value="双向 Swi/0">Swi0</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">户籍</label>
-                        <select name="class" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                            <option value="">请选择</option>
-                            <option value="公民籍">公民籍</option>
-                            <option value="奴籍">奴籍</option>
-                            <option value="罪奴籍">罪奴籍</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">职位</label>
-                        <input type="text" name="position" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                    </div>
-                </div>
-                
-                <!-- New Fields Logic: 家世 & 背景 Split -->
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">家世 (家族身份)</label>
-                        <input type="text" name="family" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">隶属 (仅奴籍填)</label>
-                        <input type="text" name="affiliation" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">背景</label>
-                    <textarea name="background" class="w-full bg-black border border-gray-700 text-white p-3 h-24 focus:border-red-900 outline-none transition-colors text-sm"></textarea>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">性格 (20字+)</label>
-                        <textarea name="personality" class="w-full bg-black border border-gray-700 text-white p-3 h-32 focus:border-red-900 outline-none transition-colors text-sm"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">外貌 (30字+)</label>
-                        <textarea name="appearance" class="w-full bg-black border border-gray-700 text-white p-3 h-32 focus:border-red-900 outline-none transition-colors text-sm"></textarea>
-                    </div>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">喜恶</label>
-                        <input type="text" name="likes" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">禁忌</label>
-                        <input type="text" name="taboos" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">薪资</label>
-                    <input type="text" name="salary" placeholder="参考薪资表填写" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                </div>
-                
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">备注</label>
-                    <input type="text" name="notes" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
-                </div>
-
-                <div class="pt-6 border-t border-gray-800">
-                    <button type="button" onclick="generateRegisterData()" class="w-full bg-red-900 hover:bg-red-800 text-white font-bold py-4 border border-red-700 transition-all uppercase tracking-widest flex items-center justify-center gap-2 text-sm">
-                        <i class="fas fa-paper-plane"></i> 提交档案至稽查司
-                    </button>
-                    <p class="text-center text-[10px] text-gray-600 mt-4 tracking-wider">
-                        *提交即代表接受《繁笼律》所有条款，包括连坐制度与隐私让渡。<br>
-                        数据上传至：内部监控系统
-                    </p>
-                </div>
-            </form>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">姓名</label>
+                <input type="text" name="name" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">年龄 (最低16岁)</label>
+                <input type="number" name="age" min="16" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+            </div>
         </div>
+
+        <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-2">属性（奴皮不允Dom/S，主皮不允许Sub/M）</label>
+            <select name="attribute" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                <option value="">请选择</option>
+                <option value="Dom1">Dom1</option>
+                <option value="Dom0.5">Dom0.5</option>
+                <option value="Dom0">Dom0</option>
+                <option value="Sub1">Sub1</option>
+                <option value="Sub0.5">Sub0.5</option>
+                <option value="Sub0">Sub0</option>
+                <option value="Swi1">Swi1</option>
+                <option value="Swi0.5">Swi0.5</option>
+                <option value="Swi0">Swi0</option>
+                <option value="S1">S1</option>
+                <option value="M0">M0</option>
+            </select>
+        </div>
+
+        <div>
+            <div class="flex justify-between items-end mb-2">
+                <label class="text-xs font-bold text-gray-500 uppercase">性格 (20字+)</label>
+                <span id="count-personality" class="text-[10px] text-yu-gold font-mono">0 字</span>
+            </div>
+            <textarea name="personality" oninput="updateCharCount(this, 'count-personality')" placeholder="不写为人处世，不写明面如何其实如何..." class="w-full bg-black border border-gray-700 text-white p-3 h-24 focus:border-red-900 outline-none transition-colors text-sm"></textarea>
+        </div>
+
+        <div>
+             <div class="flex justify-between items-end mb-2">
+                <label class="text-xs font-bold text-gray-500 uppercase">外貌 (30字+)</label>
+                <span id="count-appearance" class="text-[10px] text-yu-gold font-mono">0 字</span>
+            </div>
+            <textarea name="appearance" oninput="updateCharCount(this, 'count-appearance')" placeholder="写清楚长什么样，不强制写四肢..." class="w-full bg-black border border-gray-700 text-white p-3 h-24 focus:border-red-900 outline-none transition-colors text-sm"></textarea>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">身高（cm）</label>
+                <input type="text" name="height" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">家世 (家族内身份/士绅/平民)</label>
+                <input type="text" name="family" placeholder="如X家少爷/旁系" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-2">职位 (奴皮公奴/主皮正x品+官职/无官职自拟)</label>
+            <input type="text" name="position" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+        </div>
+
+        <div>
+            <div class="flex justify-between items-end mb-2">
+                <label class="text-xs font-bold text-gray-500 uppercase">背景</label>
+                <span id="count-background" class="text-[10px] text-yu-gold font-mono">0 字</span>
+            </div>
+            <textarea name="background" oninput="updateCharCount(this, 'count-background')" class="w-full bg-black border border-gray-700 text-white p-3 h-24 focus:border-red-900 outline-none transition-colors text-sm"></textarea>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">喜恶</label>
+                <input type="text" name="likes" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">禁忌</label>
+                <input type="text" name="taboos" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">户籍</label>
+                <select name="class" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm h-[46px]"> <option value="">请选择</option>
+                    <option value="公民籍">公民籍</option>
+                    <option value="奴籍">奴籍</option>
+                    <option value="罪奴籍">罪奴籍</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">
+                    薪资 <span class="text-yu-gold/50 text-[10px] font-normal ml-1">(点击右侧按钮计算)</span>
+                </label>
+                <div class="flex gap-2">
+                    <input type="text" name="salary" placeholder="填写数值" class="flex-1 bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+                    
+                    <button type="button" onclick="toggleSalaryModal()" class="px-4 border border-yu-gold/40 text-yu-gold bg-yu-gold/5 hover:bg-yu-gold/20 transition-all text-xs font-bold tracking-wider flex items-center gap-2 whitespace-nowrap">
+                        <i class="fas fa-calculator"></i> 计算
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">隶属 (奴皮填训诫司/主皮填家族)</label>
+                <input type="text" name="affiliation" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">备注</label>
+                <input type="text" name="notes" class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
+            </div>
+        </div>
+
+        <div class="pt-6 border-t border-gray-800">
+            <button type="button" onclick="generateRegisterData()" class="w-full bg-red-900 hover:bg-red-800 text-white font-bold py-4 border border-red-700 transition-all uppercase tracking-widest flex items-center justify-center gap-2 text-sm">
+                <i class="fas fa-paper-plane"></i> 提交档案至理户司
+            </button>
+            <p class="text-center text-[10px] text-gray-600 mt-4 tracking-wider">
+                *提交即代表接受《虞宫律》所有条款，包括连坐制度与隐私让渡。<br>
+                数据上传至：内部监控系统
+            </p>
+        </div>
+    </form>
+</div>
         </main>
 
         <nav class="md:hidden fixed bottom-0 left-0 w-full bg-black/95 backdrop-blur-md border-t border-white/10 flex justify-around items-center h-16 z-50 pb-safe">
@@ -994,11 +1019,124 @@
             <textarea id="register-result" class="w-full h-64 bg-black border border-gray-800 text-gray-300 p-3 text-xs font-mono mb-4 resize-none outline-none"></textarea>
             <div class="flex gap-4">
                 <button onclick="copyRegisterData()" class="flex-1 bg-yu-gold text-black font-bold py-2 rounded uppercase text-xs">复制内容</button>
-                <button onclick="document.getElementById('register-modal').classList.add('hidden')" class="flex-1 bg-gray-800 text-white py-2 rounded uppercase text-xs">关闭</button>
+                <button onclick="closeRegisterModal()" class="flex-1 bg-gray-800 text-white py-2 rounded uppercase text-xs">关闭</button>
             </div>
         </div>
     </div>
     
+    <div id="salary-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+    <div class="bg-[#0a0a0a] border border-yu-gold/30 w-full max-w-lg relative shadow-2xl shadow-yu-gold/10">
+        <div class="flex justify-between items-center p-4 border-b border-yu-gold/20 bg-yu-gold/5">
+            <h3 class="text-yu-gold font-cuyasong text-xl flex items-center gap-2">
+                <i class="fas fa-coins"></i> 薪资计算器
+            </h3>
+            <button onclick="toggleSalaryModal()" class="text-gray-500 hover:text-white transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="p-6 space-y-5 text-sm">
+            
+            <div>
+                <label class="block text-gray-500 text-xs uppercase tracking-wider mb-2">身份大类</label>
+                <div class="flex gap-4">
+                    <label class="flex-1 cursor-pointer">
+                        <input type="radio" name="calc-type" value="master" class="peer hidden" checked onchange="updateCalcUI()">
+                        <div class="border border-gray-700 bg-gray-900 text-gray-400 py-2 text-center peer-checked:border-[#C5A059] peer-checked:text-[#C5A059] peer-checked:bg-[#C5A059]/10 transition-all rounded">
+                            主位 / 平民
+                        </div>
+                    </label>
+                    <label class="flex-1 cursor-pointer">
+                        <input type="radio" name="calc-type" value="slave" class="peer hidden" onchange="updateCalcUI()">
+                        <div class="border border-gray-700 bg-gray-900 text-gray-400 py-2 text-center peer-checked:border-blue-500 peer-checked:text-blue-400 peer-checked:bg-blue-900/20 transition-all rounded">
+                            奴位
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div id="master-options" class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-500 text-xs mb-1">等级</label>
+                    <select id="calc-master-level" onchange="calculateSalary()" class="w-full bg-black border border-gray-700 text-white p-2 text-sm focus:border-yu-gold outline-none">
+                        <option value="qingui">亲贵 (虞家旁系)</option>
+                        <option value="quangui">权贵</option>
+                        <option value="noble">贵族</option>
+                        <option value="newnoble">新贵</option>
+                        <option value="gentry">士绅</option>
+                        <option value="commoner">平民</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-xs mb-1">系别</label>
+                    <select id="calc-lineage" onchange="calculateSalary()" class="w-full bg-black border border-gray-700 text-white p-2 text-sm focus:border-yu-gold outline-none">
+                        <option value="direct">直系</option>
+                        <option value="collateral">旁系</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="slave-options" class="hidden space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-500 text-xs mb-1">奴籍类型</label>
+                        <select id="calc-slave-type" onchange="updateCalcUI(); calculateSalary()" class="w-full bg-black border border-gray-700 text-white p-2 text-sm focus:border-blue-500 outline-none">
+                            <option value="private">私奴</option>
+                            <option value="attendant">侍奴</option>
+                            <option value="contract">契奴</option>
+                            <option value="public">公奴</option>
+                            <option value="sinner">罪奴</option>
+                            <option value="animal">畜奴</option>
+                        </select>
+                    </div>
+                    <div id="yu-private-option" class="flex items-center pt-5">
+                         <label class="flex items-center space-x-2 cursor-pointer text-gray-400 text-xs">
+                            <input type="checkbox" id="is-yu-slave" onchange="calculateSalary()" class="accent-yu-gold">
+                            <span>是虞家私奴 (固定18)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="master-salary-input" class="hidden">
+                    <label class="block text-blue-400 text-xs mb-1">主人薪资 (用于计算)</label>
+                    <input type="number" id="calc-master-base" placeholder="请输入主人薪资" oninput="calculateSalary()" class="w-full bg-black border border-blue-900/50 text-white p-2 text-sm focus:border-blue-500 outline-none">
+                    <p class="text-[10px] text-gray-600 mt-1">*私奴=主-5，侍奴=主-8 (最低10)</p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-4">
+                <label class="block text-gray-500 text-xs mb-2">职位 / 官职</label>
+                <select id="calc-rank" onchange="calculateSalary()" class="w-full bg-black border border-gray-700 text-white p-2 text-sm focus:border-yu-gold outline-none">
+                    <option value="0">无官职 / 散人 (0)</option>
+                    <option value="30">正一品 (丞辅/督军/侍官长) +30</option>
+                    <option value="28">副一品 (公卿/律官) +28</option>
+                    <option value="25">正二品 (执理事/室长) +25</option>
+                    <option value="23">副二品 (少理事/少室长) +23</option>
+                    <option value="20">正三品 (司长/骑士) +20</option>
+                    <option value="15">正四品 (庭执官/侍官/管家) +15</option>
+                    <option value="10">正五品 (属员/侍卫/从者/执事) +10</option>
+                    <option value="5">副五品 (外属/普通卫兵/常侍) +5</option>
+                    <option value="3">正六品 (地方官员/杂使) +3</option>
+                </select>
+            </div>
+
+            <div class="bg-gradient-to-r from-yu-gold/20 to-transparent p-4 border-l-4 border-yu-gold mt-4 flex justify-between items-center">
+                <div>
+                    <div class="text-yu-gold font-cuyasong tracking-widest text-xs mb-1">预估月薪</div>
+                    <div>
+                        <span id="calc-result" class="text-3xl font-bold text-white">0</span>
+                        <span class="text-xs text-yu-gold ml-1">虞元</span>
+                    </div>
+                </div>
+                
+                <button onclick="applySalaryToForm()" class="bg-yu-gold hover:bg-white text-black font-bold py-2 px-4 text-xs tracking-wider transition-colors shadow-[0_0_10px_rgba(197,160,89,0.3)]">
+                    <i class="fas fa-check mr-1"></i> 填入档案
+                </button>
+            </div>
+            
+        </div>
+    </div>
+</div>
 
     <div id="rank-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[9999] items-center justify-center p-4" style="display: none;" onclick="closeRankModal()">
     <div class="bg-[#0a0a0a] border border-yu-gold/30 p-6 rounded-sm max-w-sm w-full shadow-[0_0_50px_rgba(0,0,0,1)] relative" onclick="event.stopPropagation()">
