@@ -1,6 +1,6 @@
 /* js/core.js - 虞宫数字化终端·全功能整合终极修复版 */
 
-const API_BASE = "https://rpg0707.com/query?qq=";
+const API_BASE = "/api/query?qq=";;
 let currentUser = null;
 
 // 1. 属性配置
