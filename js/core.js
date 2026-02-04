@@ -333,7 +333,7 @@ function generateRegisterData() {
         'taboos': '', 
         'class': '（公民籍/奴籍/罪奴籍）',
         'salary': '（根据薪资表自行填写）', 
-        'affiliation': '（奴皮填训诫司，主皮填家族名称）', 
+        'affiliation': '（奴皮填训御司，主皮填家族名称）', 
         'notes': ''
     };
     
@@ -420,8 +420,18 @@ function logout() {
     location.reload();
 }
 // ====================
-// 12. 薪资计算器逻辑
+// 薪资计算器逻辑 (已更新：奴位自动推算主人薪资)
 // ====================
+
+// 1. 薪资数据映射表 (提取到外层，供双向查询)
+const salaryMap = {
+    'qingui': { direct: 25, collateral: 20 },
+    'quangui': { direct: 20, collateral: 15 },
+    'noble': { direct: 15, collateral: 12 },
+    'newnoble': { direct: 12, collateral: 10 },
+    'gentry': { direct: 8, collateral: 6 },
+    'commoner': { direct: 5, collateral: 5 }
+};
 
 // 切换弹窗显示/隐藏
 function toggleSalaryModal() {
@@ -439,8 +449,10 @@ function updateCalcUI() {
     const type = document.querySelector('input[name="calc-type"]:checked').value;
     const masterOpts = document.getElementById('master-options');
     const slaveOpts = document.getElementById('slave-options');
+    
+    // 获取新的选择区域和选项
     const slaveType = document.getElementById('calc-slave-type').value;
-    const masterInput = document.getElementById('master-salary-input');
+    const slaveMasterSelect = document.getElementById('slave-master-select'); // 对应新HTML中的ID
     const yuOption = document.getElementById('yu-private-option');
 
     if (type === 'master') {
@@ -450,9 +462,10 @@ function updateCalcUI() {
         masterOpts.classList.add('hidden');
         slaveOpts.classList.remove('hidden');
         
-        // 只有私奴和侍奴需要输入主人薪资
+        // 只有私奴和侍奴需要选择主人身份
         if (slaveType === 'private' || slaveType === 'attendant') {
-            masterInput.classList.remove('hidden');
+            slaveMasterSelect.classList.remove('hidden'); // 显示下拉框区域
+            
             // 只有私奴显示"是虞家私奴"选项
             if(slaveType === 'private') {
                 yuOption.classList.remove('hidden');
@@ -460,7 +473,7 @@ function updateCalcUI() {
                 yuOption.classList.add('hidden');
             }
         } else {
-            masterInput.classList.add('hidden');
+            slaveMasterSelect.classList.add('hidden');
             yuOption.classList.add('hidden');
         }
     }
@@ -477,33 +490,36 @@ function calculateSalary() {
         const level = document.getElementById('calc-master-level').value;
         const lineage = document.getElementById('calc-lineage').value;
         
-        // 数据表
-        const salaryMap = {
-            'qingui': { direct: 25, collateral: 20 },
-            'quangui': { direct: 20, collateral: 15 },
-            'noble': { direct: 15, collateral: 12 },
-            'newnoble': { direct: 12, collateral: 10 },
-            'gentry': { direct: 8, collateral: 6 },
-            'commoner': { direct: 5, collateral: 5 } // 平民无区别
-        };
-
         baseSalary = salaryMap[level][lineage];
 
     } else {
         // --- 奴位计算逻辑 ---
         const slaveType = document.getElementById('calc-slave-type').value;
-        const masterSalary = parseFloat(document.getElementById('calc-master-base').value) || 0;
         const isYuSlave = document.getElementById('is-yu-slave').checked;
 
+        // 1. 先计算主人基薪（仅私奴/侍奴需要）
+        let masterBase = 0;
+        if (slaveType === 'private' || slaveType === 'attendant') {
+            // 获取新下拉框的值
+            const mLevel = document.getElementById('calc-slave-master-level').value;
+            const mLineage = document.getElementById('calc-slave-master-lineage').value;
+            masterBase = salaryMap[mLevel][mLineage];
+            
+            // 更新界面上的调试小字显示 (主人基薪: xx)
+            const debugEl = document.getElementById('debug-master-salary');
+            if(debugEl) debugEl.innerText = masterBase;
+        }
+
+        // 2. 根据奴籍类型计算
         if (slaveType === 'private') {
             if (isYuSlave) {
                 baseSalary = 18; // 虞家私奴固定
             } else {
-                baseSalary = masterSalary - 5; // 主人-5
+                baseSalary = masterBase - 5; // 主人-5
             }
         } else if (slaveType === 'attendant') {
             // 主人-8，但最低不低于10
-            let calc = masterSalary - 8;
+            let calc = masterBase - 8;
             baseSalary = calc < 10 ? 10 : calc;
         } else if (slaveType === 'contract') {
             baseSalary = 8;
@@ -515,16 +531,16 @@ function calculateSalary() {
             baseSalary = 0;
         }
         
-        // 防止负数（虽然逻辑上侍奴已有保底，但私奴可能出现负数）
+        // 防止负数
         if (baseSalary < 0) baseSalary = 0;
     }
 
     // 总计 = 基础 + 职位
     const total = baseSalary + rankBonus;
     
-    // 渲染动画效果
+    // 渲染结果
     const resultEl = document.getElementById('calc-result');
-    resultEl.innerText = total;
+    if(resultEl) resultEl.innerText = total;
 }
 
 // 将计算结果填入登记表
@@ -543,10 +559,8 @@ function applySalaryToForm() {
     // 4. 关闭弹窗
     toggleSalaryModal();
     
-    // 5. (可选) 给个小提示或自动聚焦，提升体验
+    // 5. 聚焦输入框
     salaryInput.focus();
-    // 这里的边框闪烁效果是利用 Tailwind 的 ring 样式，
-    // 如果想要视觉反馈，可以临时加一个 class，这里简单聚焦即可。
 }
 
 // 实时更新字数统计
