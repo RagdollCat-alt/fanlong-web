@@ -24,7 +24,7 @@ async function handleLogin() {
     window.focus(); 
     
     const qq = qqInput.value.trim();
-    if (!qq) return alert("请输入身份芯片标识码");
+    if (!qq) return alert("请输入身份标识码");
 
     loginBtn.disabled = true;
     const originalBtnHTML = loginBtn.innerHTML;
@@ -64,7 +64,7 @@ async function handleLogin() {
         
         showCyberPopup(
             "IDENTIFICATION FAILED", 
-            "未查获该 ID 户籍记录。<br>请确保芯片标识码输入正确，或在下方完成新户籍录入登记。",
+            "未查询到该 ID。<br>请确保身份标识码输入正确，或在下方完成新户籍录入登记。",
             () => {
                 const registerSection = document.getElementById('register-section');
                 if (registerSection) {
@@ -311,16 +311,15 @@ function showCyberPopup(title, message, callback, type = 'success', btnText = '�
     };
 } 
 
-// 9. 登记表生成 (已更新)
+// 9. 登记表生成 (已更新：身高自动加cm)
 function generateRegisterData() {
     const form = document.querySelector('#register-form');
     const data = new FormData(form);
     const modal = document.getElementById('register-modal');
     const resultArea = document.getElementById('register-result');
     
-    // 更新：根据新模板修改了默认提示语
     const placeholders = {
-        'name': '', 
+        'name': '（限中文名）', 
         'age': '（最低16岁）', 
         'attribute': '（DOM/SWI/SUB、1/0；奴皮不允DOM/S，奴1会被玩后面，但不进入，主皮不允许SUB/M）',
         'personality': '（不写为人处世，不写明面如何其实如何。字数不低于20）', 
@@ -337,7 +336,6 @@ function generateRegisterData() {
         'notes': ''
     };
     
-    // 更新：调整了输出顺序以匹配新模板
     const outputOrder = [
         { key: 'name', label: '姓名' }, 
         { key: 'age', label: '年龄' }, 
@@ -358,10 +356,15 @@ function generateRegisterData() {
     
     let content = "【户籍登记表】\n";
     outputOrder.forEach(item => {
-        const userValue = data.get(item.key);
-        // 逻辑：如果有用户输入则使用输入值，否则使用占位符
+        let userValue = data.get(item.key);
+
+        // --- 核心修改：如果是身高且有值，自动追加 cm ---
+        if (item.key === 'height' && userValue && userValue.trim() !== "") {
+            userValue += "cm";
+        }
+        // ------------------------------------------
+
         const valueToShow = (userValue && userValue.trim() !== "") ? userValue : (placeholders[item.key] || "");
-        // 格式：使用中文冒号
         content += `${item.label}：${valueToShow}\n`;
     });
     
