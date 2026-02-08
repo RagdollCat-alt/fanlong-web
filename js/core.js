@@ -326,7 +326,7 @@ function generateRegisterData() {
         'appearance': '（写清楚长什么样，不强制写四肢。字数不低于30）',
         'height': '', 
         'family': '（家族内身份/士绅/平民，如X家少爷/旁系）', 
-        'position': '（奴皮选公奴，主皮有官职的写:正x品+官职名称，无官职可自拟任意职业）',
+        'position': '（奴皮选公奴，主皮有官职的写:正x品+官职名称，身兼多职写最高品级，无官职可自拟任意职业）',
         'background': '', 
         'likes': '', 
         'taboos': '', 
