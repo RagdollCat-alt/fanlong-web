@@ -120,7 +120,7 @@ function renderProfileData(data) {
         if (realKey) val = parseInt(data.stats[realKey]) || 0;
         
         totalScore += val;
-        const percent = Math.min((val / 200) * 100, 100);
+        const percent = Math.min((val / 500) * 100, 100);
 
         container.innerHTML += `
             <div class="space-y-1">
@@ -137,11 +137,11 @@ function renderProfileData(data) {
     document.getElementById('p-total').innerText = totalScore;
     const obedRankEl = document.getElementById('p-obed');
     let rank = 'E', rankColor = 'text-gray-500';
-    if (totalScore >= 1000) { rank = 'S'; rankColor = 'text-yu-gold'; }
-    else if (totalScore >= 800) { rank = 'A'; rankColor = 'text-red-500'; }
-    else if (totalScore >= 600) { rank = 'B'; rankColor = 'text-purple-500'; }
-    else if (totalScore >= 400) { rank = 'C'; rankColor = 'text-orange-600'; }
-    else if (totalScore >= 200) { rank = 'D'; rankColor = 'text-blue-400'; }
+    if (totalScore >= 2500) { rank = 'S'; rankColor = 'text-yu-gold'; }
+    else if (totalScore >= 2000) { rank = 'A'; rankColor = 'text-red-500'; }
+    else if (totalScore >= 1500) { rank = 'B'; rankColor = 'text-purple-500'; }
+    else if (totalScore >= 1000) { rank = 'C'; rankColor = 'text-orange-600'; }
+    else if (totalScore >= 500) { rank = 'D'; rankColor = 'text-blue-400'; }
 
     obedRankEl.innerText = rank;
     obedRankEl.className = `text-2xl font-roman tracking-widest ${rankColor}`;
@@ -326,13 +326,13 @@ function generateRegisterData() {
         'appearance': '（写清楚长什么样，不强制写四肢。字数不低于30）',
         'height': '', 
         'family': '（家族内身份/士绅/平民，如X家少爷/旁系）', 
-        'position': '（奴皮选公奴，主皮有官职的写:正x品+官职名称，身兼多职写最高品级，无官职可自拟任意职业）',
+        'position': '（奴皮写考核位分，主皮有官职的写:正x品+官职名称，身兼多职写最高品级，无官职可自拟任意职业）',
         'background': '', 
         'likes': '', 
         'taboos': '', 
         'class': '（公民籍/奴籍/罪奴籍）',
         'salary': '（根据薪资表自行填写）', 
-        'affiliation': '（奴皮填训御司，主皮填家族名称）', 
+        'affiliation': '（奴皮：训御司，主皮：所属家族，罪奴：所属家族/训御司）', 
         'notes': ''
     };
     
