@@ -2,15 +2,15 @@ export default async function handler(request, response) {
   // 1. 获取前端传来的 QQ 号
   const { qq } = request.query;
 
-  // 2. 目标：华为云后端的原始 HTTP 地址
-  const targetUrl = `http://116.205.101.141:8443/query?qq=${qq}`;
+  // 2. 目标：新腾讯云后端的原始 HTTP 地址
+  const targetUrl = `http://122.51.158.182:8443/query?qq=${qq}`;
 
   try {
-    // 3. Vercel 服务器帮我们去请求华为云
+    // 3. Vercel 服务器帮我们去请求新腾讯云
     const backendRes = await fetch(targetUrl, {
       headers: {
-        // 核心补丁：伪造 Host 头，骗过备案拦截
-        'Host': '116.205.101.141'
+        // 核心补丁：伪造 Host 头，对应新服务器的 IP
+        'Host': '122.51.158.182'
       }
     });
 
