@@ -243,16 +243,30 @@ function showCitizenshipDetails(type) {
 
 // 6. 地图逻辑
 function showMapDetail(regionId) {
-    const element = document.getElementById('detail-' + regionId);
+    // 兼容旧ID映射到新ID
+    const idMap = {
+        'imperial': 'central',
+        'upper': 'inner',
+        'lower': 'outer'
+    };
+    const mappedId = idMap[regionId] || regionId;
+    const element = document.getElementById('detail-' + mappedId);
     if (element) {
+        // 先重置所有区域详情卡
+        ['detail-central','detail-inner','detail-middle','detail-outer'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) { el.style.borderColor = ''; el.style.boxShadow = ''; }
+        });
+        // 滚动到目标
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // 高亮动效
         element.style.transition = "all 0.5s";
         element.style.borderColor = "var(--yu-gold)";
         element.style.boxShadow = "0 0 20px rgba(197, 160, 89, 0.4)";
         setTimeout(() => {
             element.style.borderColor = "";
             element.style.boxShadow = "";
-        }, 800);
+        }, 1200);
     }
 }
 

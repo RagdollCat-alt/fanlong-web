@@ -73,7 +73,7 @@
 
                 <p
                     class="text-lg md:text-xl text-gray-400 font-light italic serif tracking-widest reveal-item delay-200">
-                    “你是我灵魂里，最后一克自由的砝码。”
+                    "你是我灵魂里，最后一克自由的砝码。"
                 </p>
                 <p
                     class="max-w-2xl mx-auto text-xs md:text-sm text-gray-600 leading-relaxed pt-8 reveal-item delay-300 font-light">
@@ -191,7 +191,7 @@
                     <div class="p-5 card-decoration">
                         <h3 class="text-yu-gold font-bold mb-1 flex items-center gap-2 font-serif text-sm"><i
                                 class="fas fa-hand-holding-usd"></i> 中央贡赋经济</h3>
-                        <p class="text-xs text-gray-400 leading-relaxed mt-2">所有公民需缴纳赋税，核心企业中，虞家天然占有“干股”，不参与经营但享受分红。</p>
+                        <p class="text-xs text-gray-400 leading-relaxed mt-2">所有公民需缴纳赋税，核心企业中，虞家天然占有"干股"，不参与经营但享受分红。</p>
                     </div>
                 </div>
             </section>
@@ -562,7 +562,7 @@
                     </div>
                     <div class="bg-white/5 p-3 border-t-2 border-gray-500">
                         <h4 class="text-gray-300 font-bold text-xs mb-1">嫡长子继承</h4>
-                        <p class="text-[10px] text-gray-400 leading-relaxed">世家官职优先继承。若继承人“德不配位”则可能另行任命。</p>
+                        <p class="text-[10px] text-gray-400 leading-relaxed">世家官职优先继承。若继承人"德不配位"则可能另行任命。</p>
                     </div>
                     <div class="bg-white/5 p-3 border-t-2 border-gray-500">
                         <h4 class="text-gray-300 font-bold text-xs mb-1">举荐制</h4>
@@ -745,122 +745,297 @@
             <!-- Tab: map -->
         </div>
         <div id="tab-map" class="hidden fade-in mt-4 md:mt-8 pb-12">
-            <h2 class="text-3xl text-white font-cuyasong mb-2">繁城地图</h2>
-            <p class="text-gray-500 font-roman mb-8 tracking-widest text-sm">CITY MAP OF FANLONG</p>
+            <h2 class="text-3xl text-white font-cuyasong mb-2">首都城地图</h2>
+            <p class="text-gray-500 font-roman mb-2 tracking-widest text-sm">CAPITAL CITY OF YU PALACE</p>
+            <p class="text-xs text-gray-600 mb-8 leading-relaxed max-w-2xl">位于国家版图核心，外设环城水系，内分四区。中央大道由南向北贯穿全城，城区间设城门，每日清晨六点开放，夜间九点关闭。</p>
 
-            <div
-                class="relative w-full max-w-lg mx-auto aspect-square grid-bg border border-gray-800 p-4 md:p-8 flex items-center justify-center mb-8 shadow-2xl">
-                <div
-                    class="absolute bottom-10 left-0 w-full h-8 bg-blue-900/30 blur-sm flex items-center justify-center text-blue-500 text-xs font-bold z-0 transform -rotate-1 font-serif-sc serif">
-                    蟠龙江</div>
+            <!-- 地图可视化 -->
+            <div class="relative w-full max-w-xl mx-auto grid-bg border border-gray-800 p-4 md:p-6 mb-8 shadow-2xl" style="aspect-ratio: 1/1.1;">
 
-                <div class="w-full h-full border-2 border-white/30 bg-[#111] relative flex flex-col justify-between p-2 map-area"
+                <!-- 环城水系装饰 -->
+                <div class="absolute inset-0 border-4 border-blue-900/20 pointer-events-none z-0" style="margin: 4px;"></div>
+                <div class="absolute top-1 left-1 right-1 h-3 bg-blue-900/20 blur-sm"></div>
+                <div class="absolute bottom-1 left-1 right-1 h-3 bg-blue-900/20 blur-sm"></div>
+                <div class="absolute left-1 top-1 bottom-1 w-3 bg-blue-900/20 blur-sm"></div>
+                <div class="absolute right-1 top-1 bottom-1 w-3 bg-blue-900/20 blur-sm"></div>
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 text-blue-500/50 text-[9px] tracking-widest font-bold">环城水系</div>
+
+                <!-- 外城区 -->
+                <div class="w-full h-full border-2 border-white/20 bg-[#111] relative flex flex-col justify-between p-3 map-area cursor-pointer hover:border-white/40 transition-all"
                     onclick="showMapDetail('outer')">
-                    <span class="text-white text-[10px] font-bold uppercase p-1">外城区</span>
-                    <div class="landmark-icon text-white" style="top: 20%; left: 20%" data-label="中央枢纽"><i
-                            class="fas fa-plane"></i></div>
-                    <div class="landmark-icon text-white" style="top: 80%; right: 20%" data-label="繁城之心"><i
-                            class="fas fa-city"></i></div>
+                    <div class="flex justify-between items-start">
+                        <span class="text-gray-400 text-[10px] font-bold tracking-widest">外城区</span>
+                        <span class="text-[9px] text-gray-600 font-roman">OUTER DISTRICT</span>
+                    </div>
+                    <!-- 外城地标 -->
+                    <div class="landmark-icon text-gray-400" style="top:18%;left:12%" data-label="国际机场"><i class="fas fa-plane text-[9px]"></i></div>
+                    <div class="landmark-icon text-gray-400" style="top:18%;right:12%" data-label="首都大学"><i class="fas fa-graduation-cap text-[9px]"></i></div>
+                    <div class="landmark-icon text-gray-400" style="bottom:12%;left:15%" data-label="首都高铁站"><i class="fas fa-train text-[9px]"></i></div>
+                    <div class="landmark-icon text-gray-400" style="bottom:12%;right:15%" data-label="中央公园"><i class="fas fa-tree text-[9px]"></i></div>
+                    <div class="landmark-icon text-gray-400" style="top:50%;left:8%" data-label="苍澜军校"><i class="fas fa-shield-alt text-[9px]"></i></div>
+                    <div class="landmark-icon text-gray-400" style="top:50%;right:8%" data-label="织音商业街"><i class="fas fa-store text-[9px]"></i></div>
 
-                    <div class="w-3/4 h-3/4 border-2 border-white/30 bg-[#0d0d0d] mx-auto my-auto relative flex flex-col justify-between p-2 shadow-[0_0_20px_rgba(255,255,255,0.1)] map-area"
+                    <!-- 中城区 -->
+                    <div class="w-3/4 h-3/4 border-2 border-gray-600/60 bg-[#0d0d0d] mx-auto my-auto relative flex flex-col justify-between p-2 shadow-[0_0_20px_rgba(255,255,255,0.05)] map-area cursor-pointer hover:border-gray-400/60 transition-all"
                         onclick="event.stopPropagation(); showMapDetail('middle')">
-                        <span class="text-white text-[10px] font-bold uppercase p-1">中城区</span>
-                        <div class="landmark-icon text-white" style="top: 15%; right: 15%" data-label="精英大学"><i
-                                class="fas fa-graduation-cap"></i></div>
-                        <div class="landmark-icon text-white" style="bottom: 15%; left: 15%" data-label="外庭司部"><i
-                                class="fas fa-briefcase"></i></div>
+                        <div class="flex justify-between items-start">
+                            <span class="text-gray-300 text-[10px] font-bold tracking-widest">中城区</span>
+                            <span class="text-[9px] text-gray-600 font-roman">MIDDLE</span>
+                        </div>
+                        <!-- 中城地标 -->
+                        <div class="landmark-icon text-gray-300" style="top:15%;left:12%" data-label="法庭"><i class="fas fa-balance-scale text-[9px]"></i></div>
+                        <div class="landmark-icon text-gray-300" style="top:15%;right:12%" data-label="军事法庭"><i class="fas fa-gavel text-[9px]"></i></div>
+                        <div class="landmark-icon text-gray-300" style="bottom:10%;left:12%" data-label="斗兽场"><i class="fas fa-fist-raised text-[9px]"></i></div>
+                        <div class="landmark-icon text-gray-300" style="bottom:10%;right:12%" data-label="瑶光音乐厅"><i class="fas fa-music text-[9px]"></i></div>
+                        <div class="landmark-icon text-amber-600" style="top:50%;left:8%" data-label="钟楼"><i class="fas fa-clock text-[9px]"></i></div>
+                        <div class="landmark-icon text-gray-300" style="top:50%;right:8%" data-label="交易市场"><i class="fas fa-exchange-alt text-[9px]"></i></div>
 
-                        <div class="w-2/3 h-2/3 border-2 border-purple-900 bg-[#080808] mx-auto my-auto relative flex flex-col justify-between p-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] map-area"
-                            onclick="event.stopPropagation(); showMapDetail('upper')">
-                            <span class="text-white text-[10px] font-bold uppercase p-1">上城区</span>
-                            <div class="landmark-icon text-white" style="top: 10%; left: 50%" data-label="未名会所"><i
-                                    class="fas fa-wine-glass"></i></div>
-                            <div class="landmark-icon text-white" style="bottom: 10%; right: 50%" data-label="议阁"><i
-                                    class="fas fa-landmark"></i></div>
+                        <!-- 内城区 -->
+                        <div class="w-2/3 h-2/3 border-2 border-purple-800/70 bg-[#080808] mx-auto my-auto relative flex flex-col justify-between p-2 shadow-[0_0_20px_rgba(124,58,237,0.15)] map-area cursor-pointer hover:border-purple-600/70 transition-all"
+                            onclick="event.stopPropagation(); showMapDetail('inner')">
+                            <div class="flex justify-between items-start">
+                                <span class="text-purple-400 text-[10px] font-bold tracking-widest">内城区</span>
+                                <span class="text-[9px] text-gray-600 font-roman">INNER</span>
+                            </div>
+                            <!-- 内城地标 -->
+                            <div class="landmark-icon text-purple-400" style="top:18%;left:15%" data-label="亲贵居住区"><i class="fas fa-chess-king text-[9px]"></i></div>
+                            <div class="landmark-icon text-purple-400" style="top:18%;right:15%" data-label="万怀观"><i class="fas fa-mountain text-[9px]"></i></div>
+                            <div class="landmark-icon text-purple-400" style="bottom:15%;left:15%" data-label="贵族居住区"><i class="fas fa-home text-[9px]"></i></div>
+                            <div class="landmark-icon text-purple-400" style="bottom:15%;right:15%" data-label="权贵居住区"><i class="fas fa-landmark text-[9px]"></i></div>
 
-                            <div class="w-1/2 h-1/2 border-2 border-yellow-600 bg-black mx-auto my-auto flex items-center justify-center shadow-[0_0_30px_rgba(202,138,4,0.3)] relative map-area"
-                                onclick="event.stopPropagation(); showMapDetail('imperial')">
-                                <i class="fas fa-crown text-yellow-600 text-2xl animate-pulse"></i>
-                                <span class="absolute -bottom-6 text-yellow-600 text-[10px] font-bold">皇城区</span>
-                                <div class="landmark-icon text-yellow-500" style="top: 30%; left: 50%"
-                                    data-label="虞宫·内庭"><i class="fas fa-dragon"></i></div>
+                            <!-- 中央区 -->
+                            <div class="w-1/2 h-1/2 border-2 border-yellow-600/80 bg-black mx-auto my-auto flex flex-col items-center justify-center shadow-[0_0_30px_rgba(202,138,4,0.25)] relative map-area cursor-pointer hover:border-yellow-500 transition-all"
+                                onclick="event.stopPropagation(); showMapDetail('central')">
+                                <i class="fas fa-crown text-yellow-600 text-base animate-pulse mb-1"></i>
+                                <span class="text-yellow-600 text-[9px] font-bold tracking-wider">中央区</span>
+                                <div class="landmark-icon text-yellow-500" style="top:20%;left:20%" data-label="虞宫外庭"><i class="fas fa-building text-[8px]"></i></div>
+                                <div class="landmark-icon text-yellow-400" style="bottom:20%;right:20%" data-label="虞宫内庭"><i class="fas fa-dragon text-[8px]"></i></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="absolute -bottom-4 right-4 bg-red-900/20 border border-red-900 border-dashed px-2 py-1 text-red-500 text-[10px] font-bold text-center map-area"
-                    onclick="showMapDetail('lower')">
-                    下城<br>诫律区
-                    <div class="landmark-icon text-red-500" style="top: -10px; left: 10px" data-label="训御司"><i
-                            class="fas fa-gavel"></i></div>
+
+                <!-- 中央大道标注 -->
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full mt-1 text-gray-600 text-[9px] tracking-widest text-center pt-1">
+                    ↑ 中央大道
                 </div>
             </div>
+
+            <!-- 区域详情卡 -->
             <div class="max-w-4xl mx-auto space-y-4">
-                <div id="detail-imperial"
-                    class="bg-black border border-yellow-600/30 p-4 rounded-sm flex gap-3 items-start transition-all">
-                    <div class="text-yellow-600 text-xl pt-1"><i class="fas fa-crown"></i></div>
-                    <div>
-                        <h4 class="text-yellow-500 font-bold mb-1 serif text-sm">皇城区</h4>
-                        <p class="text-xs text-gray-400 mb-2">绝对中心，高耸宫墙与外界隔绝。天命大道贯穿。</p>
-                        <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
-                            <li><strong>虞宫·内庭</strong>：权力策源地。融合古典园林与未来科技，家主居所。</li>
-                            <li><strong>外庭中枢</strong>：丞辅府、理事厅等最高行政机构群。</li>
-                            <li><strong>禁军驻地</strong>：负责保卫皇城区的精锐武装。</li>
-                        </ul>
+
+                <!-- 中央区 -->
+                <div id="detail-central"
+                    class="bg-black border border-yellow-600/30 p-5 rounded-sm transition-all">
+                    <div class="flex items-center gap-3 mb-3">
+                        <i class="fas fa-crown text-yellow-600 text-lg"></i>
+                        <div>
+                            <h4 class="text-yellow-500 font-bold serif text-sm">中央区</h4>
+                            <p class="text-[10px] text-gray-600 font-roman tracking-widest">CENTRAL DISTRICT · 无官职者不得擅入</p>
+                        </div>
+                        <span class="ml-auto text-[9px] border border-red-900/50 text-red-700 px-2 py-0.5">🔒 严禁入内</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-3 leading-relaxed">坐落于首都南北纵轴为中线的核心位置，分外庭与内庭，二者共同组成首都的核心命脉。门岗专人查验身份，无官职者不得擅入。</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white/[0.03] border border-yellow-600/10 p-3">
+                            <h5 class="text-yellow-600/80 text-[10px] font-bold mb-2 uppercase tracking-wider">虞宫外庭</h5>
+                            <ul class="text-[11px] text-gray-500 space-y-1">
+                                <li><span class="text-gray-400">·</span> 办公大楼（三层·罗可可风格）</li>
+                                <li><span class="text-gray-400">·</span> 食堂（四层·含国宴厅）</li>
+                                <li><span class="text-gray-400">·</span> 档案馆·综合楼·员工居住区</li>
+                                <li><span class="text-gray-400">·</span> 属军驻地·驻军区</li>
+                                <li><span class="text-gray-400">·</span> 繁荣雕像（初代家主立像）</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white/[0.03] border border-yellow-600/10 p-3">
+                            <h5 class="text-yellow-600/80 text-[10px] font-bold mb-2 uppercase tracking-wider">虞宫内庭</h5>
+                            <ul class="text-[11px] text-gray-500 space-y-1">
+                                <li><span class="text-gray-400">·</span> 家主居住区（中轴最深处）</li>
+                                <li><span class="text-gray-400">·</span> 后宅居住区（东西两区）</li>
+                                <li><span class="text-gray-400">·</span> 侍官府·训御司办公区</li>
+                                <li><span class="text-gray-400">·</span> 漱坊·后舍·戒堂·净肆</li>
+                                <li><span class="text-gray-400">·</span> 奴隶居住区·畜笼</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <div id="detail-upper"
-                    class="bg-black border border-gray-400 p-4 rounded-sm flex gap-3 items-start transition-all">
-                    <div class="text-gray-300 text-xl pt-1"><i class="fas fa-landmark"></i></div>
-                    <div>
-                        <h4 class="text-gray-300 font-bold mb-1 serif text-sm">上城区</h4>
-                        <p class="text-xs text-gray-400 mb-2">紧邻皇城，顶级权贵居住地。</p>
-                        <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
-                            <li><strong>世家府邸</strong>：庄园式豪宅，私人园林与停机坪。</li>
-                            <li><strong>议阁</strong>：公卿议事场所，政治斗争舞台。</li>
-                            <li><strong>未名会所</strong>：顶级私人会所，权色交易与密谋之地。</li>
-                        </ul>
+                <!-- 内城区 -->
+                <div id="detail-inner"
+                    class="bg-black border border-purple-800/40 p-5 rounded-sm transition-all">
+                    <div class="flex items-center gap-3 mb-3">
+                        <i class="fas fa-chess-king text-purple-400 text-lg"></i>
+                        <div>
+                            <h4 class="text-purple-400 font-bold serif text-sm">内城区</h4>
+                            <p class="text-[10px] text-gray-600 font-roman tracking-widest">INNER CITY · 需贵族身份凭证</p>
+                        </div>
+                        <span class="ml-auto text-[9px] border border-purple-900/50 text-purple-700 px-2 py-0.5">🔒 凭证入内</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-3 leading-relaxed">呈回字形包围中央区外围，以阶级秩序为建城逻辑，越向北越尊贵。高墙深院，门禁森严，与中央区之间有单独城门。</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <div class="bg-white/[0.03] border border-purple-800/20 p-3">
+                            <h5 class="text-purple-300 text-[10px] font-bold mb-1">● 亲贵居住区</h5>
+                            <p class="text-[11px] text-gray-600">最北，隔墙与内庭相邻，虞家亲贵专属。百年古木，园景精致。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-purple-800/20 p-3">
+                            <h5 class="text-purple-400/80 text-[10px] font-bold mb-1">● 权贵居住区</h5>
+                            <p class="text-[11px] text-gray-600">中部东西两侧，各大权贵世家集中宅邸，院落宏大，旗帜悬于门庭。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-purple-800/20 p-3">
+                            <h5 class="text-purple-500/80 text-[10px] font-bold mb-1">● 贵族居住区</h5>
+                            <p class="text-[11px] text-gray-600">最南端东西两处，联排庭院与独栋别墅，临近中城区城门。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-purple-800/20 p-3">
+                            <h5 class="text-purple-400/60 text-[10px] font-bold mb-1">◎ 万怀观</h5>
+                            <p class="text-[11px] text-gray-600">东北方位，白玉石板铺道，松柏白玉兰，露天花景·赏春台·历史陈列馆。</p>
+                        </div>
                     </div>
                 </div>
 
+                <!-- 中城区 -->
                 <div id="detail-middle"
-                    class="bg-black border border-gray-500 p-4 rounded-sm flex gap-3 items-start transition-all">
-                    <div class="text-gray-400 text-xl pt-1"><i class="fas fa-university"></i></div>
-                    <div>
-                        <h4 class="text-gray-400 font-bold mb-1 serif text-sm">中城区</h4>
-                        <p class="text-xs text-gray-400 mb-2">社会中坚力量聚集区。</p>
-                        <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
-                            <li><strong>外庭司部</strong>：各司、庭、属办公大楼，政策执行层。</li>
-                            <li><strong>中央精英大学</strong>：为贵族子弟和天才平民提供高等教育。</li>
-                        </ul>
+                    class="bg-black border border-gray-600/40 p-5 rounded-sm transition-all">
+                    <div class="flex items-center gap-3 mb-3">
+                        <i class="fas fa-city text-gray-300 text-lg"></i>
+                        <div>
+                            <h4 class="text-gray-300 font-bold serif text-sm">中城区</h4>
+                            <p class="text-[10px] text-gray-600 font-roman tracking-widest">MIDDLE CITY · 公民籍可自由迁徙</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">首都最繁华的城区，权贵阶级的经济腹地，文化、司法、金融、娱乐的高度集中地。</p>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        <div class="bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-university text-[9px] text-amber-600"></i> 中央金融区</h5>
+                            <p class="text-[11px] text-gray-600">中央银行为轴心，八大世家资产管理总部、虞宫证券交易所。深色玻璃幕墙，属军常年驻守。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-gavel text-[9px] text-gray-400"></i> 拍卖行</h5>
+                            <p class="text-[11px] text-gray-600">明家创立，虞家参股。古典圆柱拱廊，邀请制入席，承拍世界级珍品。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-star text-[9px] text-yellow-500"></i> 星轨娱乐</h5>
+                            <p class="text-[11px] text-gray-600">全国最大娱乐产业聚集地，演艺·影视·音乐厂牌，年度星选大赛，夜间流光璀璨。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-music text-[9px] text-gray-400"></i> 瑶光音乐厅</h5>
+                            <p class="text-[11px] text-gray-600">钻石切面造型，深灰镜面，32米五层。主营歌剧·交响·东方古乐，贵族社交场所。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-hospital text-[9px] text-blue-400"></i> 圣晖医院</h5>
+                            <p class="text-[11px] text-gray-600">褚家私立，虞家持股。全国最先进医疗，基因检测室·独立手术中心，优先贵族就诊。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-balance-scale text-[9px] text-gray-400"></i> 法庭·军事法庭</h5>
+                            <p class="text-[11px] text-gray-600">东西相对而立。法庭受理民事，军事法庭裁决军政，两庭管辖争议由来已久。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-fist-raised text-[9px] text-red-700"></i> 斗兽场</h5>
+                            <p class="text-[11px] text-gray-600">都尉家兴建，仿古罗马环形设计。斗兽·多人角斗·人兽角斗，非常时期用于处决重刑犯。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-dice text-[9px] text-yellow-600"></i> 赌场</h5>
+                            <p class="text-[11px] text-gray-600">闻家名下，暗金霓虹，24小时全氧供应。百家乐·德州扑克·轮盘，奴籍可携带入场。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-exchange-alt text-[9px] text-gray-400"></i> 交易市场</h5>
+                            <p class="text-[11px] text-gray-600">全国最大合法奴隶交易市场。展示区·评级区·签约区，向新贵阶层输送人口资源。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-clock text-[9px] text-amber-600"></i> 钟楼</h5>
+                            <p class="text-[11px] text-gray-600">中城最古老建筑，24米尖顶塔式。每日正午及深夜12点鸣响，百年间无一日差错。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-sun text-[9px] text-orange-500"></i> 晚照坡</h5>
+                            <p class="text-[11px] text-gray-600">斗兽场与钟楼间缓坡高地。傍晚夕阳低角度穿越楼宇，金橙光晕持续约二十分钟。</p>
+                        </div>
+                        <div class="bg-white/[0.03] border border-red-900/20 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-moon text-[9px] text-red-700"></i> 风车集 <span class="text-red-700 text-[9px]">（黑市）</span></h5>
+                            <p class="text-[11px] text-gray-600">每日凌晨3-5点。入市须戴面谱（5虞元），风筝为人，灯笼为物。无面谱入者或有去无回。</p>
+                        </div>
+                        <div class="col-span-2 md:col-span-3 bg-white/[0.03] border border-gray-700/30 p-3">
+                            <h5 class="text-gray-200 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-bars text-[9px] text-gray-500"></i> 监狱</h5>
+                            <p class="text-[11px] text-gray-600">中城东北，封闭要塞式结构，军仲厅与理事厅联合管辖。仅关押公民籍犯罪人员，每间8人，每日劳作换取饮食。</p>
+                        </div>
                     </div>
                 </div>
 
+                <!-- 外城区 -->
                 <div id="detail-outer"
-                    class="bg-black border border-gray-700 p-4 rounded-sm flex gap-3 items-start transition-all">
-                    <div class="text-gray-500 text-xl pt-1"><i class="fas fa-building"></i></div>
-                    <div>
-                        <h4 class="text-gray-500 font-bold mb-1 serif text-sm">外城区</h4>
-                        <p class="text-xs text-gray-400 mb-2">最广阔区域，市民与商人混居。</p>
-                        <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
-                            <li><strong>繁城之心</strong>：商业区，金融大厦与娱乐场所。</li>
-                            <li><strong>中央交通枢纽</strong>：列车站与空港，人流混杂。</li>
-                        </ul>
+                    class="bg-black border border-gray-700/40 p-5 rounded-sm transition-all">
+                    <div class="flex items-center gap-3 mb-3">
+                        <i class="fas fa-building text-gray-500 text-lg"></i>
+                        <div>
+                            <h4 class="text-gray-400 font-bold serif text-sm">外城区</h4>
+                            <p class="text-[10px] text-gray-600 font-roman tracking-widest">OUTER CITY · 公民籍及奴籍可自由活动</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 leading-relaxed">首都最外围，生活气息最浓厚，人口密度最高的地带。新贵与士绅定居，各类交通站点集中，平民与奴籍日常流动最频繁的区域。</p>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        <div class="bg-white/[0.03] border border-gray-700/20 p-3">
+                            <h5 class="text-gray-300 text-[10px] font-bold mb-1">居住区</h5>
+                            <ul class="text-[11px] text-gray-600 space-y-0.5">
+                                <li>· 新贵居住区（内侧地带）</li>
+                                <li>· 士绅居住区（地理居中）</li>
+                                <li>· 民众居住区（点状散布）</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/20 p-3">
+                            <h5 class="text-gray-300 text-[10px] font-bold mb-1">教育与军事</h5>
+                            <ul class="text-[11px] text-gray-600 space-y-0.5">
+                                <li>· 苍澜军校（中央第一军校）</li>
+                                <li>· 首都大学（全国最高学府）</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/20 p-3">
+                            <h5 class="text-gray-300 text-[10px] font-bold mb-1">商业与市集</h5>
+                            <ul class="text-[11px] text-gray-600 space-y-0.5">
+                                <li>· 织音商业街（禁车·步行街区）</li>
+                                <li>· 市集（早集·晚集两场）</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/20 p-3">
+                            <h5 class="text-gray-300 text-[10px] font-bold mb-1">交通枢纽</h5>
+                            <ul class="text-[11px] text-gray-600 space-y-0.5">
+                                <li>· 国际机场（最南端·环城水系外）</li>
+                                <li>· 首都高铁站（西南·含贵宾专区）</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/20 p-3">
+                            <h5 class="text-gray-300 text-[10px] font-bold mb-1">公共服务</h5>
+                            <ul class="text-[11px] text-gray-600 space-y-0.5">
+                                <li>· 首都综合医院（公立·理事厅管辖）</li>
+                                <li>· 户籍中心（唯一官方办理中心）</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white/[0.03] border border-gray-700/20 p-3">
+                            <h5 class="text-gray-300 text-[10px] font-bold mb-1 flex items-center gap-1"><i class="fas fa-leaf text-[9px] text-green-600"></i> 自然景观</h5>
+                            <ul class="text-[11px] text-gray-600 space-y-0.5">
+                                <li>· 中央公园·银霜湖（天然湖泊）</li>
+                                <li>· 绯红枫林（九至十一月赏枫）</li>
+                                <li>· 浮影烁金（八至九月限时奇景）</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <div id="detail-lower"
-                    class="bg-black border border-red-900/30 p-4 rounded-sm flex gap-3 items-start transition-all">
-                    <div class="text-red-800 text-xl pt-1"><i class="fas fa-skull"></i></div>
-                    <div>
-                        <h4 class="text-red-800 font-bold mb-1 serif text-sm">下城-诫律区</h4>
-                        <p class="text-xs text-red-900/70 mb-2">蟠龙江对岸，奴隶与罪犯的流放地。</p>
-                        <ul class="text-xs text-gray-500 list-disc list-inside space-y-1">
-                            <li><strong>训御司总部</strong>：堡垒般综合体。奴隶登记、拍卖、惩戒。</li>
-                            <li><strong>奴隶营</strong>：从蜂巢宿舍到重刑监区。</li>
-                        </ul>
+                <!-- 门禁说明 -->
+                <div class="bg-[#0a0a0a] border border-white/5 p-4 rounded-sm">
+                    <h4 class="text-gray-400 text-xs font-bold mb-3 flex items-center gap-2 uppercase tracking-widest"><i class="fas fa-lock text-gray-600"></i> 各区门禁说明</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px]">
+                        <div class="flex items-start gap-2">
+                            <span class="text-red-700 mt-0.5">🔒</span>
+                            <div><span class="text-red-700 font-bold">中央区</span><span class="text-gray-600"> — 无官职者不得擅入，门岗专人查验</span></div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-purple-700 mt-0.5">⚠</span>
+                            <div><span class="text-purple-500 font-bold">内城区</span><span class="text-gray-600"> — 无贵族身份凭证者限制出入</span></div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-gray-500 mt-0.5">✓</span>
+                            <div><span class="text-gray-400 font-bold">中城区·外城区</span><span class="text-gray-600"> — 公民籍及奴籍依规可自由活动</span></div>
+                        </div>
                     </div>
+                    <p class="text-[10px] text-gray-700 mt-3 border-t border-white/5 pt-2">城区间城门每日清晨六点开放，夜间九点关闭，由属军驻守。</p>
                 </div>
             </div>
         </div>
@@ -902,7 +1077,7 @@
                             class="absolute top-0 right-0 bg-yu-purple text-white text-[10px] font-bold px-2 py-0.5 font-serif">
                             军门</div>
                         <h3 class="text-2xl text-yu-purple font-serif mb-2">都尉家</h3>
-                        <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">“绝对忠诚，铁血无私”，虞家最信赖的“刀柄”。</p>
+                        <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">"绝对忠诚，铁血无私"，虞家最信赖的"刀柄"。</p>
                         <div
                             class="text-xs text-yu-purple group-hover:text-white transition-colors mt-auto tracking-wider">
                             查看详情 <i class="fas fa-arrow-right ml-1"></i>
@@ -915,7 +1090,7 @@
                             class="absolute top-0 right-0 bg-yu-purple text-white text-[10px] font-bold px-2 py-0.5 font-serif">
                             地产</div>
                         <h3 class="text-2xl text-yu-purple font-serif mb-2">闻家</h3>
-                        <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">“政商一体，经济至上”，追求效率与经济把控，拒绝感性投入。</p>
+                        <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">"政商一体，经济至上"，追求效率与经济把控，拒绝感性投入。</p>
                         <div
                             class="text-xs text-yu-purple group-hover:text-white transition-colors mt-auto tracking-wider">
                             查看详情 <i class="fas fa-arrow-right ml-1"></i>
@@ -928,7 +1103,7 @@
                             class="absolute top-0 right-0 bg-yu-purple text-white text-[10px] font-bold px-2 py-0.5 font-serif">
                             科研</div>
                         <h3 class="text-2xl text-yu-purple font-serif mb-2">褚家</h3>
-                        <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">“严谨执尺，藏锋守正”，在科研与秩序中保持低调。</p>
+                        <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">"严谨执尺，藏锋守正"，在科研与秩序中保持低调。</p>
                         <div
                             class="text-xs text-yu-purple group-hover:text-white transition-colors mt-auto tracking-wider">
                             查看详情 <i class="fas fa-arrow-right ml-1"></i>
@@ -942,7 +1117,7 @@
                             罪奴</div>
                         <h3 class="text-2xl text-red-700 font-serif mb-2">奚家</h3>
                         <p class="text-xs text-gray-400 mb-4 h-8 line-clamp-2">
-                            “慎独笃行，博众而新”，追求文明、律法与教育的传承，如今却成了他们身陷罪奴籍时最讽刺的注脚。</p>
+                            "慎独笃行，博众而新"，追求文明、律法与教育的传承，如今却成了他们身陷罪奴籍时最讽刺的注脚。</p>
                         <div
                             class="text-xs text-red-800 group-hover:text-red-500 transition-colors mt-auto tracking-wider">
                             查看详情 <i class="fas fa-exclamation-circle ml-1"></i>
