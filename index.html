@@ -1275,7 +1275,7 @@
 
             <div id="register-section">
                 <h2 class="text-2xl md:text-3xl text-white font-cuyasong mb-8 flex items-center justify-center">
-                    <i class="fas fa-fingerprint mr-4 text-red-900"></i> 户籍登记
+                    <i class="fas fa-fingerprint mr-4 text-red-900"></i> 户籍登记表
                 </h2>
                 <form id="register-form"
                     class="bg-[#0a0a0a] border border-gray-800 p-6 md:p-8 space-y-6 shadow-2xl relative">
@@ -1291,14 +1291,14 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-2">年龄 (最低16岁)</label>
-                            <input type="number" name="age" min="16"
+                            <input type="number" name="age" min="18"
                                 class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
                         </div>
                     </div>
 
                     <div>
                         <label
-                            class="block text-xs font-bold text-gray-500 uppercase mb-2">属性（奴皮不允Dom/S，主皮不允许Sub/M）</label>
+                            class="block text-xs font-bold text-gray-500 uppercase mb-2">属性 (DOM/SWI/SUB、1/0；奴皮不允DOM/S；权贵及以上的主皮不允许SUB/M)</label>
                         <select name="attribute"
                             class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
                             <option value="">请选择</option>
@@ -1318,27 +1318,27 @@
 
                     <div>
                         <div class="flex justify-between items-end mb-2">
-                            <label class="text-xs font-bold text-gray-500 uppercase">性格 (20字+)</label>
+                            <label class="text-xs font-bold text-gray-500 uppercase">性格 (不写为人处世，不写明面如何其实如何。字数不低于20)</label>
                             <span id="count-personality" class="text-[10px] text-yu-gold font-mono">0 字</span>
                         </div>
                         <textarea name="personality" oninput="updateCharCount(this, 'count-personality')"
-                            placeholder="不写为人处世，不写明面如何其实如何..."
+                            placeholder="字数不低于20"
                             class="w-full bg-black border border-gray-700 text-white p-3 h-24 focus:border-red-900 outline-none transition-colors text-sm"></textarea>
                     </div>
 
                     <div>
                         <div class="flex justify-between items-end mb-2">
-                            <label class="text-xs font-bold text-gray-500 uppercase">外貌 (30字+)</label>
+                            <label class="text-xs font-bold text-gray-500 uppercase">外貌 (写清楚长什么样，不强制写四肢。字数不低于30)</label>
                             <span id="count-appearance" class="text-[10px] text-yu-gold font-mono">0 字</span>
                         </div>
                         <textarea name="appearance" oninput="updateCharCount(this, 'count-appearance')"
-                            placeholder="写清楚长什么样，不强制写四肢..."
+                            placeholder="字数不低于30"
                             class="w-full bg-black border border-gray-700 text-white p-3 h-24 focus:border-red-900 outline-none transition-colors text-sm"></textarea>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-2">身高</label>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-2">身高：cm</label>
                             <div class="relative">
                                 <input type="number" name="height"
                                     class="w-full bg-black border border-gray-700 text-white p-3 pr-10 focus:border-red-900 outline-none transition-colors text-sm"
@@ -1351,7 +1351,7 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase mb-2">家世 (家族内身份/士绅/平民)</label>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-2">家世 (家族内身份/士绅/平民，如X家少爷/旁系)</label>
                             <input type="text" name="family" placeholder="如X家少爷/旁系"
                                 class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
                         </div>
@@ -1359,8 +1359,8 @@
 
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-2">职位
-                            (奴皮所考位分/主皮正x品+官职/无官职自拟)</label>
-                        <input type="text" name="position" placeholder="身兼多职写最高品级"
+                            (奴皮写考核的位分，主皮有官职的写:正x品+官职名称，身兼多职写最高品级，无官职可自拟任意职业，同二十一世纪常规职业。)</label>
+                        <input type="text" name="position" placeholder="按要求填写职位"
                             class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
                     </div>
 
@@ -1400,7 +1400,7 @@
 
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-2">
-                                薪资 <span class="text-yu-gold/50 text-[10px] font-normal ml-1">(点击右侧按钮计算)</span>
+                                薪资 <span class="text-yu-gold/50 text-[10px] font-normal ml-1">(根据薪资表自行填写，可点击右侧按钮计算)</span>
                             </label>
                             <div class="flex gap-2">
                                 <input type="text" name="salary" placeholder="填写数值"
@@ -1417,7 +1417,7 @@
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-2">隶属
-                                (奴皮：训御司，主皮：所属家族，罪奴：所属家族/训御司)</label>
+                                (奴籍/罪奴籍-前面写出身家族/这里写主人家族「无主写训御司」；公民籍-仅写出身家族)</label>
                             <input type="text" name="affiliation"
                                 class="w-full bg-black border border-gray-700 text-white p-3 focus:border-red-900 outline-none transition-colors text-sm">
                         </div>
@@ -1439,6 +1439,11 @@
                         </p>
                     </div>
                 </form>
+            </div>
+
+            <!-- 档案tab底部提示 -->
+            <div class="mt-12 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
+                最终解释权归虞宫所有，欢迎致电:954475604
             </div>
     </main>
 

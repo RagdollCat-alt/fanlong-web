@@ -334,19 +334,19 @@ function generateRegisterData() {
     
     const placeholders = {
         'name': '（限中文名）', 
-        'age': '（最低16岁）', 
-        'attribute': '（DOM/SWI/SUB、1/0；奴皮不允DOM/S，奴1会被玩后面，但不进入，主皮不允许SUB/M）',
+        'age': '（最低16岁）',
+        'attribute': '（DOM/SWI/SUB、1/0；奴皮不允DOM/S；权贵及以上的主皮不允许SUB/M）',
         'personality': '（不写为人处世，不写明面如何其实如何。字数不低于20）', 
         'appearance': '（写清楚长什么样，不强制写四肢。字数不低于30）',
         'height': '', 
         'family': '（家族内身份/士绅/平民，如X家少爷/旁系）', 
-        'position': '（奴皮写考核位分，主皮有官职的写:正x品+官职名称，身兼多职写最高品级，无官职可自拟任意职业）',
+        'position': '（奴皮写考核的位分，主皮有官职的写:正x品+官职名称，身兼多职写最高品级，无官职可自拟任意职业，同二十一世纪常规职业。）',
         'background': '', 
         'likes': '', 
         'taboos': '', 
         'class': '（公民籍/奴籍/罪奴籍）',
         'salary': '（根据薪资表自行填写）', 
-        'affiliation': '（奴皮：训御司，主皮：所属家族，罪奴：所属家族/训御司）', 
+        'affiliation': '（奴籍/罪奴籍-前面写出身家族/这里写主人家族「无主写训御司」；公民籍-仅写出身家族）',
         'notes': ''
     };
     
