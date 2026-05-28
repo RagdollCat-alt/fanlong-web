@@ -1,0 +1,141 @@
+/* 本地兜底数据：后端 /api/archives 可用后，页面会自动优先使用真实档案。 */
+const archiveSeedData = [
+  {
+    id: "demo-yu-001",
+    name: "虞珩",
+    profile: {
+      "年龄": "26",
+      "户籍": "公民籍",
+      "家世": "虞家旁系",
+      "职位": "亲贵",
+      "隶属": "虞家"
+    },
+    stats: {
+      stat_face: 420,
+      stat_charm: 390,
+      stat_intel: 465,
+      stat_biz: 430,
+      stat_talk: 360,
+      stat_body: 310,
+      stat_art: 280,
+      stat_obed: 410
+    },
+    currency: { yuCoin: 860000, reputation: 92 },
+    notes: "示例档案，用于展示档案库筛选效果。"
+  },
+  {
+    id: "demo-xi-001",
+    name: "奚闻",
+    profile: {
+      "年龄": "21",
+      "户籍": "罪奴籍",
+      "家世": "奚家少主",
+      "职位": "无职",
+      "隶属": "训御司"
+    },
+    stats: {
+      stat_face: 385,
+      stat_charm: 320,
+      stat_intel: 455,
+      stat_biz: 260,
+      stat_talk: 335,
+      stat_body: 210,
+      stat_art: 310,
+      stat_obed: 120
+    },
+    currency: { yuCoin: 1800, reputation: -70 },
+    notes: "示例档案，用于展示同姓家族归档。"
+  },
+  {
+    id: "demo-wen-001",
+    name: "闻殊",
+    profile: {
+      "年龄": "24",
+      "户籍": "公民籍",
+      "家世": "闻家直系",
+      "职位": "风投顾问",
+      "隶属": "闻家"
+    },
+    stats: {
+      stat_face: 360,
+      stat_charm: 365,
+      stat_intel: 440,
+      stat_biz: 480,
+      stat_talk: 420,
+      stat_body: 250,
+      stat_art: 240,
+      stat_obed: 330
+    },
+    currency: { yuCoin: 520000, reputation: 73 },
+    notes: "示例档案。"
+  },
+  {
+    id: "demo-bo-001",
+    name: "褚见微",
+    profile: {
+      "年龄": "28",
+      "户籍": "公民籍",
+      "家世": "褚家直系",
+      "职位": "科研院主管",
+      "隶属": "褚家"
+    },
+    stats: {
+      stat_face: 315,
+      stat_charm: 300,
+      stat_intel: 495,
+      stat_biz: 335,
+      stat_talk: 280,
+      stat_body: 220,
+      stat_art: 375,
+      stat_obed: 390
+    },
+    currency: { yuCoin: 410000, reputation: 81 },
+    notes: "示例档案。"
+  },
+  {
+    id: "demo-si-001",
+    name: "司澜",
+    profile: {
+      "年龄": "22",
+      "户籍": "公民籍",
+      "家世": "司家旁系",
+      "职位": "行政辅理",
+      "隶属": "司家"
+    },
+    stats: {
+      stat_face: 455,
+      stat_charm: 470,
+      stat_intel: 350,
+      stat_biz: 280,
+      stat_talk: 430,
+      stat_body: 245,
+      stat_art: 450,
+      stat_obed: 315
+    },
+    currency: { yuCoin: 210000, reputation: 64 },
+    notes: "示例档案。"
+  },
+  {
+    id: "demo-duwei-001",
+    name: "都尉凛",
+    profile: {
+      "年龄": "30",
+      "户籍": "公民籍",
+      "家世": "都尉家旁系",
+      "职位": "巡行官",
+      "隶属": "都尉家"
+    },
+    stats: {
+      stat_face: 330,
+      stat_charm: 310,
+      stat_intel: 365,
+      stat_biz: 250,
+      stat_talk: 285,
+      stat_body: 490,
+      stat_art: 190,
+      stat_obed: 455
+    },
+    currency: { yuCoin: 330000, reputation: 88 },
+    notes: "示例档案，包含复姓筛选。"
+  }
+];

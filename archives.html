@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>档案总库 | 虞宫</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@200;300;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="min-h-screen archive-page">
+    <header
+        class="fixed top-0 w-full z-50 bg-black/95 backdrop-blur-md border-b border-white/5 h-16 flex items-center justify-between px-6">
+        <button onclick="location.href='index.html'" class="flex flex-col text-left">
+            <h1 class="text-xl md:text-3xl font-bold tracking-[0.2em] text-white gold-glow font-cuyasong">虞宫</h1>
+            <span class="text-[0.6rem] text-gray-500 font-roman tracking-widest uppercase">Imperial Archive</span>
+        </button>
+
+        <nav class="hidden md:flex gap-6 text-xs font-bold tracking-widest text-gray-500">
+            <button onclick="location.href='index.html'" class="tab-btn py-2">官网</button>
+            <button class="tab-btn py-2 active">档案库</button>
+        </nav>
+    </header>
+
+    <main class="archive-shell">
+        <section class="archive-hero">
+            <div class="archive-hero-copy">
+                <span class="archive-kicker">SUBMITTED PERSONA ARCHIVE</span>
+                <h2>已交人设档案总库</h2>
+            </div>
+            <div class="archive-hero-mark">
+                <img src="https:////img10.360buyimg.com/imgzone/jfs/t1/387590/36/20410/1573481/69805895F53993666/008399db5d6de15a.png"
+                    alt="虞宫Logo">
+            </div>
+        </section>
+
+        <section class="archive-metrics" aria-label="档案统计">
+            <div>
+                <span>总档案</span>
+                <strong id="archive-total">0</strong>
+            </div>
+            <div>
+                <span>家族姓氏</span>
+                <strong id="archive-family-count">0</strong>
+            </div>
+            <div>
+                <span>当前结果</span>
+                <strong id="archive-filtered-count">0</strong>
+            </div>
+            <div>
+                <span>人数最多</span>
+                <strong id="archive-top-family">-</strong>
+            </div>
+        </section>
+
+        <section class="archive-toolbar" aria-label="筛选工具">
+            <div class="archive-search">
+                <i class="fas fa-magnifying-glass"></i>
+                <input id="archive-search" type="search" placeholder="搜索姓名 / 家世 / 职位 / 隶属">
+            </div>
+            <select id="class-filter" class="archive-select" aria-label="按户籍筛选">
+                <option>全部</option>
+            </select>
+        </section>
+
+        <section class="archive-family-panel">
+            <div class="archive-panel-heading">
+                <span>按姓氏筛同家族</span>
+                <span>Family Filter</span>
+            </div>
+            <div id="surname-filters" class="archive-filter-strip"></div>
+        </section>
+
+        <section id="archive-grid" class="archive-grid" aria-live="polite"></section>
+
+        <section id="archive-empty" class="archive-empty hidden">
+            <i class="fas fa-folder-open"></i>
+            <h3>没有匹配档案</h3>
+            <p>换一个姓氏或关键词试试。</p>
+        </section>
+    </main>
+
+    <nav
+        class="md:hidden fixed bottom-0 left-0 w-full bg-black/95 backdrop-blur-md border-t border-white/10 flex justify-around items-center h-auto z-50 pb-safe py-3">
+        <button onclick="location.href='index.html'"
+            class="bottom-nav-item flex flex-col items-center justify-center w-full text-gray-600">
+            <i class="fas fa-home text-lg mb-1 transition-colors"></i>
+            <span class="text-[0.5rem] tracking-widest font-roman">官网</span>
+        </button>
+        <button class="bottom-nav-item active flex flex-col items-center justify-center w-full text-gray-600">
+            <i class="fas fa-address-book text-lg mb-1 transition-colors"></i>
+            <span class="text-[0.5rem] tracking-widest font-roman">档案库</span>
+        </button>
+    </nav>
+
+    <div id="archive-modal" class="archive-modal hidden">
+        <div class="archive-modal-card">
+            <button id="archive-modal-close" class="archive-modal-close" aria-label="关闭档案详情">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="archive-modal-body"></div>
+        </div>
+    </div>
+
+    <script src="js/archive-data.js"></script>
+    <script src="js/archive.js"></script>
+</body>
+
+</html>

@@ -25,6 +25,11 @@
         </div>
 
         <div class="flex items-center gap-6">
+            <button onclick="location.href='archives.html'"
+                class="mobile-archive-entry md:hidden text-[10px] text-black bg-yu-gold px-3 py-2 font-bold tracking-widest">
+                档案库
+            </button>
+
             <div id="user-status-area" class="flex items-center gap-3">
                 <div id="status-offline" class="flex items-center gap-2">
                     <span class="w-2 h-2 bg-gray-600 rounded-full animate-pulse"></span>
@@ -44,6 +49,7 @@
                 <button onclick="switchTab('politics')" class="tab-btn py-2">政体</button>
                 <button onclick="switchTab('map')" class="tab-btn py-2">地图</button>
                 <button onclick="switchTab('families')" class="tab-btn py-2">世家</button>
+                <button onclick="location.href='archives.html'" class="tab-btn py-2">档案库</button>
                 <button onclick="switchTab('profile')" id="nav-profile-btn"
                     class="tab-btn text-white bg-red-900/80 px-4 py-2 rounded-sm border border-red-900">档案</button>
             </nav>
@@ -80,6 +86,14 @@
                     欢迎访问虞宫官方终端<br>
                     请谨记：在这里，血统决定高度，高主位对低主位拥有天然权威。
                 </p>
+
+                <div class="pt-8 reveal-item delay-500 md:hidden">
+                    <button onclick="location.href='archives.html'"
+                        class="inline-flex items-center justify-center gap-2 bg-yu-gold text-black px-6 py-3 text-xs font-bold tracking-[0.2em]">
+                        <i class="fas fa-address-book"></i>
+                        档案库
+                    </button>
+                </div>
             </div>
 
             <div class="grid md:grid-cols-3 gap-4 md:gap-6 text-center reveal-item delay-500">
