@@ -37,6 +37,23 @@
     都尉: "都尉家"
   };
 
+  const profileFieldOrder = [
+    "年龄",
+    "属性",
+    "性格",
+    "外貌",
+    "身高",
+    "家世",
+    "职位",
+    "背景",
+    "喜恶",
+    "禁忌",
+    "户籍",
+    "薪资",
+    "隶属",
+    "备注"
+  ];
+
   function $(id) {
     return document.getElementById(id);
   }
@@ -245,6 +262,14 @@
     return value;
   }
 
+  function isLikelyBadProfileKey(key) {
+    const text = String(key || "").trim();
+    if (!text) return true;
+    if (text.length > 24) return true;
+    if (/[，。；：、！？,.!?]/.test(text)) return true;
+    return false;
+  }
+
   function collectArchiveFields(record) {
     const raw = record.__raw || record;
     const excludedKeys = new Set([
@@ -261,18 +286,32 @@
       "age"
     ]);
     const rows = [];
-    const seen = new Set();
+    const seenKeys = new Set();
+    const seenLabels = new Set();
 
     const pushField = (key, value) => {
-      if (seen.has(key)) return;
-      seen.add(key);
-      rows.push([labelField(key), formatFieldValue(value)]);
+      const label = labelField(key);
+      if (seenKeys.has(key) || seenLabels.has(label)) return;
+      seenKeys.add(key);
+      seenLabels.add(label);
+      rows.push([label, formatFieldValue(value)]);
     };
 
     pushField("id", record.id);
     pushField("name", record.name);
 
-    Object.entries(raw.profile || {}).forEach(([key, value]) => pushField(key, value));
+    const profile = raw.profile || {};
+    profileFieldOrder.forEach((key) => {
+      if (Object.prototype.hasOwnProperty.call(profile, key)) pushField(key, profile[key]);
+    });
+
+    Object.entries(profile).forEach(([key, value]) => {
+      if (key === "姓名") return;
+      if (profileFieldOrder.includes(key)) return;
+      if (isLikelyBadProfileKey(key)) return;
+      pushField(key, value);
+    });
+
     Object.entries(raw).forEach(([key, value]) => {
       if (!excludedKeys.has(key)) pushField(key, value);
     });
