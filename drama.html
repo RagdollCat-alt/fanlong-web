@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="robots" content="noindex,nofollow">
+    <title>戏录阅读 | 虞宫</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@200;300;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body.drama-reader {
+            padding-bottom: 0;
+            background:
+                linear-gradient(180deg, rgba(197, 160, 89, 0.08), transparent 280px),
+                #050505;
+        }
+
+        .drama-shell {
+            width: min(920px, calc(100vw - 32px));
+            margin: 0 auto;
+            padding: 96px 0 56px;
+        }
+
+        .drama-kicker {
+            color: var(--yu-gold);
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 0.24em;
+        }
+
+        .drama-title {
+            color: #f5f0e6;
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(28px, 7vw, 56px);
+            line-height: 1.1;
+            letter-spacing: 0;
+            margin: 12px 0 18px;
+        }
+
+        .drama-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .drama-chip {
+            border: 1px solid rgba(197, 160, 89, 0.22);
+            background: rgba(255, 255, 255, 0.035);
+            color: #b8b0a2;
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+        .drama-panel {
+            border: 1px solid rgba(197, 160, 89, 0.18);
+            background: rgba(8, 8, 8, 0.86);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+        }
+
+        .drama-content {
+            white-space: pre-wrap;
+            color: #d8d1c6;
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(15px, 3.9vw, 18px);
+            line-height: 2;
+            letter-spacing: 0;
+        }
+
+        .drama-status {
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a3a3a3;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 640px) {
+            .drama-shell {
+                width: min(100% - 24px, 920px);
+                padding-top: 84px;
+            }
+
+            .drama-panel {
+                border-left: 0;
+                border-right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="drama-reader min-h-screen">
+    <header
+        class="fixed top-0 w-full z-50 bg-black/95 backdrop-blur-md border-b border-white/5 h-16 flex items-center justify-between px-6">
+        <button onclick="location.href='index.html'" class="flex flex-col text-left">
+            <h1 class="text-xl md:text-3xl font-bold tracking-[0.2em] text-white gold-glow font-cuyasong">虞宫</h1>
+            <span class="text-[0.6rem] text-gray-500 font-roman tracking-widest uppercase">Drama Archive</span>
+        </button>
+        <div class="hidden md:block text-[10px] text-gray-600 font-roman tracking-[0.22em] uppercase">
+            Private Link
+        </div>
+    </header>
+
+    <main class="drama-shell">
+        <section id="drama-status" class="drama-status">
+            <div>
+                <i class="fas fa-circle-notch fa-spin text-yu-gold mb-4 text-xl"></i>
+                <p>正在调取戏录...</p>
+            </div>
+        </section>
+
+        <article id="drama-reader" class="hidden">
+            <div class="drama-kicker">YU PALACE DRAMA RECORD</div>
+            <h2 id="drama-title" class="drama-title"></h2>
+            <div id="drama-meta" class="drama-meta"></div>
+            <section class="drama-panel">
+                <div id="drama-content" class="drama-content p-5 md:p-8"></div>
+            </section>
+        </article>
+    </main>
+
+    <script>
+        const params = new URLSearchParams(location.search);
+        const id = params.get("id");
+        const sig = params.get("sig");
+        const statusEl = document.getElementById("drama-status");
+        const readerEl = document.getElementById("drama-reader");
+
+        function setStatus(title, detail) {
+            statusEl.innerHTML = `<div><p class="text-yu-gold font-bold mb-2">${title}</p><p>${detail || ""}</p></div>`;
+        }
+
+        function chip(label, value) {
+            if (!value) return "";
+            return `<span class="drama-chip">${label}：${String(value).replace(/[&<>"']/g, (m) => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            }[m]))}</span>`;
+        }
+
+        async function loadDrama() {
+            if (!id || !sig) {
+                setStatus("链接无效", "缺少戏录编号或签名。");
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/drama?id=${encodeURIComponent(id)}&sig=${encodeURIComponent(sig)}`);
+                const data = await res.json();
+                if (!res.ok || data.error) {
+                    setStatus("无法打开戏录", data.detail || data.error || "链接可能已失效。");
+                    return;
+                }
+
+                document.title = `${data.title || "戏录阅读"} | 虞宫`;
+                document.getElementById("drama-title").textContent = data.title || `戏录-${id}`;
+                document.getElementById("drama-content").textContent = data.content || "";
+                document.getElementById("drama-meta").innerHTML = [
+                    chip("编号", data.id || id),
+                    chip("时间", data.date_str),
+                    chip("参与", data.participants),
+                    chip("记录", data.recorder),
+                    chip("备注", data.note)
+                ].join("");
+
+                statusEl.classList.add("hidden");
+                readerEl.classList.remove("hidden");
+            } catch (error) {
+                setStatus("服务器暂不可达", error.message);
+            }
+        }
+
+        loadDrama();
+    </script>
+</body>
+
+</html>
