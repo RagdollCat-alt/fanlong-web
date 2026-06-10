@@ -9,6 +9,7 @@
             
             --deep-black: #050505;
             --panel-bg: #0a0a0a;
+            --fanlong-original-work-signature: "fanlong-yugong-official-2026";
         }
 
         html {
@@ -120,6 +121,60 @@
         }
 
         /* 导航状态 */
+        .original-guardline {
+            width: fit-content;
+            max-width: min(82vw, 560px);
+            margin: -2.75rem auto 3rem;
+            color: rgba(197, 160, 89, 0.78);
+            border: 1px solid rgba(197, 160, 89, 0.18);
+            background: rgba(197, 160, 89, 0.055);
+            padding: 8px 18px;
+            font-size: 12px;
+            line-height: 1.45;
+            letter-spacing: 0.08em;
+            text-align: center;
+            box-shadow: inset 0 0 18px rgba(197, 160, 89, 0.035);
+        }
+
+        .site-original-signature {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            width: 1px;
+            height: 1px;
+            opacity: 0.01;
+            overflow: hidden;
+            pointer-events: none;
+            user-select: none;
+            color: transparent;
+            z-index: -1;
+        }
+
+        body::after {
+            content: var(--fanlong-original-work-signature);
+            position: fixed;
+            right: 12px;
+            bottom: 12px;
+            width: 1px;
+            height: 1px;
+            opacity: 0.001;
+            pointer-events: none;
+            user-select: none;
+            color: transparent;
+            overflow: hidden;
+        }
+
+        @media (max-width: 767px) {
+            .original-guardline {
+                max-width: min(82vw, 320px);
+                margin-top: -2.25rem;
+                margin-bottom: 2.5rem;
+                padding: 7px 12px;
+                font-size: 11px;
+                letter-spacing: 0.04em;
+            }
+        }
+
         .tab-btn.active { color: var(--yu-gold); border-bottom: 2px solid var(--yu-gold); }
         .bottom-nav-item {
             flex: 1 1 0;
@@ -989,6 +1044,38 @@ input#login-qq {
 .cyber-modal-btn:hover {
     border-color: var(--yu-gold);
     background: rgba(197, 160, 89, 0.1);
+}
+
+.archive-auth-card {
+    max-width: 420px;
+}
+
+.archive-auth-input {
+    width: 100%;
+    border: 1px solid rgba(197, 160, 89, 0.3);
+    background: rgba(0, 0, 0, 0.55);
+    color: #f5f0e6;
+    padding: 0.75rem 0.9rem;
+    outline: none;
+    text-align: center;
+    letter-spacing: 0.08em;
+}
+
+.archive-auth-input:focus {
+    border-color: var(--yu-gold);
+    box-shadow: 0 0 18px rgba(197, 160, 89, 0.12);
+}
+
+.archive-auth-message {
+    min-height: 1.25rem;
+    margin-top: 0.75rem;
+    color: #ef4444;
+    font-size: 0.75rem;
+}
+
+.cyber-modal-btn:disabled {
+    cursor: wait;
+    opacity: 0.55;
 }
 
 /* 显示状态 */

@@ -5,16 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="author" content="繁笼">
+    <meta name="copyright" content="Copyright 2026 繁笼. All rights reserved.">
+    <meta name="rights" content="本站内容、架构与交互逻辑均为繁笼首发原创，请勿复制、搬运或仿冒。">
+    <meta name="original-source" content="fanlong-yugong-official-2026">
+    <!-- 繁笼官网原创首发：内容设定、页面架构、交互逻辑与前端实现未经授权禁止复制、搬运、镜像或仿冒。 -->
     <title>档案总库 | 虞宫</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@200;300;500;700;900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.min.css">
 </head>
 
-<body class="min-h-screen archive-page">
+<body class="min-h-screen archive-page" data-original-work="fanlong-yugong-official-2026"
+    data-rights-owner="繁笼">
+    <script>
+        (function () {
+            var access = null;
+            try {
+                access = JSON.parse(sessionStorage.getItem("fanlongArchiveAccess") || "null");
+            } catch (error) {
+                access = null;
+            }
+
+            if (!access || !access.qq || !access.name) {
+                alert("请先完成档案登记。");
+                location.replace("index.html");
+            }
+        })();
+    </script>
+    <div class="site-original-signature" aria-hidden="true" data-signature="fanlong-yugong-official-2026">
+        繁笼官网原创首发
+    </div>
     <header
         class="fixed top-0 w-full z-50 bg-black/95 backdrop-blur-md border-b border-white/5 h-16 flex items-center justify-between px-6">
         <button onclick="location.href='index.html'" class="flex flex-col text-left">
@@ -108,8 +132,8 @@
         </div>
     </div>
 
-    <script src="js/archive-data.js"></script>
-    <script src="js/archive.js"></script>
+    <script src="js/archive-data.min.js"></script>
+    <script src="js/archive.min.js"></script>
 </body>
 
 </html>

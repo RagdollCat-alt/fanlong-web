@@ -5,16 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="author" content="繁笼">
+    <meta name="copyright" content="Copyright 2026 繁笼. All rights reserved.">
+    <meta name="rights" content="本站内容、架构与交互逻辑均为繁笼首发原创，请勿复制、搬运或仿冒。">
+    <meta name="original-source" content="fanlong-yugong-official-2026">
+    <!-- 繁笼官网原创首发：内容设定、页面架构、交互逻辑与前端实现未经授权禁止复制、搬运、镜像或仿冒。 -->
     <title>虞宫官网 | YU PALACE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@200;300;500;700;900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.min.css">
 </head>
 
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col" data-original-work="fanlong-yugong-official-2026"
+    data-rights-owner="繁笼">
+    <div class="site-original-signature" aria-hidden="true" data-signature="fanlong-yugong-official-2026">
+        繁笼官网原创首发
+    </div>
 
     <header
         class="fixed top-0 w-full z-50 bg-black/95 backdrop-blur-md border-b border-white/5 h-16 flex items-center justify-between px-6">
@@ -25,7 +34,7 @@
         </div>
 
         <div class="flex items-center gap-6">
-            <button onclick="location.href='archives.html'"
+            <button onclick="requestArchiveAccess(event)"
                 class="mobile-archive-entry md:hidden text-[10px] text-black bg-yu-gold px-3 py-2 font-bold tracking-widest">
                 档案库
             </button>
@@ -49,7 +58,7 @@
                 <button onclick="switchTab('politics')" class="tab-btn py-2">政体</button>
                 <button onclick="switchTab('map')" class="tab-btn py-2">地图</button>
                 <button onclick="switchTab('families')" class="tab-btn py-2">世家</button>
-                <button onclick="location.href='archives.html'" class="tab-btn py-2">档案库</button>
+                <button onclick="requestArchiveAccess(event)" class="tab-btn py-2">档案库</button>
                 <button onclick="switchTab('profile')" id="nav-profile-btn"
                     class="tab-btn text-white bg-red-900/80 px-4 py-2 rounded-sm border border-red-900">档案</button>
             </nav>
@@ -61,6 +70,10 @@
         <!-- Tab: HOME -->
         <div id="tab-home" class="block mt-8 md:mt-12 reveal-container">
             <div class="text-center py-16 md:py-24 relative overflow-hidden">
+                <div class="original-guardline" title="本站内容、架构与交互逻辑均为繁笼首发原创，请勿复制、搬运或仿冒。">
+                    本站内容、架构与交互逻辑均为繁笼首发原创，请勿复制、搬运或仿冒。
+                </div>
+
                 <div class="reveal-item">
                     <div class="w-48 md:w-64 h-auto mx-auto mb-10 relative flex items-center justify-center">
                         <img src="https:////img10.360buyimg.com/imgzone/jfs/t1/387590/36/20410/1573481/69805895F53993666/008399db5d6de15a.png"
@@ -87,13 +100,6 @@
                     请谨记：在这里，血统决定高度，高主位对低主位拥有天然权威。
                 </p>
 
-                <div class="pt-8 reveal-item delay-500 md:hidden">
-                    <button onclick="location.href='archives.html'"
-                        class="inline-flex items-center justify-center gap-2 bg-yu-gold text-black px-6 py-3 text-xs font-bold tracking-[0.2em]">
-                        <i class="fas fa-address-book"></i>
-                        档案库
-                    </button>
-                </div>
             </div>
 
             <div class="grid md:grid-cols-3 gap-4 md:gap-6 text-center reveal-item delay-500">
@@ -1720,8 +1726,8 @@
     </div>
 
 
-    <script src="js/data.js"></script>
-    <script src="js/core.js"></script>
+    <script src="js/data.min.js"></script>
+    <script src="js/core.min.js"></script>
 
     <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
     <script>LA.init({ id: "3Ozjj94VDX59oMT9", ck: "3Ozjj94VDX59oMT9", autoTrack: true })</script>
