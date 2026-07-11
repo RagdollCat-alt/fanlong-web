@@ -88,7 +88,8 @@
         }
 
         .drama-tool-btn,
-        .drama-color-label {
+        .drama-color-label,
+        .drama-select-label {
             min-height: 36px;
             display: inline-flex;
             align-items: center;
@@ -99,6 +100,20 @@
             padding: 7px 11px;
             font-size: 12px;
             cursor: pointer;
+        }
+
+        .drama-select {
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: inherit;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        body:not(.day-mode) .drama-select option {
+            background: #171717;
+            color: #d8d1c6;
         }
 
         .drama-color-input {
@@ -125,7 +140,8 @@
         body.day-mode .drama-chip { background: rgba(255, 255, 255, 0.42); color: #625a50; }
         body.day-mode .drama-panel { background: rgba(250, 247, 239, 0.94); box-shadow: 0 24px 70px rgba(75, 57, 31, 0.12); }
         body.day-mode .drama-tool-btn,
-        body.day-mode .drama-color-label { background: rgba(255, 255, 255, 0.46); color: #51483d; }
+        body.day-mode .drama-color-label,
+        body.day-mode .drama-select-label { background: rgba(255, 255, 255, 0.46); color: #51483d; }
 
         .drama-status {
             min-height: 50vh;
@@ -187,6 +203,33 @@
                     正文颜色
                     <input id="text-color" class="drama-color-input" type="color" value="#d8d1c6">
                 </label>
+                <label class="drama-select-label" for="text-font">
+                    字体
+                    <select id="text-font" class="drama-select">
+                        <option value="serif">宋体</option>
+                        <option value="kaiti">楷体</option>
+                        <option value="fangsong">仿宋</option>
+                        <option value="sans">黑体</option>
+                        <option value="system">系统字体</option>
+                    </select>
+                </label>
+                <label class="drama-select-label" for="text-size">
+                    字号
+                    <select id="text-size" class="drama-select">
+                        <option value="15">小</option>
+                        <option value="18">标准</option>
+                        <option value="21">大</option>
+                        <option value="24">特大</option>
+                    </select>
+                </label>
+                <label class="drama-select-label" for="line-height">
+                    行距
+                    <select id="line-height" class="drama-select">
+                        <option value="1.7">紧凑</option>
+                        <option value="2">标准</option>
+                        <option value="2.4">宽松</option>
+                    </select>
+                </label>
                 <button id="reader-reset" class="drama-tool-btn" type="button">恢复默认</button>
             </div>
             <section class="drama-panel">
@@ -203,14 +246,31 @@
         const readerEl = document.getElementById("drama-reader");
         const themeToggle = document.getElementById("theme-toggle");
         const textColor = document.getElementById("text-color");
+        const textFont = document.getElementById("text-font");
+        const textSize = document.getElementById("text-size");
+        const lineHeight = document.getElementById("line-height");
+        const dramaContent = document.getElementById("drama-content");
         const READER_PREFS_KEY = "fanlongDramaReaderPrefs";
-        const defaults = { theme: "night", color: "#d8d1c6" };
+        const defaults = { theme: "night", color: "#d8d1c6", font: "serif", size: "18", lineHeight: "2" };
+        const fontFamilies = {
+            serif: "'Noto Serif SC', 'Songti SC', serif",
+            kaiti: "'Kaiti SC', 'STKaiti', 'KaiTi', serif",
+            fangsong: "'FangSong', 'STFangsong', serif",
+            sans: "'PingFang SC', 'Microsoft YaHei', sans-serif",
+            system: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        };
 
         function applyReaderPrefs(prefs) {
             const isDay = prefs.theme === "day";
             document.body.classList.toggle("day-mode", isDay);
             document.body.style.setProperty("--drama-text-color", prefs.color);
             textColor.value = prefs.color;
+            textFont.value = fontFamilies[prefs.font] ? prefs.font : defaults.font;
+            textSize.value = prefs.size;
+            lineHeight.value = prefs.lineHeight;
+            dramaContent.style.fontFamily = fontFamilies[textFont.value];
+            dramaContent.style.fontSize = `${prefs.size}px`;
+            dramaContent.style.lineHeight = prefs.lineHeight;
             themeToggle.innerHTML = isDay
                 ? '<i class="fas fa-moon"></i><span>夜间模式</span>'
                 : '<i class="fas fa-sun"></i><span>日间模式</span>';
@@ -237,6 +297,18 @@
         });
         textColor.addEventListener("input", () => {
             readerPrefs.color = textColor.value;
+            saveReaderPrefs(readerPrefs);
+        });
+        textFont.addEventListener("change", () => {
+            readerPrefs.font = textFont.value;
+            saveReaderPrefs(readerPrefs);
+        });
+        textSize.addEventListener("change", () => {
+            readerPrefs.size = textSize.value;
+            saveReaderPrefs(readerPrefs);
+        });
+        lineHeight.addEventListener("change", () => {
+            readerPrefs.lineHeight = lineHeight.value;
             saveReaderPrefs(readerPrefs);
         });
         document.getElementById("reader-reset").addEventListener("click", () => {
