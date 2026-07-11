@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/style.min.css">
     <style>
         body.drama-reader {
+            --drama-text-color: #d8d1c6;
             padding-bottom: 0;
             background:
                 linear-gradient(180deg, rgba(197, 160, 89, 0.08), transparent 280px),
@@ -71,12 +72,60 @@
 
         .drama-content {
             white-space: pre-wrap;
-            color: #d8d1c6;
+            color: var(--drama-text-color);
             font-family: 'Noto Serif SC', serif;
             font-size: clamp(15px, 3.9vw, 18px);
             line-height: 2;
             letter-spacing: 0;
         }
+
+        .drama-tools {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .drama-tool-btn,
+        .drama-color-label {
+            min-height: 36px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(197, 160, 89, 0.25);
+            background: rgba(255, 255, 255, 0.04);
+            color: #c9c1b4;
+            padding: 7px 11px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .drama-color-input {
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        body.drama-reader.day-mode {
+            background: linear-gradient(180deg, rgba(153, 112, 36, 0.11), transparent 280px), #eee8dc;
+        }
+
+        body.day-mode header {
+            background: rgba(242, 237, 226, 0.96) !important;
+            border-color: rgba(89, 68, 37, 0.12) !important;
+        }
+
+        body.day-mode header h1 { color: #28231d !important; }
+        body.day-mode header span, body.day-mode header div { color: #746b5e !important; }
+        body.day-mode .drama-title { color: #26211b; }
+        body.day-mode .drama-chip { background: rgba(255, 255, 255, 0.42); color: #625a50; }
+        body.day-mode .drama-panel { background: rgba(250, 247, 239, 0.94); box-shadow: 0 24px 70px rgba(75, 57, 31, 0.12); }
+        body.day-mode .drama-tool-btn,
+        body.day-mode .drama-color-label { background: rgba(255, 255, 255, 0.46); color: #51483d; }
 
         .drama-status {
             min-height: 50vh;
@@ -130,6 +179,16 @@
             <div class="drama-kicker">YU PALACE DRAMA RECORD</div>
             <h2 id="drama-title" class="drama-title"></h2>
             <div id="drama-meta" class="drama-meta"></div>
+            <div class="drama-tools" aria-label="阅读设置">
+                <button id="theme-toggle" class="drama-tool-btn" type="button">
+                    <i class="fas fa-sun"></i><span>日间模式</span>
+                </button>
+                <label class="drama-color-label" for="text-color">
+                    正文颜色
+                    <input id="text-color" class="drama-color-input" type="color" value="#d8d1c6">
+                </label>
+                <button id="reader-reset" class="drama-tool-btn" type="button">恢复默认</button>
+            </div>
             <section class="drama-panel">
                 <div id="drama-content" class="drama-content p-5 md:p-8"></div>
             </section>
@@ -142,6 +201,48 @@
         const sig = params.get("sig");
         const statusEl = document.getElementById("drama-status");
         const readerEl = document.getElementById("drama-reader");
+        const themeToggle = document.getElementById("theme-toggle");
+        const textColor = document.getElementById("text-color");
+        const READER_PREFS_KEY = "fanlongDramaReaderPrefs";
+        const defaults = { theme: "night", color: "#d8d1c6" };
+
+        function applyReaderPrefs(prefs) {
+            const isDay = prefs.theme === "day";
+            document.body.classList.toggle("day-mode", isDay);
+            document.body.style.setProperty("--drama-text-color", prefs.color);
+            textColor.value = prefs.color;
+            themeToggle.innerHTML = isDay
+                ? '<i class="fas fa-moon"></i><span>夜间模式</span>'
+                : '<i class="fas fa-sun"></i><span>日间模式</span>';
+        }
+
+        function getReaderPrefs() {
+            try {
+                return { ...defaults, ...JSON.parse(localStorage.getItem(READER_PREFS_KEY) || "{}") };
+            } catch (_) {
+                return { ...defaults };
+            }
+        }
+
+        function saveReaderPrefs(prefs) {
+            localStorage.setItem(READER_PREFS_KEY, JSON.stringify(prefs));
+            applyReaderPrefs(prefs);
+        }
+
+        let readerPrefs = getReaderPrefs();
+        applyReaderPrefs(readerPrefs);
+        themeToggle.addEventListener("click", () => {
+            readerPrefs.theme = readerPrefs.theme === "day" ? "night" : "day";
+            saveReaderPrefs(readerPrefs);
+        });
+        textColor.addEventListener("input", () => {
+            readerPrefs.color = textColor.value;
+            saveReaderPrefs(readerPrefs);
+        });
+        document.getElementById("reader-reset").addEventListener("click", () => {
+            readerPrefs = { ...defaults };
+            saveReaderPrefs(readerPrefs);
+        });
 
         function setStatus(title, detail) {
             statusEl.innerHTML = `<div><p class="text-yu-gold font-bold mb-2">${title}</p><p>${detail || ""}</p></div>`;
