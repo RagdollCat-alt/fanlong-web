@@ -702,9 +702,19 @@ window.addEventListener("pagehide",()=>sessionStorage.setItem(SCROLL_KEY,String(
 let feedObserver;
 function observeFeedEnd(){ feedObserver?.disconnect(); const sentinel=$("[data-load-more]"); if(!sentinel)return; feedObserver=new IntersectionObserver(async(entries)=>{if(!entries[0].isIntersecting)return; sentinel.innerHTML='<span class="skeleton-line"></span><span class="skeleton-line"></span>'; try{await loadMoreFeed();}catch(error){state.feedLoading=false;sentinel.innerHTML='加载失败，点击重试';sentinel.dataset.retry='1';}}, {rootMargin:"500px"}); feedObserver.observe(sentinel); }
 
+let postOpenRequest = 0;
 async function openPost(postId, pushHistory = true) {
+  const request = ++postOpenRequest;
+  const dialog = $("#post-dialog");
+  const cached = findPost(postId);
+  state.activePost = null;
+  $("#post-detail").innerHTML = `<div class="detail-shell"><header class="detail-topbar"><button class="detail-back" type="button" data-close="post-dialog" aria-label="返回">←</button><h2>众声正文</h2></header>${cached ? `<div class="detail-main" inert>${renderTimelinePost(cached, {detail:true})}</div>` : ''}<section class="empty-state" role="status" aria-live="polite">正在加载评论……</section></div>`;
+  if (!dialog.open) openDialog(dialog);
+  dialog.scrollTop = 0;
   try {
-    state.activePost = await api("post", { query: { id: postId } });
+    const loaded = await api("post", { query: { id: postId } });
+    if (request !== postOpenRequest || !dialog.open) return;
+    state.activePost = loaded;
     state.detailTab = "comments";
     const post = state.activePost;
     $("#post-detail").innerHTML = `<div class="detail-shell" data-post-id="${post.id}"><header class="detail-topbar"><button class="detail-back" type="button" data-close="post-dialog" aria-label="返回"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button><h2>众声正文</h2><button class="detail-top-menu" type="button" data-detail-more aria-label="更多操作">${socialIcons.more}</button></header><div class="detail-visibility"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>公开</div><div class="detail-main">${renderTimelinePost(post, { detail: true })}</div>${renderAdvancedDetail(post)}<nav class="detail-tabs"><button type="button" data-detail-tab="reposts">转发 <b>${post.counts.repost}</b></button><button type="button" class="active" data-detail-tab="comments">评论 <b>${post.counts.comment}</b></button><button type="button" data-detail-tab="likes">赞 <b>${post.counts.like}</b></button></nav><section class="detail-discussion" id="detail-discussion">${renderDetailDiscussion("comments")}</section><footer class="detail-action-bar"><button type="button" class="${post.viewer?.reposted ? "active" : ""}" data-action="repost">${socialIcons.repost}<span>${post.counts.repost || "转发"}</span></button><button type="button" data-detail-comment>${socialIcons.comment}<span>${post.counts.comment || "评论"}</span></button><button type="button" class="${post.viewer?.liked ? "active" : ""}" data-action="like">${socialIcons.like}<span>${post.counts.like || "赞"}</span></button></footer></div>`;
@@ -713,7 +723,10 @@ async function openPost(postId, pushHistory = true) {
       const url = new URL(location.href); url.searchParams.set("post", post.id);
       history.pushState({ zsOverlay: "post", postId: post.id }, "", url);
     }
-  } catch (error) { toast(error.message, "error"); }
+  } catch (error) {
+    if (request !== postOpenRequest || !dialog.open) return;
+    $("#post-detail").innerHTML = `<div class="detail-shell"><header class="detail-topbar"><button class="detail-back" type="button" data-close="post-dialog" aria-label="返回">←</button><h2>众声正文</h2></header><section class="empty-state" role="alert"><p>${escapeHtml(error.message)}</p><button type="button" class="outline-btn" data-retry-post="${escapeHtml(postId)}">重新加载</button></section></div>`;
+  }
 }
 
 function switchTab(tab) {
@@ -1028,6 +1041,8 @@ $("#compose-form").addEventListener("submit", async (event) => {
 });
 
 document.addEventListener("click", async (event) => {
+  const retryPost = event.target.closest('[data-retry-post]');
+  if (retryPost) return openPost(retryPost.dataset.retryPost);
   const suggested = event.target.closest("[data-suggest-search]");
   if (suggested) { const term=suggested.dataset.suggestSearch; $("#global-search-input").value=term; $("#mobile-search-input").value=term; if($("#search-dialog").open)$("#search-dialog").close(); await runSearch(term); return; }
   const suggestedPost = event.target.closest(".suggest-post");
