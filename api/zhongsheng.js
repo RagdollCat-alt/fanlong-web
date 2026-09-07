@@ -32,7 +32,7 @@ export default async function handler(request, response) {
   };
   if (!["GET", "HEAD"].includes(request.method)) headers["Content-Type"] = "application/json";
   const session = readCookie(request.headers.cookie, "zs_session");
-  if (session) headers["X-ZS-Session"] = session;
+  if (session && action !== "media") headers["X-ZS-Session"] = session;
   if (request.headers["idempotency-key"]) headers["Idempotency-Key"] = request.headers["idempotency-key"];
 
   const options = { method: request.method, headers };
@@ -45,6 +45,9 @@ export default async function handler(request, response) {
       const bytes = Buffer.from(await backend.arrayBuffer());
       response.setHeader("Content-Type", contentType);
       response.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+      response.setHeader("CDN-Cache-Control", "public, max-age=31536000");
+      response.setHeader("Vercel-CDN-Cache-Control", "public, max-age=31536000");
+      response.setHeader("X-Content-Type-Options", "nosniff");
       return response.status(200).send(bytes);
     }
     const payload = contentType.includes("application/json")
@@ -58,6 +61,7 @@ export default async function handler(request, response) {
     if (action === "logout" || (action === "change-password" && backend.ok)) {
       response.setHeader("Set-Cookie", sessionCookie("", 0));
     }
+    response.setHeader("Cache-Control", "private, no-store");
     response.status(backend.status).json(payload);
   } catch (error) {
     console.error("[zhongsheng-proxy]", error);

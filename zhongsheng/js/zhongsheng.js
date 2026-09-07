@@ -4,6 +4,52 @@ const COMPOSE_DRAFT_KEY = "zhongsheng-compose-draft-v1";
 const RECENT_SEARCH_KEY = "zhongsheng-recent-searches-v1";
 const SCROLL_KEY = "zhongsheng-scroll-v1";
 const DEFAULT_PROFILE_COVER = "/zhongsheng/assets/profile-cover-default.svg";
+const pendingLikes = new Set();
+
+function mediaThumbnail(url, width) {
+  return /^\/api\/zhongsheng\?action=media&id=\d+$/.test(url) ? `${url}&w=${width}` : url;
+}
+
+async function togglePostLike(postId, action) {
+  const id = Number(postId);
+  if (pendingLikes.has(id)) return;
+  pendingLikes.add(id);
+  const posts = new Set();
+  const visit = (post) => { if (!post || posts.has(post)) return; posts.add(post); visit(post.repost?.original); };
+  [state.activePost, ...state.feed, ...state.hot, ...state.timeline.map(item => item.post || item.repost)].forEach(visit);
+  const matches = [...posts].filter(post => Number(post.id) === id);
+  const oldLiked = findPost(id)?.viewer?.liked ?? action.classList.contains('active');
+  const oldCount = findPost(id)?.counts?.like ?? (Number(action.querySelector('span')?.textContent) || 0);
+  const paint = (liked, count) => {
+    matches.forEach(post => { post.viewer = {...post.viewer, liked}; post.counts = {...post.counts, like:count}; });
+    $$('[data-action="like"]').filter(button => Number(button.closest('[data-post-id]')?.dataset.postId) === id).forEach(button => {
+      button.classList.toggle('active', liked);
+      button.setAttribute('aria-pressed', String(liked));
+      const label = $('span', button); if (label) label.textContent = count || '赞';
+    });
+  };
+  paint(!oldLiked, Math.max(0, oldCount + (oldLiked ? -1 : 1)));
+  try {
+    const result = await api('like', {method:'POST',body:{postId:id}});
+    paint(result.liked, Math.max(0, oldCount + (result.liked === oldLiked ? 0 : result.liked ? 1 : -1)));
+    matches.forEach(post => { if (result.heat !== undefined) {post.heat = result.heat;post.displayHeat=`${Math.round(result.heat)}万`;} });
+  } catch (error) { paint(oldLiked, oldCount); toast(error.message, 'error'); }
+  finally { pendingLikes.delete(id); }
+}
+
+async function uploadComposeMedia(items) {
+  let cursor = 0;
+  const failures = [];
+  await Promise.all(Array.from({length:Math.min(3, items.length)}, async () => {
+    while (cursor < items.length) {
+      const item = items[cursor++];
+      if (item.url) continue;
+      try { item.url = (await uploadFile(item.file)).url; } catch (error) { failures.push(error); }
+    }
+  }));
+  if (failures.length) throw failures[0];
+  return items.map(item => item.url);
+}
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -67,7 +113,7 @@ function formatDeadline(value) {
 
 function avatar(account, size = "avatar") {
   const name = account?.displayName || "众";
-  return `<span class="${size}">${account?.avatarUrl ? `<img src="${escapeHtml(account.avatarUrl)}" alt="">` : escapeHtml(name.slice(0, 1))}</span>`;
+  return `<span class="${size}">${account?.avatarUrl ? `<img src="${escapeHtml(mediaThumbnail(account.avatarUrl, 96))}" alt="">` : escapeHtml(name.slice(0, 1))}</span>`;
 }
 
 function toast(message, type = "success") {
@@ -110,7 +156,7 @@ function renderImageViewer() {
   $("#image-viewer-count").textContent = `${index + 1} / ${items.length}`;
   $("#image-viewer-caption").textContent = items.length > 1 ? `第 ${index + 1} 张，共 ${items.length} 张` : "众声图片";
   $("#image-download").dataset.url = items[index] || "";
-  $("#image-thumbnails").innerHTML = items.map((url,itemIndex)=>`<button type="button" class="${itemIndex===index?'active':''}" data-image-index="${itemIndex}" aria-label="查看第${itemIndex+1}张"><img src="${escapeHtml(url)}" alt=""></button>`).join("");
+  $("#image-thumbnails").innerHTML = items.map((url,itemIndex)=>`<button type="button" class="${itemIndex===index?'active':''}" data-image-index="${itemIndex}" aria-label="查看第${itemIndex+1}张"><img src="${escapeHtml(mediaThumbnail(url, 96))}" alt="" loading="lazy" decoding="async"></button>`).join("");
   $(".image-prev").hidden = items.length < 2;
   $(".image-next").hidden = items.length < 2;
 }
@@ -121,8 +167,8 @@ function openImageViewer(button) {
     renderImageViewer(); openDialog($("#image-dialog"), button); return;
   }
   const post = findPost(button.closest("[data-post-id]")?.dataset.postId);
-  const gridItems = [...button.closest(".media-grid")?.querySelectorAll("img") || []].map((image) => image.src);
-  const items = post?.media?.length ? post.media : gridItems;
+  const gridItems = [...button.closest(".media-grid")?.querySelectorAll("img") || []].map((image) => image.closest("[data-media-url]")?.dataset.mediaUrl || image.src);
+  const items = post?.media?.length ? post.media : gridItems.length ? gridItems : button.dataset.mediaUrl ? [button.dataset.mediaUrl] : [];
   if (!items.length) return;
   state.imageViewer = { items, index: Math.min(Number(button.dataset.mediaIndex || 0), items.length - 1), scale: 1, x: 0, y: 0 };
   renderImageViewer();
@@ -141,11 +187,11 @@ async function compressImage(file) {
   if (!/^image\/(jpeg|png|webp|gif)$/.test(file.type)) throw new Error("仅支持 JPG、PNG、WebP 或 GIF 图片");
   if (file.type === "image/gif" && file.size <= 2 * 1024 * 1024) return await fileToDataUrl(file);
   const source = await createImageBitmap(file);
-  const scale = Math.min(1, 1600 / Math.max(source.width, source.height));
+  const scale = Math.min(1, 1280 / Math.max(source.width, source.height));
   const canvas = document.createElement("canvas");
   canvas.width = Math.max(1, Math.round(source.width * scale)); canvas.height = Math.max(1, Math.round(source.height * scale));
   canvas.getContext("2d").drawImage(source, 0, 0, canvas.width, canvas.height); source.close();
-  const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.82));
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.76));
   if (!blob) throw new Error("图片压缩失败");
   if (blob.size > 2 * 1024 * 1024) throw new Error("图片压缩后仍超过2MB，请换一张图片");
   return await fileToDataUrl(blob);
@@ -257,7 +303,7 @@ function showApp() {
 }
 
 function verificationClass(value) {
-  return ({ "蓝V": "blue", "实名V": "real", "银V": "silver", "金V": "gold", "显赫V": "illustrious" })[value] || "real";
+  return ({ "蓝V": "blue", "红V": "red", "V": "real", "实名V": "real", "银V": "silver", "金V": "gold", "显赫V": "illustrious" })[value] || "real";
 }
 function natureLabel(value) { return ({ positive: "正面", negative: "负面", neutral: "中立" })[value] || value; }
 
@@ -276,7 +322,7 @@ const socialIcons = {
 
 function renderIdentity() {
   if (!state.me) return;
-  $("#identity-mini").innerHTML = `<div class="identity-head">${avatar(state.me, "mini-avatar")}<div><h3>${escapeHtml(state.me.displayName)}<span class="v-badge ${verificationClass(state.me.verification)}">${escapeHtml(state.me.verification)}</span></h3><p>${escapeHtml(state.me.realName || state.me.identity)} · ${escapeHtml(state.me.identity)}</p></div></div><div class="mini-stats"><span>传播力<b>${state.me.influence}</b></span><span>名誉进度<b>${Number(state.me.reputationProgress || 0) > 0 ? "+" : ""}${state.me.reputationProgress ?? "—"}</b></span></div>`;
+  $("#identity-mini").innerHTML = `<div class="identity-head">${avatar(state.me, "mini-avatar")}<div><h3>${escapeHtml(state.me.displayName)}<span class="v-badge ${verificationClass(state.me.verification)}">${escapeHtml(state.me.verification)}</span></h3><p>${state.me.identityUnverified ? "未完成实名" : `${escapeHtml(state.me.realName || state.me.displayName)} · ${escapeHtml(state.me.identity)}`}</p></div></div><div class="mini-stats"><span>传播力<b>${state.me.influence}</b></span><span>名誉进度<b>${Number(state.me.reputationProgress || 0) > 0 ? "+" : ""}${state.me.reputationProgress ?? "—"}</b></span></div>`;
   $("#wallet-balance").textContent = Number(state.me.yuCoin || 0).toLocaleString("zh-CN");
   $("#top-name").textContent = state.me.displayName;
   $("#top-avatar").innerHTML = state.me.avatarUrl ? `<img src="${escapeHtml(state.me.avatarUrl)}" alt="">` : escapeHtml(state.me.displayName.slice(0, 1));
@@ -285,7 +331,7 @@ function renderIdentity() {
 function renderPost(post, full = false, options = {}) {
   const mediaCount = Math.min(post.media?.length || 0, 9);
   const displayHeat = post.displayHeat || `${Math.round(Number(post.heat || 0))}万`;
-  const media = mediaCount ? `<div class="media-grid media-count-${mediaCount}">${post.media.map((url, index) => `<button type="button" class="media-item" data-media-index="${index}" aria-label="查看第${index + 1}张大图"><img src="${escapeHtml(url)}" alt="众声图片 ${index + 1}" loading="lazy"></button>`).join("")}</div>` : "";
+  const media = mediaCount ? `<div class="media-grid media-count-${mediaCount}">${post.media.map((url, index) => `<button type="button" class="media-item" data-media-url="${escapeHtml(url)}" data-media-index="${index}" aria-label="查看第${index + 1}张大图"><img src="${escapeHtml(mediaThumbnail(url, 480))}" alt="众声图片 ${index + 1}" loading="lazy" decoding="async"></button>`).join("")}</div>` : "";
   const targets = post.targets?.length ? `<div class="post-targets"><span class="nature-badge ${post.nature}">${natureLabel(post.nature)}</span><span>影响对象：${post.targets.map((target) => `<b>${escapeHtml(target.name)}</b>`).join("、")}</span></div>` : `<div class="post-targets"><span class="nature-badge ${post.nature}">${natureLabel(post.nature)}</span><span>无名誉影响</span></div>`;
   const ownerActions = `${post.viewer?.isAuthor && state.me.capabilities?.pinLimit ? `<button type="button" data-action="pin">${post.pinned ? "取消置顶" : "置顶众声"}</button>` : ""}${post.viewer?.isAuthor && !post.observationEndsAt ? `<button type="button" data-action="edit">编辑众声</button>` : ""}${post.viewer?.isAuthor ? `<button type="button" class="danger" data-action="delete">删除众声</button>` : ""}`;
   return `<article class="post-card ${post.statementStyle ? "statement-post" : ""}" data-post-id="${post.id}">
@@ -311,7 +357,7 @@ function renderRepostCopy(post, detail = false) {
 }
 
 function renderOriginalEmbed(original) {
-  return `<div class="embedded-post ${original.status !== "published" ? "deleted-original" : ""}" data-post-id="${original.id}"><button type="button" class="embedded-author" data-account-id="${original.author.id}">@${escapeHtml(original.author.displayName)}<span class="v-badge ${verificationClass(original.author.verification)}">${escapeHtml(original.author.verification)}</span></button><div class="embedded-content">${formatPostContent(original.content, original.mentions)}</div>${original.media?.length ? `<button type="button" class="embedded-media media-item" data-media-index="0" aria-label="查看原众声大图"><img src="${escapeHtml(original.media[0])}" alt="原众声图片" loading="lazy"><span>${original.media.length > 1 ? `${original.media.length}张图片` : "查看图片"}</span></button>` : ""}<footer><span>原众声热度 ${escapeHtml(original.displayHeat)}</span><span>${original.counts.repost || 0} 转发 · ${original.counts.comment || 0} 评论 · ${original.counts.like || 0} 赞</span></footer></div>`;
+  return `<div class="embedded-post ${original.status !== "published" ? "deleted-original" : ""}" data-post-id="${original.id}"><button type="button" class="embedded-author" data-account-id="${original.author.id}">@${escapeHtml(original.author.displayName)}<span class="v-badge ${verificationClass(original.author.verification)}">${escapeHtml(original.author.verification)}</span></button><div class="embedded-content">${formatPostContent(original.content, original.mentions)}</div>${original.media?.length ? `<button type="button" class="embedded-media media-item" data-media-url="${escapeHtml(original.media[0])}" data-media-index="0" aria-label="查看原众声大图"><img src="${escapeHtml(mediaThumbnail(original.media[0], 480))}" alt="原众声图片" loading="lazy" decoding="async"><span>${original.media.length > 1 ? `${original.media.length}张图片` : "查看图片"}</span></button>` : ""}<footer><span>原众声热度 ${escapeHtml(original.displayHeat)}</span><span>${original.counts.repost || 0} 转发 · ${original.counts.comment || 0} 评论 · ${original.counts.like || 0} 赞</span></footer></div>`;
 }
 
 function renderRepostCard(post, options = {}) {
@@ -371,7 +417,7 @@ function commentItem(comment, parent = null, compact = false, extraClass = "") {
   if (comment.tombstone) return `<article class="comment comment-tombstone ${extraClass}" data-comment-id="${comment.id}"><span class="comment-avatar">—</span><div class="comment-main"><p>原评论已删除或隐藏</p></div></article>`;
   const replyTo = parent ? `<span class="reply-to">回复 <b>@${escapeHtml(parent.author.displayName)}</b>：</span>` : "";
   const badges = `${comment.isPinned ? `<span class="comment-badge pinned">置顶</span>` : ""}${comment.isFeatured ? `<span class="comment-badge featured">精选</span>` : ""}`;
-  const media = comment.media?.length ? `<button type="button" class="comment-image media-item" data-comment-media="${escapeHtml(comment.media[0])}" aria-label="查看评论图片"><img src="${escapeHtml(comment.media[0])}" alt="评论图片" loading="lazy"></button>` : "";
+  const media = comment.media?.length ? `<button type="button" class="comment-image media-item" data-comment-media="${escapeHtml(comment.media[0])}" aria-label="查看评论图片"><img src="${escapeHtml(mediaThumbnail(comment.media[0], 480))}" alt="评论图片" loading="lazy" decoding="async"></button>` : "";
   const canRootManage = comment.viewer?.canModerate && !comment.parentId && comment.moderationStatus === "visible";
   const menuActions = `${comment.viewer?.isAuthor && comment.moderationStatus === "visible" ? `<button type="button" class="danger" data-delete-comment="${comment.id}">删除</button>` : ""}${canRootManage ? `<button type="button" data-manage-comment="pin" data-comment-id="${comment.id}">${comment.isPinned ? "取消置顶" : "置顶评论"}</button><button type="button" data-manage-comment="feature" data-comment-id="${comment.id}">${comment.isFeatured ? "取消精选" : "精选评论"}</button>` : ""}`;
   const menu = menuActions ? `<details class="comment-more"><summary aria-label="评论更多操作">${socialIcons.more}</summary><div>${menuActions}</div></details>` : "";
@@ -427,7 +473,7 @@ function renderDetailDiscussion(tab) {
 
 function renderHot() {
   const view = $("#view-hot");
-  const header = `<header class="hot-board-head"><h1>众声热搜榜</h1><p>每30分钟更新一次</p></header>`;
+  const header = `<header class="hot-board-head"><h1>众声热搜榜</h1><p>根据最新互动实时更新</p></header>`;
   if (!state.hot.length) { view.innerHTML = `<section class="hot-board">${header}<div class="empty-state">当前暂无众声达到热搜门槛</div></section>`; return; }
   const fire = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2s1 5-3 8c-3 2-3 7 1 10-6-1-8-7-5-11 1 2 3 3 4 2 3-2 3-6 3-9Z"/></svg>`;
   const rows = state.hot.map((post, index) => {
@@ -461,6 +507,7 @@ function renderFeed() {
   const more = !state.searchTerm && state.feedHasMore ? `<button type="button" class="load-more auto-load" data-load-more>继续加载众声</button>` : "";
   const emptyCopy = state.feedFilter === "following" ? "关注的人还没有发布新众声" : "没有找到符合条件的众声";
   $("#view-feed").innerHTML = `<section class="feed-board">${heading}${filters}${quickCompose}${searchNote}${accounts}<div class="feed-list">${items.length ? items.map((item) => renderTimelinePost(item.post || item.repost)).join("") : `<div class="empty-state">${emptyCopy}</div>`}</div>${more}</section>`;
+  $$('.feed-list .post-card:first-child .media-grid img').forEach(img => {img.loading='eager';img.fetchPriority='high';});
   requestAnimationFrame(observeFeedEnd);
 }
 
@@ -516,7 +563,7 @@ function renderMine() {
   const influence = me.influenceBreakdown || {};
   const influenceFormula = me.type === "official"
     ? `官方账号固定身份系数 ${Number(influence.identityCoefficient || 1.8).toFixed(2)}，当前传播力为 ${Number(me.influence).toFixed(2)}。`
-    : `身份“${escapeHtml(influence.identity || me.identity)}” ${Number(influence.identityCoefficient || 1).toFixed(2)} × 属性总值 ${Number(influence.attributeTotal || 0)} 对应系数 ${Number(influence.attributeCoefficient || 1).toFixed(2)} × 正式名誉 ${Number(influence.reputation || 0)} 对应系数 ${Number(influence.reputationCoefficient || 1).toFixed(2)} ＝ ${Number(me.influence).toFixed(2)}。`;
+    : `${me.identityUnverified ? "身份系数" : `身份“${escapeHtml(influence.identity || me.identity)}”`} ${Number(influence.identityCoefficient || 1).toFixed(2)} × 属性总值 ${Number(influence.attributeTotal || 0)} 对应系数 ${Number(influence.attributeCoefficient || 1).toFixed(2)} × 正式名誉 ${Number(influence.reputation || 0)} 对应系数 ${Number(influence.reputationCoefficient || 1).toFixed(2)} ＝ ${Number(me.influence).toFixed(2)}。`;
   const ownPosts = state.feed.filter((post) => post.viewer?.isAuthor);
   const timeline = ownPosts.sort((a, b) => Number(Boolean(b.pinned)) - Number(Boolean(a.pinned)) || Number(a.pinnedPosition || 999) - Number(b.pinnedPosition || 999) || new Date(String(b.createdAt).replace(" ", "T")) - new Date(String(a.createdAt).replace(" ", "T")));
   const names = new Set([me.realName, me.displayName].filter(Boolean));
@@ -528,10 +575,10 @@ function renderMine() {
   $("#view-mine").innerHTML = `<section class="profile-page">
     <header class="profile-topbar"><div><h1>个人主页</h1><span>@${escapeHtml(me.identityUnverified ? me.displayName : (me.realName || me.displayName))}</span></div><button class="profile-security" data-mine-action="password" aria-label="账号与安全" title="账号与安全">${socialIcons.settings}</button></header>
     <button type="button" class="mine-cover mine-cover-action" data-mine-action="cover" aria-label="更换个人主页背景"><img src="${escapeHtml(me.coverUrl || DEFAULT_PROFILE_COVER)}" alt="个人主页背景"></button>
-    <section class="mine-hero"><button type="button" class="avatar mine-avatar-action" data-mine-action="avatar" aria-label="更换头像">${me.avatarUrl ? `<img src="${escapeHtml(me.avatarUrl)}" alt="当前头像">` : escapeHtml(me.displayName.slice(0, 1))}</button><div class="profile-actions"><button class="outline-btn" data-mine-action="profile">编辑资料</button><button class="profile-more" data-mine-action="logout" aria-label="退出登录" title="退出登录">${socialIcons.more}</button></div><div class="profile-identity"><h2>${escapeHtml(me.displayName)}<span class="v-badge ${verificationClass(me.verification)}">${escapeHtml(me.verification)}</span></h2><p>${escapeHtml(me.bio || "尚未填写个人简介")}</p><div class="profile-meta"><span>${me.identityUnverified ? "未完成实名" : `实名 ${escapeHtml(me.realName || "官方账号")}`}</span><span>${escapeHtml(me.identity)}</span></div></div></section>
+    <section class="mine-hero"><button type="button" class="avatar mine-avatar-action" data-mine-action="avatar" aria-label="更换头像">${me.avatarUrl ? `<img src="${escapeHtml(me.avatarUrl)}" alt="当前头像">` : escapeHtml(me.displayName.slice(0, 1))}</button><div class="profile-actions"><button class="outline-btn" data-mine-action="profile">编辑资料</button><button class="profile-more" data-mine-action="logout" aria-label="退出登录" title="退出登录">${socialIcons.more}</button></div><div class="profile-identity"><h2>${escapeHtml(me.displayName)}<span class="v-badge ${verificationClass(me.verification)}">${escapeHtml(me.verification)}</span></h2><p>${escapeHtml(me.bio || "尚未填写个人简介")}</p><div class="profile-meta"><span>${me.type === "official" ? "官方认证账号" : (me.identityUnverified ? "未完成实名" : `实名 ${escapeHtml(me.realName)}`)}</span>${me.identityUnverified || me.type === "official" ? "" : `<span>${escapeHtml(me.identity)}</span>`}</div></div></section>
     <div class="profile-social-stats"><button data-profile-tab="posts"><b>${timeline.length}</b><span>众声</span></button><button data-profile-tab="involved"><b>${involvedPosts.length}</b><span>涉及我的</span></button><button type="button" data-relationship-type="following" data-relationship-account="${me.id}" data-relationship-name="${escapeHtml(me.displayName)}"><b>${me.followingCount || 0}</b><span>关注</span></button><button type="button" data-relationship-type="followers" data-relationship-account="${me.id}" data-relationship-name="${escapeHtml(me.displayName)}"><b>${me.followerCount || 0}</b><span>粉丝</span></button></div>
     <section class="account-snapshot"><div><span>属性总值</span><b>${me.attributeTotal ?? "—"}</b></div><div><span>虞元余额</span><b>${Number(me.yuCoin || 0).toLocaleString("zh-CN")}</b></div><div><span>正式名誉</span><b>${Number(me.reputation || 0)}</b></div><div><span>名誉进度</span><b>${Number(me.reputationProgress || 0) > 0 ? "+" : ""}${me.reputationProgress ?? "—"}</b></div><div class="influence-metric"><span>传播力 <button type="button" class="metric-help" data-influence-help aria-expanded="false" aria-controls="influence-help-panel">?</button></span><b>${me.influence}</b></div></section>
-    <aside class="influence-explainer" id="influence-help-panel" hidden><b>你的传播力是怎么得到的</b><p>${influenceFormula}</p><p>属性系数＝1＋属性总值×0.0016；名誉等级对应系数为实名1.00、银V 1.15、金V 1.30、显赫V 1.50。页面显示值按最终乘积四舍五入到两位小数。</p><small>传播力用于发布、点赞、评论与首次有效转发的热度贡献；自赞不增加热度。</small></aside>
+    <aside class="influence-explainer" id="influence-help-panel" hidden><b>你的传播力是怎么得到的</b><p>${influenceFormula}</p><p>属性系数＝1＋属性总值×0.0016；名誉等级对应系数为V 1.00、银V 1.15、金V 1.30、显赫V 1.50。页面显示值按最终乘积四舍五入到两位小数。</p><small>传播力用于发布、点赞、评论与首次有效转发的热度贡献；自赞不增加热度。</small></aside>
     <nav class="profile-tabs" aria-label="个人主页内容"><button class="${state.profileTab === "posts" ? "active" : ""}" data-profile-tab="posts" aria-selected="${state.profileTab === "posts"}">众声</button><button class="${state.profileTab === "involved" ? "active" : ""}" data-profile-tab="involved" aria-selected="${state.profileTab === "involved"}">涉及我的</button></nav>
     <div class="profile-timeline">${profilePanels[state.profileTab] || profilePanels.posts}</div>
   </section>`;
@@ -553,10 +600,14 @@ function renderMessages() {
 }
 
 async function loadAll() {
-  const [hot, feed, timeline, notifications, myActivity, activityRecords] = await Promise.all([api("hot"), api("feed",{query:{page:1,limit:50}}), api("timeline",{query:{page:1,limit:20,mode:state.feedFilter}}), api("notifications"), api("my-activity").catch(() => ({ reposts: [] })), api("activity-records").catch(() => [])]);
-  state.hot = hot; state.feed = feed; state.timeline = timeline; state.feedPage = 1; state.feedHasMore = timeline.length === 20; state.notifications = notifications; state.myActivity = myActivity || { reposts: [] }; state.activityRecords = activityRecords;
-  renderHot(); renderFeed(); renderFeedRail(); renderMine(); renderMessages();
-  updateUnreadBadges();
+  await Promise.all([
+    api('hot').then(hot => {state.hot=hot;renderHot();renderFeedRail();}),
+    api('timeline',{query:{page:1,limit:20,mode:state.feedFilter}}).then(timeline => {state.timeline=timeline;state.feedPage=1;state.feedHasMore=timeline.length===20;renderFeed();}),
+    api('feed',{query:{page:1,limit:50}}).then(feed => {state.feed=feed;renderMine();}),
+    api('notifications').then(items => {state.notifications=items;renderMessages();updateUnreadBadges();}),
+    api('my-activity').then(items => {state.myActivity=items||{reposts:[]};renderMine();}).catch(() => {}),
+    api('activity-records').then(items => {state.activityRecords=items;renderMine();}).catch(() => {})
+  ]);
 }
 
 function updateUnreadBadges() {
@@ -953,16 +1004,24 @@ $("#compose-form").addEventListener("submit", async (event) => {
   const tags = values.content.match(/#[^#\s]{1,24}#/gu) || [];
   if (tags.length > 3) { message.textContent = "一条众声最多添加3个文字标签"; $("#compose-content").focus(); return; }
   if (values.nature !== "neutral" && !state.selectedTargets.length) { message.textContent = "正面或负面众声必须选择至少1名影响对象"; $("#target-search").focus(); return; }
-  const submit = $(".primary-action", form); submit.disabled = true;
+  const submit = $(".primary-action", form); if (submit.disabled) return; submit.disabled = true;
   const payload = { postId: Number(form.dataset.editingPostId || 0), content: values.content, nature: values.nature, sourceLabel: sourceValue(form), commentPolicy: values.commentPolicy || "everyone", advancedStatement: values.advancedStatement === "on", targets: values.nature === "neutral" ? [] : state.selectedTargets.map((target) => target.id), media: [] };
   try {
-    for (let index = 0; index < state.mediaItems.length; index++) {
-      const item = state.mediaItems[index];
-      if (item.url) payload.media.push(item.url);
-      else { submit.textContent = `上传图片 ${index + 1}/${state.mediaItems.length}`; payload.media.push((await uploadFile(item.file)).url); }
-    }
+    const pendingUploads = state.mediaItems.filter((item) => !item.url).length;
+    if (pendingUploads) submit.textContent = `正在上传 ${pendingUploads} 张图片`;
+    payload.media = await uploadComposeMedia([...state.mediaItems]);
     submit.textContent = "正在发布";
-    await api(form.dataset.editingPostId ? "edit-post" : "post", { method: "POST", body: payload }); localStorage.removeItem(COMPOSE_DRAFT_KEY); form.reset(); form.dataset.editingPostId = ""; state.selectedTargets = []; resetMediaItems(); $("#compose-dialog").close(); toast(payload.postId ? "众声已修改" : "众声已发布"); await refreshMe(); await loadAll(); switchTab("feed");
+    const saved = await api(form.dataset.editingPostId ? "edit-post" : "post", { method: "POST", body: payload });
+    localStorage.removeItem(COMPOSE_DRAFT_KEY); form.reset(); form.dataset.editingPostId = ""; state.selectedTargets = []; resetMediaItems(); $("#compose-dialog").close();
+    toast(payload.postId ? "众声已修改" : "众声已发布");
+    if (saved.author && saved.counts) {
+      state.feed = [saved, ...state.feed.filter(post => post.id !== saved.id)];
+      state.timeline = [{type:'post',post:saved}, ...state.timeline.filter(item => (item.post || item.repost)?.id !== saved.id)];
+      state.searchTerm = ''; state.natureFilter = 'all'; renderFeed(); renderMine();
+    }
+    switchTab("feed"); window.scrollTo({top:0,behavior:'auto'});
+    // Refresh the ranking independently; publishing does not wait for six list requests.
+    api('hot').then(hot => {state.hot=hot;renderHot();renderFeedRail();}).catch(() => {});
   }
   catch (error) { message.textContent = error.message; }
   finally { submit.disabled = false; submit.textContent = "发布"; }
@@ -1072,7 +1131,7 @@ document.addEventListener("click", async (event) => {
   const action = event.target.closest("[data-action]");
   if (action) {
     const postId = action.closest("[data-post-id]").dataset.postId; const type = action.dataset.action;
-    if (type === "like") { const buttons = $$(`[data-post-id="${postId}"] [data-action="like"]`); const wasActive = action.classList.contains("active"); buttons.forEach((button) => { button.classList.toggle("active", !wasActive); const label = $("span", button); const current = Number(label?.textContent) || 0; if (label) label.textContent = Math.max(0, current + (wasActive ? -1 : 1)) || "赞"; }); try { await api("like", { method: "POST", body: { postId } }); await loadAll(); if ($("#post-dialog").open) await openPost(postId, false); } catch (error) { buttons.forEach((button) => button.classList.toggle("active", wasActive)); toast(error.message, "error"); } return; }
+    if (type === "like") return togglePostLike(postId, action);
     if (type === "comment") return openPost(postId);
     if (type === "pin") { try { const result = await api("pin", { method: "POST", body: { postId } }); toast(result.pinned ? "众声已置顶" : "已取消置顶"); await loadAll(); } catch (error) { toast(error.message, "error"); } return; }
     if (type === "edit") {
@@ -1183,7 +1242,7 @@ cropStage.addEventListener("pointermove", (event) => { const crop = state.avatar
 cropStage.addEventListener("pointerup", () => { if (state.avatarCrop) state.avatarCrop.dragging = false; });
 cropStage.addEventListener("pointercancel", () => { if (state.avatarCrop) state.avatarCrop.dragging = false; });
 
-$("#profile-form").addEventListener("submit", async (event) => { event.preventDefault(); const form = event.currentTarget; const submit = $(".primary-action", form); const wasLocked=$("#profile-dialog").dataset.locked==="true"; try { submit.disabled = true; const body = Object.fromEntries(new FormData(form)); const avatarFile = state.croppedAvatar?.blob; if (avatarFile) { submit.textContent = "正在上传头像"; body.avatarUrl = (await uploadFile(avatarFile)).url; } if (state.coverFile) { submit.textContent = "正在上传底图"; body.coverUrl = (await uploadFile(state.coverFile)).url; } state.me = await api("profile", { method: "POST", body }); $("#profile-dialog").dataset.locked="false"; $("#profile-dialog").close(); $("#avatar-input").value = ""; $("#cover-input").value = ""; if (state.croppedAvatar?.url) URL.revokeObjectURL(state.croppedAvatar.url); if (state.coverPreviewUrl) URL.revokeObjectURL(state.coverPreviewUrl); state.croppedAvatar = null; state.coverFile = null; state.coverPreviewUrl = ""; $("#avatar-file-name").textContent = "上传后可缩放和移动裁剪"; renderIdentity(); if(wasLocked)await loadAll();else renderMine(); toast(wasLocked?"众声账号已开通":"个人资料已保存"); } catch (error) { $(".form-message", form).textContent = error.message; } finally { submit.disabled = false; submit.textContent = "保存资料"; } });
+$("#profile-form").addEventListener("submit", async (event) => { event.preventDefault(); const form = event.currentTarget; const submit = $(".primary-action", form); const wasLocked=$("#profile-dialog").dataset.locked==="true"; try { submit.disabled = true; const body = Object.fromEntries(new FormData(form)); const avatarFile = state.croppedAvatar?.blob; const coverFile = state.coverFile; if (avatarFile || coverFile) { submit.textContent = "正在上传图片"; const [avatarUpload, coverUpload] = await Promise.all([avatarFile ? uploadFile(avatarFile) : null, coverFile ? uploadFile(coverFile) : null]); if (avatarUpload) body.avatarUrl = avatarUpload.url; if (coverUpload) body.coverUrl = coverUpload.url; } state.me = await api("profile", { method: "POST", body }); $("#profile-dialog").dataset.locked="false"; $("#profile-dialog").close(); $("#avatar-input").value = ""; $("#cover-input").value = ""; if (state.croppedAvatar?.url) URL.revokeObjectURL(state.croppedAvatar.url); if (state.coverPreviewUrl) URL.revokeObjectURL(state.coverPreviewUrl); state.croppedAvatar = null; state.coverFile = null; state.coverPreviewUrl = ""; $("#avatar-file-name").textContent = "上传后可缩放和移动裁剪"; renderIdentity(); if(wasLocked)loadAll().catch(()=>{});else renderMine(); toast(wasLocked?"众声账号已开通":"个人资料已保存"); } catch (error) { $(".form-message", form).textContent = error.message; } finally { submit.disabled = false; submit.textContent = "保存资料"; } });
 
 async function submitCommentForm(form, context) {
   const input=form.content;const submit=$("button[type=submit],button:not([type])",form);const content=input.value.trim();const mediaItem=state.commentMedia[context];
