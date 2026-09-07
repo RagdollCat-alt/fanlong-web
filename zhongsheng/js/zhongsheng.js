@@ -329,6 +329,13 @@ function renderIdentity() {
   $("#top-avatar").innerHTML = state.me.avatarUrl ? `<img src="${escapeHtml(state.me.avatarUrl)}" alt="">` : escapeHtml(state.me.displayName.slice(0, 1));
 }
 
+function renderExpandableContent(content, mentions = [], className = "post-content", expanded = false) {
+  const text = String(content || "");
+  const isLong = Array.from(text).length > 180 || text.split(/\r?\n/).length > 6;
+  const collapsible = isLong && !expanded;
+  return `<div class="${className}${collapsible ? " collapsible-content is-collapsed" : ""}">${formatPostContent(text, mentions)}</div>${collapsible ? `<button type="button" class="content-expand-button" data-expand-content aria-expanded="false">查看全文</button>` : ""}`;
+}
+
 function renderPost(post, full = false, options = {}) {
   const mediaCount = Math.min(post.media?.length || 0, 9);
   const displayHeat = post.displayHeat || `${Math.round(Number(post.heat || 0))}万`;
@@ -338,7 +345,7 @@ function renderPost(post, full = false, options = {}) {
   return `<article class="post-card ${post.statementStyle ? "statement-post" : ""}" data-post-id="${post.id}">
     ${options.showPinned && post.pinned ? `<div class="pinned-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M7 10l5-5 5 5M5 21h14"/></svg>置顶</div>` : ""}${post.statementStyle ? `<div class="statement-label">显赫声明</div>` : ""}
     <div class="post-head"><button type="button" class="post-author-link" data-account-id="${post.author.id}" aria-label="查看${escapeHtml(post.author.displayName)}的个人主页">${avatar(post.author)}<span class="post-author"><strong>${escapeHtml(post.author.displayName)}<span class="v-badge ${verificationClass(post.author.verification)}">${escapeHtml(post.author.verification)}</span></strong><small>${formatTime(post.createdAt)}${post.author.official ? "" : ` · 来自 ${escapeHtml(post.sourceLabel || "众声网页版")}`}</small></span></button><span class="post-heat" title="当前众声热度"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2s1 5-3 8c-3 2-3 7 1 10-6-1-8-7-5-11 1 2 3 3 4 2 3-2 3-6 3-9Z"/><path d="M15 9c4 3 4 8 0 11 1-3-1-5-3-6"/></svg><span>热度</span><b>${escapeHtml(displayHeat)}</b></span><div class="post-menu-wrap"><button type="button" class="post-menu-trigger" aria-label="更多操作">${socialIcons.more}</button><div class="post-more-menu" hidden><button type="button" data-action="promote">推广众声</button><button type="button" data-action="cool">降低热搜</button>${ownerActions}</div></div></div>
-    <div class="post-body"><div class="post-content">${formatPostContent(post.content, post.mentions)}</div>${targets}${media}</div>
+    <div class="post-body">${renderExpandableContent(post.content, post.mentions, "post-content", Boolean(options.detail))}${targets}${media}</div>
     <div class="post-metrics">
       <button class="post-action ${post.viewer?.reposted ? "active" : ""}" data-action="repost">${socialIcons.repost}<span>${post.counts.repost || "转发"}</span></button>
       <button class="post-action" data-action="comment">${socialIcons.comment}<span>${post.counts.comment || "评论"}</span></button>
@@ -358,7 +365,7 @@ function renderRepostCopy(post, detail = false) {
 }
 
 function renderOriginalEmbed(original) {
-  return `<div class="embedded-post ${original.status !== "published" ? "deleted-original" : ""}" data-post-id="${original.id}"><button type="button" class="embedded-author" data-account-id="${original.author.id}">@${escapeHtml(original.author.displayName)}<span class="v-badge ${verificationClass(original.author.verification)}">${escapeHtml(original.author.verification)}</span></button><div class="embedded-content">${formatPostContent(original.content, original.mentions)}</div>${original.media?.length ? `<button type="button" class="embedded-media media-item" data-media-url="${escapeHtml(original.media[0])}" data-media-index="0" aria-label="查看原众声大图"><img src="${escapeHtml(mediaThumbnail(original.media[0], 480))}" alt="原众声图片" loading="lazy" decoding="async"><span>${original.media.length > 1 ? `${original.media.length}张图片` : "查看图片"}</span></button>` : ""}<footer><span>原众声热度 ${escapeHtml(original.displayHeat)}</span><span>${original.counts.repost || 0} 转发 · ${original.counts.comment || 0} 评论 · ${original.counts.like || 0} 赞</span></footer></div>`;
+  return `<div class="embedded-post ${original.status !== "published" ? "deleted-original" : ""}" data-post-id="${original.id}"><button type="button" class="embedded-author" data-account-id="${original.author.id}">@${escapeHtml(original.author.displayName)}<span class="v-badge ${verificationClass(original.author.verification)}">${escapeHtml(original.author.verification)}</span></button>${renderExpandableContent(original.content, original.mentions, "embedded-content")}${original.media?.length ? `<button type="button" class="embedded-media media-item" data-media-url="${escapeHtml(original.media[0])}" data-media-index="0" aria-label="查看原众声大图"><img src="${escapeHtml(mediaThumbnail(original.media[0], 480))}" alt="原众声图片" loading="lazy" decoding="async"><span>${original.media.length > 1 ? `${original.media.length}张图片` : "查看图片"}</span></button>` : ""}<footer><span>原众声热度 ${escapeHtml(original.displayHeat)}</span><span>${original.counts.repost || 0} 转发 · ${original.counts.comment || 0} 评论 · ${original.counts.like || 0} 赞</span></footer></div>`;
 }
 
 function renderRepostCard(post, options = {}) {
@@ -1081,6 +1088,14 @@ $("#compose-form").addEventListener("submit", async (event) => {
 });
 
 document.addEventListener("click", async (event) => {
+  const expandContent = event.target.closest("[data-expand-content]");
+  if (expandContent) {
+    const content = expandContent.previousElementSibling;
+    const expanded = content?.classList.toggle("is-collapsed") === false;
+    expandContent.textContent = expanded ? "收起" : "查看全文";
+    expandContent.setAttribute("aria-expanded", String(expanded));
+    return;
+  }
   const retryPost = event.target.closest('[data-retry-post]');
   if (retryPost) return openPost(retryPost.dataset.retryPost);
   const suggested = event.target.closest("[data-suggest-search]");
