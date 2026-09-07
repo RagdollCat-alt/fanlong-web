@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">众声默认个人主页背景</title>
+  <desc id="desc">黑金色繁笼纹样，包含 PUBLIC IDENTITY 与众声文字</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#0c0b0a"/>
+      <stop offset=".52" stop-color="#241a12"/>
+      <stop offset="1" stop-color="#6f4828"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="72%" cy="18%" r="58%">
+      <stop stop-color="#e1b86d" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#e1b86d" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="lines" width="76" height="76" patternUnits="userSpaceOnUse" patternTransform="rotate(28)">
+      <path d="M0 1h76" stroke="#f7ddb0" stroke-opacity=".08"/>
+      <path d="M0 38h76" stroke="#f7ddb0" stroke-opacity=".035"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="420" fill="url(#bg)"/>
+  <rect width="1200" height="420" fill="url(#glow)"/>
+  <rect width="1200" height="420" fill="url(#lines)"/>
+  <path d="M-20 350 240 92l128 128L566 22l180 180 132-132 350 350H-20Z" fill="#080706" fill-opacity=".3"/>
+  <path d="M820 48h284M820 64h188" stroke="#d2a65b" stroke-opacity=".42"/>
+  <circle cx="1082" cy="72" r="38" fill="none" stroke="#d2a65b" stroke-opacity=".42"/>
+  <circle cx="1082" cy="72" r="27" fill="none" stroke="#d2a65b" stroke-opacity=".2"/>
+  <text x="70" y="150" fill="#f0d39c" fill-opacity=".88" font-family="Georgia,serif" font-size="24" letter-spacing="10">PUBLIC IDENTITY</text>
+  <text x="690" y="348" fill="#fff0d1" fill-opacity=".15" font-family="Songti SC,Noto Serif CJK SC,serif" font-size="176" font-weight="800" letter-spacing="28">众声</text>
+  <text x="72" y="350" fill="#e7c98f" fill-opacity=".38" font-family="Songti SC,Noto Serif CJK SC,serif" font-size="20" letter-spacing="7">众口成碑 · 万声有迹</text>
+</svg>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f0e8">
+  <title>众声｜繁笼公开社交平台</title>
+  <meta name="description" content="繁笼公共社交与舆情系统。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/zhongsheng.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+  <header class="mobile-topbar">
+    <a class="mobile-brand" href="/" aria-label="返回繁笼官网"><span class="seal"><img src="./assets/fanlong-family-crest.png" alt=""></span><b>众声</b></a>
+    <div class="mobile-actions">
+      <span class="wallet"><i>虞</i><b id="wallet-balance">0</b></span>
+      <button class="icon-btn" id="mobile-search-trigger" aria-label="打开搜索"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg></button>
+      <button class="icon-btn" id="notification-button" aria-label="查看消息"><svg viewBox="0 0 24 24"><path d="M5 8a7 7 0 0 1 14 0v5l2 3H3l2-3Z"/><path d="M9 20h6"/></svg><b id="notification-count" hidden>0</b></button>
+      <button class="top-profile" id="top-profile" aria-label="进入我的页面"><span id="top-avatar"></span><strong id="top-name">我的</strong></button>
+    </div>
+  </header>
+
+  <main class="app-shell" id="app" hidden>
+    <aside class="left-rail">
+      <a class="brand" href="/" aria-label="返回繁笼官网">
+        <span class="brand-seal"><img src="./assets/fanlong-family-crest.png" alt=""></span>
+        <span><b>众声</b><small>ALL VOICES</small></span>
+      </a>
+      <nav class="primary-nav" aria-label="众声导航">
+        <button class="nav-item active" data-tab="hot"><svg viewBox="0 0 24 24"><path d="M13 2s1 5-3 8c-3 2-3 7 1 10-6-1-8-7-5-11 1 2 3 3 4 2 3-2 3-6 3-9Z"/><path d="M15 9c4 3 4 8 0 11 1-3-1-5-3-6"/></svg><b>热搜</b></button>
+        <button class="nav-item" data-tab="feed"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 8h10M7 12h7M7 16h9"/></svg><b>内容</b></button>
+        <button class="compose-nav" id="compose-trigger" aria-label="发布众声"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16Z"/><path d="m13 7 4 4"/></svg><b>发布</b></button>
+        <button class="nav-item" data-tab="messages"><svg viewBox="0 0 24 24"><path d="M5 8a7 7 0 0 1 14 0v5l2 3H3l2-3Z"/><path d="M9 20h6"/></svg><b>消息</b><i class="nav-dot" id="nav-notification-count" hidden>0</i></button>
+        <button class="nav-item" data-tab="mine"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><b>我的</b></button>
+      </nav>
+      <section class="rail-account" id="identity-mini"></section>
+    </aside>
+
+    <section class="main-stage" id="main-content" tabindex="-1">
+      <div id="view-hot" class="view active"><div class="loading-state">正在接入公共舆情链路……</div></div>
+      <div id="view-feed" class="view"><div class="loading-state">正在读取内容……</div></div>
+      <div id="view-messages" class="view"><div class="loading-state">消息页面将在下一阶段制作</div></div>
+      <div id="view-mine" class="view"><div class="loading-state">正在读取实名档案……</div></div>
+    </section>
+
+    <aside class="right-rail">
+      <div class="search-combobox"><label class="global-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search-input" placeholder="搜索众声" aria-label="搜索众声、用户或繁笼实名" autocomplete="off" aria-expanded="false" aria-controls="search-suggestions"></label><div id="search-suggestions" class="search-suggestions" hidden></div></div>
+      <div class="right-default">
+        <section class="side-card hot-rules"><h3>热搜规则</h3><p>榜单每30分钟刷新一次，当前热度达到30后进入候选。</p><dl><div><dt>热</dt><dd>150</dd></div><div><dt>沸</dt><dd>300</dd></div><div><dt>爆</dt><dd>600</dd></div></dl><p>连续两轮处于同一排名区间，才会锁定稳定成绩。</p></section>
+        <section class="side-card world-note"><span>众声公约 · 01</span><h3>让流言留下出处</h3><p>公开发布、实名归属。每一次互动都会成为公共记忆的一部分。</p></section>
+        <a class="return-site" href="/">返回繁笼官网 <span>›</span></a>
+      </div>
+      <div class="feed-right" id="feed-right"></div>
+    </aside>
+  </main>
+
+  <section class="auth-screen" id="auth-screen">
+    <div class="auth-copy"><span class="auth-seal">众</span><p>THE CROWD REMEMBERS</p><h1>众口<br>成碑</h1><blockquote>“每一次转发，都在改写公共记忆。”</blockquote></div>
+    <form class="auth-card" id="login-form">
+      <div class="auth-index">ZS / 001</div><p class="eyebrow">IDENTITY ACCESS</p><h2>接入众声</h2>
+      <label>QQ号或UID<input name="login" autocomplete="username" inputmode="numeric" required placeholder="输入机器人档案账号"></label>
+      <label>登录密码<input name="password" type="password" minlength="8" autocomplete="current-password" required placeholder="首次输入即设为后续密码"></label>
+      <button type="submit">验证并进入 <span>→</span></button>
+      <p class="form-message" id="login-message"></p>
+      <small>系统会按QQ号或UID自动查询现有档案；首次输入的密码会直接成为后续登录密码。</small>
+      <a href="/">← 返回繁笼官网</a>
+    </form>
+  </section>
+
+  <dialog id="password-dialog" class="panel-dialog" data-locked="false">
+    <form method="dialog" id="password-form"><header><div><p class="eyebrow">SECURITY PROTOCOL</p><h2>修改登录密码</h2></div><button class="dialog-close" value="cancel" aria-label="关闭">×</button></header><p id="password-hint">管理员重置密码后，需要先设置新密码再继续使用众声。</p><label class="current-password-field">原密码<input name="currentPassword" type="password" autocomplete="current-password"></label><label>新密码<input name="newPassword" type="password" minlength="8" autocomplete="new-password" required placeholder="至少8位"></label><label>确认新密码<input name="confirmPassword" type="password" minlength="8" autocomplete="new-password" required></label><p class="form-message"></p><button class="primary-action" value="default">保存并重新登录</button></form>
+  </dialog>
+
+  <dialog id="compose-dialog" class="panel-dialog wide-dialog">
+    <form method="dialog" id="compose-form" class="weibo-composer">
+      <header class="compose-header">
+        <button class="dialog-close compose-cancel" type="button" value="cancel" aria-label="取消发布">取消</button>
+        <div><p class="eyebrow">PUBLIC TRANSMISSION</p><h2>发众声</h2></div>
+        <button class="primary-action compose-submit" value="default">发布</button>
+      </header>
+      <section class="compose-author" aria-label="发布身份">
+        <span class="avatar" id="compose-avatar">众</span>
+        <div><strong id="compose-author-name">众声用户</strong><span>公开 · 实名发布</span></div>
+      </section>
+      <label class="compose-content-label" for="compose-content">众声正文</label>
+      <textarea id="compose-content" name="content" maxlength="1000" rows="6" required placeholder="分享此刻正在发生的事……"></textarea>
+      <div id="media-preview" class="media-preview compose-media-preview"></div>
+      <div class="compose-toolbar">
+        <label class="compose-media-button" title="添加图片">
+          <input id="media-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m4 17 4.5-4 3.5 3 3-3 5 4.5"/></svg>
+          <span>图片</span><small>0/9</small>
+        </label>
+        <span class="compose-tag-hint">正文可输入 #标签#</span>
+        <span id="compose-count">0 / 1000</span>
+      </div>
+      <label class="source-picker">发布来源<select name="sourceLabel"><option>众声网页版</option><option>iPhone</option><option>Android</option><option>OPPO</option><option>华为</option><option>小米</option><option>繁笼终端</option></select></label>
+      <label class="custom-source">自定义来源后缀<input name="sourceSuffix" maxlength="20" placeholder="可选，如：小苹果定制"></label>
+      <label class="comment-policy">评论权限<select name="commentPolicy"><option value="everyone">所有人可评论</option><option value="following">仅我关注的人可评论</option><option value="closed">关闭评论</option></select></label>
+      <fieldset class="nature-picker">
+        <legend>这条众声的内容性质</legend>
+        <label><input type="radio" name="nature" value="neutral" checked><span><b>中立</b><small>不影响名誉</small></span></label>
+        <label><input type="radio" name="nature" value="positive"><span><b>正面</b><small>增加名誉进度</small></span></label>
+        <label><input type="radio" name="nature" value="negative"><span><b>负面</b><small>减少名誉进度</small></span></label>
+      </fieldset>
+      <section class="target-box" id="compose-target-box" hidden>
+        <div class="compose-section-head"><div><b>影响对象</b><small>必选，最多3人</small></div><span id="target-limit">0/3</span></div>
+        <input id="target-search" autocomplete="off" placeholder="搜索繁笼实名或 UID" aria-label="搜索影响对象">
+        <div id="target-results" class="target-results"></div>
+        <div id="selected-targets" class="selected-targets"></div>
+      </section>
+      <div class="compose-rule-note" id="compose-rule-note"><b>中立内容</b><span>即使进入热搜，也不会结算名誉进度。</span></div>
+      <label class="statement-toggle" id="statement-toggle" hidden><input type="checkbox" name="advancedStatement"><span><b>高级声明卡片</b><small>显赫V专属，以正式声明样式发布</small></span></label>
+      <p class="form-message" role="alert"></p>
+    </form>
+  </dialog>
+
+  <dialog id="post-dialog" class="panel-dialog post-dialog"><div id="post-detail"></div></dialog>
+
+  <dialog id="hot-detail-dialog" class="panel-dialog hot-detail-dialog"><div id="hot-detail-content"></div></dialog>
+
+  <dialog id="public-profile-dialog" class="panel-dialog public-profile-dialog"><div id="public-profile-content"></div></dialog>
+
+  <dialog id="relationship-dialog" class="panel-dialog relationship-dialog">
+    <section class="relationship-sheet"><header><button type="button" class="dialog-close" aria-label="关闭">×</button><div><p class="eyebrow">SOCIAL CONNECTIONS</p><h2 id="relationship-title">关注</h2></div><span></span></header><div id="relationship-list" class="relationship-list"></div></section>
+  </dialog>
+
+  <dialog id="action-dialog" class="panel-dialog compact-dialog">
+    <form method="dialog" id="action-form"><header><div><p class="eyebrow" id="action-eyebrow">ACTION</p><h2 id="action-title">操作</h2></div><button class="dialog-close" value="cancel">×</button></header><div id="action-fields"></div><p class="form-message"></p><button class="primary-action" value="default" id="action-submit">确认</button></form>
+  </dialog>
+
+  <dialog id="profile-dialog" class="panel-dialog" data-locked="false">
+    <form method="dialog" id="profile-form"><header><div><p class="eyebrow">PUBLIC IDENTITY</p><h2>编辑社交资料</h2></div><button class="dialog-close" value="cancel" aria-label="关闭">×</button></header><section class="profile-cover-editor" id="profile-cover-preview"><span>个人主页底图</span><label>更换底图<input id="cover-input" type="file" accept="image/jpeg,image/png,image/webp"></label><button type="button" data-cover-reset>恢复默认</button></section><section class="profile-avatar-editor"><span class="avatar" id="profile-avatar-preview">众</span><label class="avatar-upload-button">更换头像<input id="avatar-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><small id="avatar-file-name">上传后可缩放和移动裁剪</small></section><input name="avatarUrl" type="hidden"><input name="coverUrl" type="hidden"><label>社交昵称<input name="nickname" maxlength="24" required></label><label>个人简介<textarea name="bio" maxlength="120" rows="4"></textarea></label><p class="form-message"></p><button class="primary-action" value="default">保存资料</button></form>
+  </dialog>
+
+  <dialog id="reply-dialog" class="panel-dialog reply-dialog"><div id="reply-thread"></div></dialog>
+
+  <dialog id="avatar-crop-dialog" class="panel-dialog crop-dialog">
+    <div class="crop-shell"><header><div><p class="eyebrow" id="crop-eyebrow">IMAGE CROP</p><h2 id="crop-title">裁剪图片</h2></div><button type="button" data-crop-cancel aria-label="取消裁剪">×</button></header><div class="crop-workspace"><div class="crop-stage avatar-mode" id="avatar-crop-stage"><img id="avatar-crop-image" alt="图片裁剪预览" draggable="false"><span class="crop-grid" aria-hidden="true"></span></div><aside class="crop-result"><span>最终效果</span><canvas id="crop-result-preview" width="240" height="240" aria-label="裁剪结果实时预览"></canvas><small id="crop-ratio-label">1:1 头像</small></aside></div><div class="crop-controls"><button type="button" data-crop-zoom-out aria-label="缩小">−</button><label class="crop-zoom"><span>缩放</span><input id="avatar-crop-zoom" type="range" min="1" max="4" step="0.01" value="1"></label><button type="button" data-crop-zoom-in aria-label="放大">＋</button><button type="button" class="crop-reset" data-crop-reset>居中</button></div><p id="crop-help">拖动图片调整位置，右侧会实时显示最终头像。</p><footer><button class="outline-btn" type="button" data-crop-cancel>取消</button><button class="primary-action" type="button" data-crop-confirm>使用此图片</button></footer></div>
+  </dialog>
+
+  <dialog id="image-dialog" class="image-dialog">
+    <header><span id="image-viewer-count">1 / 1</span><div><button id="image-download" type="button">下载原图</button><button id="image-reset" type="button">还原</button><button class="image-close" type="button" aria-label="关闭大图">×</button></div></header><button class="image-nav image-prev" type="button" aria-label="上一张"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button><figure id="image-stage"><img id="image-viewer-img" alt="众声大图" draggable="false"><figcaption id="image-viewer-caption">众声图片</figcaption></figure><button class="image-nav image-next" type="button" aria-label="下一张"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button><nav id="image-thumbnails" class="image-thumbnails" aria-label="图片缩略图"></nav>
+  </dialog>
+
+  <dialog id="search-dialog" class="panel-dialog search-dialog">
+    <form method="dialog" id="mobile-search-form"><header><div><p class="eyebrow">SEARCH VOICES</p><h2>搜索众声</h2></div><button class="dialog-close" value="cancel" aria-label="关闭">×</button></header><label>关键词<input id="mobile-search-input" autocomplete="off" placeholder="众声、用户或繁笼实名"></label><div id="mobile-search-suggestions" class="search-suggestions mobile"></div><button class="primary-action" value="default">查看搜索结果</button></form>
+  </dialog>
+
+  <section id="repost-page" class="repost-page" aria-labelledby="repost-page-title" hidden>
+    <form id="repost-form" class="repost-page-shell">
+      <header class="repost-page-head">
+        <button type="button" class="repost-cancel" data-repost-close>取消</button>
+        <div><h2 id="repost-page-title">转发众声</h2><span id="repost-page-author">众声用户</span></div>
+        <button type="submit" class="repost-send">发送</button>
+      </header>
+      <main class="repost-editor-main">
+        <input type="hidden" name="postId">
+        <textarea name="content" maxlength="280" placeholder="说说分享心得……" aria-label="转发文字"></textarea>
+        <div id="repost-origin-preview" class="repost-origin-card"></div>
+      </main>
+      <section class="repost-page-options">
+        <div class="repost-source-row"><label>发布来源<select name="sourceLabel"><option>众声网页版</option><option>iPhone</option><option>Android</option><option>OPPO</option><option>华为</option><option>小米</option><option>繁笼终端</option></select></label><label>自定义后缀<input name="sourceSuffix" maxlength="20" placeholder="如：小苹果定制"></label></div>
+        <fieldset class="nature-picker repost-nature-picker">
+          <legend>这条转发的内容性质</legend>
+          <label><input type="radio" name="nature" value="neutral" checked><span><b>中立</b><small>不影响名誉</small></span></label>
+          <label><input type="radio" name="nature" value="positive"><span><b>正面</b><small>增加名誉进度</small></span></label>
+          <label><input type="radio" name="nature" value="negative"><span><b>负面</b><small>降低名誉进度</small></span></label>
+        </fieldset>
+        <section class="target-box" id="repost-target-box" hidden><div class="compose-section-head"><div><b>影响对象</b><small>最多选择3人</small></div></div><input id="repost-target-search" autocomplete="off" placeholder="搜索繁笼实名或 UID"><div id="repost-target-results" class="target-results"></div><div id="repost-selected-targets" class="selected-targets"></div></section>
+        <div class="compose-rule-note neutral" id="repost-rule-note"></div>
+        <p class="form-message" role="alert"></p>
+        <footer class="repost-page-tools"><div><button type="button" data-repost-insert="@" aria-label="提及用户">@</button><button type="button" data-repost-insert="#" aria-label="添加话题">#</button></div><span>公开发布</span></footer>
+      </section>
+    </form>
+  </section>
+
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+  <script src="./js/zhongsheng.js"></script>
+</body>
+</html>

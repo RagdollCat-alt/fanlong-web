@@ -1,1 +1,4 @@
 .DS_Store
+.local/
+scripts/
+zhongsheng/v-badge-preview.html

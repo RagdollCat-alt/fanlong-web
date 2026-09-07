@@ -33,11 +33,17 @@
                 Portal</span>
         </div>
 
-        <div class="flex items-center gap-6">
-            <button onclick="requestArchiveAccess(event)"
-                class="mobile-archive-entry md:hidden text-[10px] text-black bg-yu-gold px-3 py-2 font-bold tracking-widest">
-                档案库
-            </button>
+        <div class="flex items-center gap-3 md:gap-6">
+            <div class="md:hidden flex items-center gap-2">
+                <button onclick="requestArchiveAccess(event)"
+                    class="mobile-archive-entry text-[10px] text-black bg-yu-gold px-3 py-2 font-bold tracking-widest">
+                    档案库
+                </button>
+                <a href="/zhongsheng/"
+                    class="text-[10px] text-yu-gold border border-yu-gold/60 px-3 py-2 font-bold tracking-widest">
+                    众声
+                </a>
+            </div>
 
             <div id="user-status-area" class="flex items-center gap-3">
                 <div id="status-offline" class="flex items-center gap-2">
@@ -52,13 +58,14 @@
                 </div>
             </div>
 
-            <nav id="desktop-nav" class="hidden md:flex gap-8 text-xs font-bold tracking-widest text-gray-500">
+            <nav id="desktop-nav" class="hidden md:flex gap-4 xl:gap-8 text-xs font-bold tracking-widest text-gray-500">
                 <button onclick="switchTab('home')" class="tab-btn py-2 active">首页</button>
                 <button onclick="switchTab('world')" class="tab-btn py-2">世界观</button>
                 <button onclick="switchTab('politics')" class="tab-btn py-2">政体</button>
                 <button onclick="switchTab('map')" class="tab-btn py-2">地图</button>
                 <button onclick="switchTab('families')" class="tab-btn py-2">世家</button>
                 <button onclick="requestArchiveAccess(event)" class="tab-btn py-2">档案库</button>
+                <a href="/zhongsheng/" class="tab-btn py-2 hover:text-yu-gold transition-colors">众声</a>
                 <button onclick="switchTab('profile')" id="nav-profile-btn"
                     class="tab-btn text-white bg-red-900/80 px-4 py-2 rounded-sm border border-red-900">档案</button>
             </nav>
