@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$backend = 'https://api.huaian.cloud/zhongsheng-api/index.php';
+$backend = 'https://127.0.0.1/zhongsheng-api/index.php';
 $action = isset($_GET['action']) ? (string) $_GET['action'] : 'health';
 $params = $_GET;
 $params['action'] = $action;
@@ -11,6 +11,7 @@ $secret = (string) getenv('ZHONGSHENG_PROXY_SECRET');
 
 $headers = [
     'Accept: ' . ($action === 'media' ? 'image/*' : 'application/json'),
+    'Host: api.huaian.cloud',
     'X-Forwarded-For: ' . (string) ($_SERVER['REMOTE_ADDR'] ?? ''),
     'X-Zhongsheng-Proxy: ' . $secret,
 ];
@@ -26,6 +27,10 @@ curl_setopt_array($curl, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_CONNECTTIMEOUT => 4,
     CURLOPT_TIMEOUT => $action === 'media' ? 30 : 20,
+    // Fixed loopback origin: TLS never leaves this server. The Host header above
+    // selects the existing api.huaian.cloud virtual host.
+    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_SSL_VERIFYHOST => 0,
     CURLOPT_CUSTOMREQUEST => $method,
     CURLOPT_HTTPHEADER => $headers,
 ]);
