@@ -5,6 +5,7 @@ const RECENT_SEARCH_KEY = "zhongsheng-recent-searches-v1";
 const SCROLL_KEY = "zhongsheng-scroll-v1";
 const DEFAULT_PROFILE_COVER = "/zhongsheng/assets/profile-cover-default.svg";
 const pendingLikes = new Set();
+const pendingFollows = new Set();
 
 function mediaThumbnail(url, width) {
   return /^\/api\/zhongsheng\?action=media&id=\d+$/.test(url) ? `${url}&w=${width}` : url;
@@ -381,7 +382,7 @@ function renderTimelinePost(post, options = {}) { return post?.type === "repost"
 
 async function openPublicProfile(accountId) {
   if (Number(accountId) === Number(state.me.id)) {
-    ["post-dialog", "public-profile-dialog"].forEach((id) => { if ($(`#${id}`).open) $(`#${id}`).close(); });
+    ["post-dialog", "public-profile-dialog", "search-dialog"].forEach((id) => { if ($(`#${id}`).open) $(`#${id}`).close(); });
     switchTab("mine");
     return;
   }
@@ -951,11 +952,50 @@ $$(".nav-item").forEach((button) => button.addEventListener("click", () => switc
 $("#notification-button").addEventListener("click", () => switchTab("messages"));
 $("#top-profile").addEventListener("click", () => switchTab("mine"));
 $("#compose-trigger").addEventListener("click", openComposer);
-$("#mobile-search-button")?.addEventListener("click", () => openDialog($("#search-dialog")));
-$("#mobile-search-trigger").addEventListener("click", () => {
-  $("#mobile-search-input").value = state.searchTerm;
+const userDirectory = {items:[],cursor:null,hasMore:false,loading:false,version:0};
+let directoryTimer;
+function renderUserDirectory() {
+  $("#directory-list").innerHTML = userDirectory.items.map(profile => `<article class="directory-row"><button type="button" class="directory-person" data-account-id="${profile.id}">${avatar(profile,'comment-avatar')}<span><strong>${escapeHtml(profile.displayName)}<i class="v-badge ${verificationClass(profile.verification)}">${escapeHtml(profile.verification)}</i></strong><small>${escapeHtml(profile.bio || '尚未填写简介')}</small></span></button>${profile.isSelf ? '<span class="relationship-self">我</span>' : `<button type="button" class="follow-button ${profile.viewerFollowing?'following':''}" data-follow-account="${profile.id}" aria-pressed="${Boolean(profile.viewerFollowing)}">${profile.viewerFollowing?'已关注':'+ 关注'}</button>`}</article>`).join('');
+}
+async function loadUserDirectory(reset = true) {
+  if (!reset && userDirectory.loading) return;
+  const version = ++userDirectory.version;
+  if (reset) {userDirectory.items=[];userDirectory.cursor=null;renderUserDirectory();}
+  userDirectory.loading=true;
+  $("#directory-more").hidden=true;
+  $("#directory-status").textContent='正在加载用户……';
+  const query=$("#mobile-search-input").value.trim();
+  $("#directory-title").textContent=query?'匹配的已注册用户':'已注册用户';
+  try {
+    const data=await api('account-directory',{query:{q:query,cursor:userDirectory.cursor||0,limit:30}});
+    if(version!==userDirectory.version) return;
+    if(!Array.isArray(data.items)) throw Error('用户列表暂不可用，请确认后端已更新');
+    const known=new Set(userDirectory.items.map(item=>item.id));
+    userDirectory.items.push(...data.items.filter(item=>!known.has(item.id)));
+    userDirectory.cursor=data.nextCursor;userDirectory.hasMore=data.hasMore;
+    renderUserDirectory();
+    $("#directory-status").textContent=userDirectory.items.length?(data.hasMore?'':'已展示全部匹配用户'):'暂无匹配的已注册用户';
+    $("#directory-more").textContent='加载更多用户';$("#directory-more").hidden=!data.hasMore;
+  } catch(error) {
+    if(version!==userDirectory.version)return;
+    $("#directory-status").textContent=`用户列表加载失败：${error.message}`;
+    $("#directory-more").textContent='重新加载';$("#directory-more").hidden=false;
+  } finally {if(version===userDirectory.version)userDirectory.loading=false;}
+}
+function openSearchPage(query = '') {
+  clearTimeout(directoryTimer);hideSuggestions();
+  $("#mobile-search-input").value = query;
   openDialog($("#search-dialog"));
-  setTimeout(() => $("#mobile-search-input").focus(), 50);
+  loadUserDirectory();
+}
+$("#mobile-search-button")?.addEventListener("click", () => openSearchPage());
+$("#mobile-search-trigger").addEventListener("click", () => openSearchPage());
+$("#global-search-input").addEventListener("click", () => openSearchPage($("#global-search-input").value));
+$("#directory-more").addEventListener("click",()=>loadUserDirectory(!userDirectory.items.length));
+$("#mobile-search-input").addEventListener('input',()=>{
+  clearTimeout(directoryTimer);userDirectory.version++;userDirectory.loading=false;
+  $("#directory-list").innerHTML='';$("#directory-more").hidden=true;$("#directory-status").textContent='正在搜索用户……';
+  directoryTimer=setTimeout(()=>loadUserDirectory(),200);
 });
 $("#search-dialog").addEventListener("close", () => $("#mobile-search-input").blur());
 $("#search-dialog form").addEventListener("submit", async (event) => {
@@ -1048,7 +1088,20 @@ document.addEventListener("click", async (event) => {
   const suggestedPost = event.target.closest(".suggest-post");
   if (suggestedPost) { hideSuggestions(); await openPost(suggestedPost.dataset.postId); return; }
   const follow = event.target.closest("[data-follow-account]");
-  if (follow) { follow.disabled=true; try { const result=await api("follow",{method:"POST",body:{accountId:Number(follow.dataset.followAccount)}}); follow.classList.toggle("following",result.following); follow.textContent=result.following?"已关注":"+ 关注"; await refreshMe(); if(state.tab==="mine")renderMine(); if($("#relationship-dialog").open){const view=state.relationshipView;await openRelationshipList(view.type,view.accountId,view.name);} } catch(error){toast(error.message,"error");} finally{follow.disabled=false;} return; }
+  if (follow) {
+    const id=Number(follow.dataset.followAccount);
+    if(pendingFollows.has(id))return;pendingFollows.add(id);
+    const buttons=$$('[data-follow-account]').filter(button=>Number(button.dataset.followAccount)===id);
+    buttons.forEach(button=>button.disabled=true);
+    try {
+      const result=await api('follow',{method:'POST',body:{accountId:id}});
+      userDirectory.items.filter(item=>item.id===id).forEach(item=>item.viewerFollowing=result.following);
+      $$('[data-follow-account]').filter(button=>Number(button.dataset.followAccount)===id).forEach(button=>{button.classList.toggle('following',result.following);button.textContent=result.following?'已关注':'+ 关注';button.setAttribute('aria-pressed',String(result.following));});
+      refreshMe().then(()=>{if(state.tab==='mine')renderMine();}).catch(()=>{});
+    } catch(error){toast(error.message,'error');}
+    finally{pendingFollows.delete(id);$$('[data-follow-account]').filter(button=>Number(button.dataset.followAccount)===id).forEach(button=>button.disabled=false);}
+    return;
+  }
   const openReplies = event.target.closest("[data-open-replies]"); if(openReplies){state.replyScrollTop=0;openReplyThread(openReplies.dataset.openReplies,false);return;}
   const refreshReplies = event.target.closest("[data-reply-refresh]");
   if(refreshReplies){refreshReplies.disabled=true;try{await refreshCommentViews(true);}catch(error){toast(error.message,"error");}finally{refreshReplies.disabled=false;}return;}
@@ -1189,7 +1242,6 @@ $("#view-feed").addEventListener("change", (event) => { if (!event.target.matche
 $("#global-search-input").addEventListener("keydown", async (event) => { if (event.key !== "Enter") return; event.preventDefault(); await runSearch(event.currentTarget.value); });
 $("#global-search-input").addEventListener("input",event=>suggestSearch(event.currentTarget,$("#search-suggestions")));
 $("#global-search-input").addEventListener("focus",event=>suggestSearch(event.currentTarget,$("#search-suggestions")));
-$("#mobile-search-input").addEventListener("input",event=>suggestSearch(event.currentTarget,$("#mobile-search-suggestions")));
 
 $("#repost-page").addEventListener("click", async (event) => {
   if (event.target.closest("[data-repost-close]")) { await closeRepostPage(true); return; }

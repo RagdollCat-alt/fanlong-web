@@ -237,6 +237,24 @@ body.repost-open{overflow:hidden}
 @media(max-width:767px){.repost-copy{margin-left:55px}.repost-detail-card .repost-copy{margin-left:0}.account-snapshot{display:flex;grid-template-columns:none;margin:9px 10px;padding:6px}.account-snapshot div,.account-snapshot div:nth-child(n+4){min-width:0;flex:1 1 20%;padding:7px 5px;border-top:0;border-right:1px solid rgba(223,185,117,.16)}.account-snapshot div:last-child{border-right:0}.account-snapshot span{font-size:8px}.account-snapshot b{font-size:13px}}
 .mention-suggestions{inset:auto;margin:0}
 
+/* Keep dialog form-header styling out of embedded repost cards. */
+.panel-dialog .repost-card>header{display:grid;grid-template-columns:48px minmax(0,1fr) 40px;align-items:center;justify-content:normal;gap:11px;margin:0;padding:0;border:0;text-align:left}
+.panel-dialog .repost-author{justify-self:start;flex:none;width:100%;height:auto;aspect-ratio:1}
+.panel-dialog .repost-author>.avatar{width:100%;height:100%;aspect-ratio:1}
+button,a,[role="button"]{-webkit-tap-highlight-color:transparent}
+button:focus:not(:focus-visible),a:focus:not(:focus-visible){outline:none}
+.registered-users{padding:0 20px 20px}
+.registered-users>h3{margin:0 0 12px;font-size:15px}
+.directory-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.directory-person{display:flex;align-items:center;gap:10px;min-width:0;flex:1;padding:0;border:0;text-align:left;background:none;color:var(--ink)}
+dialog:focus{outline:none}
+.directory-person>span:last-child{min-width:0;display:grid;gap:5px}
+.directory-person strong,.directory-person small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.directory-person small{color:var(--muted);font-size:12px}
+.directory-row .follow-button{flex:none;min-height:36px;font-size:12px}
+.directory-status{padding:18px 0;color:var(--muted);font-size:13px}
+@media(max-width:767px){.panel-dialog .repost-card>header{grid-template-columns:45px minmax(0,1fr) 40px;gap:10px}}
+
 /* The dialog itself scrolls so the sticky send bar remains reachable. */
 #compose-dialog{overflow-y:auto;overflow-x:hidden;max-height:calc(100dvh - 28px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable}
 .weibo-composer .compose-header{background:rgba(255,255,255,.97)}

@@ -144,7 +144,8 @@
   </dialog>
 
   <dialog id="search-dialog" class="panel-dialog search-dialog">
-    <form method="dialog" id="mobile-search-form"><header><div><p class="eyebrow">SEARCH VOICES</p><h2>搜索众声</h2></div><button class="dialog-close" value="cancel" aria-label="关闭">×</button></header><label>关键词<input id="mobile-search-input" autocomplete="off" placeholder="众声、用户或繁笼实名"></label><div id="mobile-search-suggestions" class="search-suggestions mobile"></div><button class="primary-action" value="default">查看搜索结果</button></form>
+    <form method="dialog" id="mobile-search-form"><header><div><p class="eyebrow">SEARCH VOICES</p><h2>搜索众声与用户</h2></div><button type="button" class="dialog-close" value="cancel" aria-label="关闭">×</button></header><label>关键词<input id="mobile-search-input" autocomplete="off" placeholder="众声、用户或繁笼实名"></label><div id="mobile-search-suggestions" class="search-suggestions mobile"></div><button class="primary-action" value="default">查看众声搜索结果</button></form>
+    <section class="registered-users" aria-label="已注册用户"><h3 id="directory-title">已注册用户</h3><div id="directory-list"></div><div id="directory-status" class="directory-status" role="status" aria-live="polite"></div><button type="button" id="directory-more" class="outline-btn" hidden>加载更多用户</button></section>
   </dialog>
 
   <section id="repost-page" class="repost-page" aria-labelledby="repost-page-title" hidden>
